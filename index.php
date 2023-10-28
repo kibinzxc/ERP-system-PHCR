@@ -1,6 +1,9 @@
 <?php
 include('src/db/config.php');
 
+
+session_start();
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST["email"];
     $password = $_POST["password"];
@@ -10,10 +13,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
-            $user_type = $row["user_type"];
-            switch ($user_type) {
+            $_SESSION['email'] = $row['email'];
+            $_SESSION['user_type'] = $row['user_type'];
+
+            switch ($_SESSION['user_type']) {
                 case "cashier":
-                    header("Location: cashier-dashboard.php");
+                    header("Location: src/pages/cashier/cashier.php");
                     break;
                 case "manager":
                     header("Location: manager-dashboard.php");
@@ -21,16 +26,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 case "customer":
                     header("Location: ordering-page.php");
                     break;
+                case "employee":
+                    header("Location: employee-dashboard.php");
+                    break;
                 default:
-                    echo "Invalid User Credentials";
+                    echo "Invalid user type.";
             }
         }
     } else {
-        echo "Invalid username or password. Please try again.";
+        echo "Invalid email or password. Please try again.";
     }
 
     $conn->close();
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -46,7 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <div class="login-container">
         <h2>Login</h2>
-        <form action="login.php" method="post">
+        <form action="" method="post">
             <input type="text" name="email" placeholder="email" required><br>
             <input type="password" name="password" placeholder="Password" required><br>
             <button type="submit">Login</button>
