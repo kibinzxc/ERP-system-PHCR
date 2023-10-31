@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,19 +11,18 @@
     <script src="src/bootstrap/js/bootstrap.min.js"></script>
     <script src="src/bootstrap/js/bootstrap.js"></script>
 </head>
-<body style="background:red">
-<div class="container">
-  <div class="row">
-    <div class="col">
-      Column
+
+<body style="background: gray;">
+    <div class="container-fluid" style="background: red; width: 100%">
+        <div class="row">
+            <div class="col-md-4" style="background: blue;">
+                Column
+            </div>
+            <div class="col-md-8" style="background: pink;">
+                Column
+            </div>
+        </div>
     </div>
-    <div class="col">
-      Column
-    </div>
-    <div class="col">
-      Column
-    </div>
-  </div>
-</div>
 </body>
+
 </html>

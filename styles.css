@@ -1,42 +1,284 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    display: flex;
-}
-
-.container {
-    display: flex;
-}
-
-.sidenav {
-    height: 100vh;
-    width: 60px;
-    background-color: #f1f1f1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-}
-
-.icon {
+@font-face {
+    font-family: 'Biryani';
+    src: url(../assets/fonts/Biryani.ttf);
+  }
+  body {font-family: "Lato", sans-serif;}
+  
+  .sidebar {
+    height: 100%;
+    width: 100px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: white;
+    border-right: 2px solid #B6B6B6;
+    overflow-x: hidden;
+    padding-top: 16px;
+    overflow-y: hidden;
+  
+  }
+  
+  .sidebar a {
+    margin: 5px 25px 30px 25px;
+    text-decoration: none;
+    color: #1A8526;
+    display: block;
+    position:relative;
+  }
+  
+  .sidebar i{
+    padding: 10px 0px 10px 0px;
     font-size: 30px;
-    margin-top: 20px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-}
-
-.content {
-    padding: 20px;
+    margin: 0 0 0 10px;
+  
+  }
+  
+  .hr1{
+    color:#B6B6B6;
+    width:70%;
+    height: 3px;
+    background:black ;
+    text-align: left;
+    margin-left:20px;
+  }
+  .sidebar .logo{
+  width: 70px;
+  margin-right:10px;
+  margin-left:-8px;
+  }
+  
+  .hovertext {
+    border-bottom: 1px dotted black;
+    position:relative;
+    
+    }
+    .hovertext:before {
+      content: attr(data-hover);
+      visibility: hidden;
+      opacity: 0;
+      width: 85px;
+      background-color: #FF9400;
+      color: black;
+      text-align: center;
+      border-radius: 5px;
+      padding: 3px 0;
+      font-size:13px;
+      position: absolute;
+      z-index: 1;
+      left: 7px;
+      top: 90%;
+      font-weight: 600;
+    }
+    
+    .hovertext:hover:before {
+      opacity: 1;
+      visibility: visible;
+    }
+  
+  .main {
+    margin: 10px 10px 10px 110px; /* Same as the width of the sidenav */
+    padding: 0px 20px;
+    background: #FFF;
+    box-shadow: 2px 2px 4px 5px rgba(0, 0, 0, 0.10);
+    height: auto;
+    
+  }
+  
+  .container1{
+    margin: 0 50px 0 50px;
+  }
+  .input-field{
     display: flex;
     flex-direction: column;
-    align-items: center;
-}
+    background-clip: padding-box;
+  }
 
-.title-box {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 20px;
+  .input-field select{
+    padding:5px;
+  }
+
+  input {
+    height: 50px;
+    width: 100%;
+    border: none;
+    outline: none;
     border-radius: 5px;
-    margin-bottom: 20px;
+    color: black;
+    padding: 0 20px 0 20px;
+    background: #f3f2f2;
+    border:#D9D9D9 1px solid;
+  
+  }
+  
+  .container1 input{
+    font-size: 16px;
+    font-family: 'Verdana', sans-serif;
+  }
+  label {
+    font-weight: 600;
+  }
+  .error {
+    width: 100%; 
+      margin-bottom:-20px;
+      border: 1px solid #a94442; 
+      color: #a94442; 
+      background: #f2dede; 
+      border-radius: 5px; 
+      text-align: center;
+      font-family: 'Arial';
+      
+  }
+  
+  .success {
+      color: #3c763d; 
+      width: 100%; 
+      margin-bottom:-20px;
+      padding: 5px; 
+      border: 1px solid #3c763d; 
+      background: #dff0d8; 
+      border-radius: 5px; 
+      text-align: center;
+  }
+
+
+  input[type=submit]:hover{
+    background: #DB7F00;
+  }
+  @media screen and (max-height: 450px) {
+    .sidebar {padding-top: 15px;}
+    .sidebar a {font-size: 18px;}
+    .sidebar i {font-size: 40px;}
+  }
+  
+  @media screen and (max-wodtj: 110px) {
+    .sidebar {margin-bottom: 20px;}
+    .sidebar a {font-size: 10px;}
+    .sidebar i {font-size: 10px;}
+  }
+  
+  /*
+  Scroll Bar
+  */
+  
+  /* width */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    box-shadow: #f1f1f1; 
+   
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #FF9400; 
+  
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #DB7F00; 
+  }
+
+  .mpopup1 {
+    display:block;
+    position: fixed;
+    z-index: 1;
+    padding-top: 90px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
+    padding: 250px;
+  
+    
+  }
+  .modal-content1 {
+    position: relative;
+    background-color: #fafafa;
+    margin: auto;
+    width: 500px;
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s;
+    border-radius: 0.3rem;
+    font-family: 'Biryani', sans-serif;
+    border-radius: 20px;
+    text-align: left;
+  
+    
+  }
+  .modal-header1 {
+    background-color: #E9AF05;
+    color: #333;
+    border-top-left-radius: 0.3rem;
+    border-top-right-radius: 0.3rem;
+    padding: 20px 20px 0 20px;
+    
+  }
+  
+  .modal-body1 {padding: 2px 25px; background-color: #fafafa;}
+  
+  
+  .modal-footer1 {
+    padding: 20px 10px 20px 10px;
+    background-color: #fafafa;
+    color: #333;
+    border-bottom-left-radius: 0.3rem;
+    border-bottom-right-radius: 0.3rem;
+    text-align: right;
+    display:flex;
+    justify-content: space-between;
+    font-family: 'Biryani', sans-serif;
+    align-items: center;
+  }
+
+  .confirmation{
+    border-radius: 5px;
+    text-decoration : none;
+    padding : 10px;
+    background: #E9AF05;
+    font-size: 15px;
+    color:black;
+    width:200px;
+    height:45px;
+    outline:none;
+    text-decoration: none;
+    font-family: 'Biryani', sans-serif;
+    margin-left:15px;
+  }
+  .cancellation{
+    border-radius: 5px;
+    text-decoration : none;
+    padding : 10px;
+    background: #E9AF05;
+    font-size: 15px;
+    color:black;
+    width:200px;
+    height:45px;
+    outline:none;
+    text-decoration: none;
+    font-family: 'Biryani', sans-serif;
+    margin-right:15px;
+  }
+  .borderism{
+    border: 1px solid rgb(170, 170, 170);
+    padding:10px;
+  }
+  .notification-count {
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 1px 10px;
+    font-size: 12px;
+    position: absolute;
+    top: 1px;
+    right: -5px;
+    font-weight:bold;
 }
