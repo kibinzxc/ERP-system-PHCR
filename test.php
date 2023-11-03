@@ -45,6 +45,10 @@
         <!-- Add more items as needed -->
     </div>
 
+    <div class="content">
+        <h1>Content</h1>
+    </div>
+
     <script>
         function toggleSidebar() {
             document.querySelector('.sidebar').classList.toggle('collapsed');

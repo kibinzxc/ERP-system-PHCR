@@ -17,16 +17,16 @@
     <div class="container-fluid" style="background: red; width: 100%">
         <div class="row">
             <div class="col-md-2" style="background: blue; padding:0;">
-                <div class="sidebar">
-                    <div class="hamburger-icon">
-                        <i class="fas fa-bars"></i>
+                    <button onclick="toggleSidebar()">Toggle</button>
+                    <div class="item">
+                        <i class="icon">🏠</i>
+                        <span>Home</span>
                     </div>
-                    <div class="title">Sidebar Title</div>
-                    <a class="active" href="#home">Home</a>
-                    <a href="#news">News</a>
-                    <a href="#contact">Contact</a>
-                    <a href="#about">About</a>
-                </div>
+                    <div class="item">
+                        <i class="icon">🔍</i>
+                        <span>Search</span>
+                    </div>
+                    <!-- Add more items as needed -->
             </div>
 
             <div class="col-md-10" style="background: pink;">
@@ -36,10 +36,9 @@
     </div>
 
     <script>
-        document.querySelector('.hamburger-icon').addEventListener('click', function () {
-            var title = document.querySelector('.sidebar .title');
-            title.style.display = (title.style.display === 'none' || title.style.display === '') ? 'block' : 'none';
-        });
+        function toggleSidebar() {
+            document.querySelector('.col-md-2').classList.toggle('collapsed');
+        }
     </script>
 </body>
 

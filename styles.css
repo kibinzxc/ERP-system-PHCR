@@ -2,30 +2,34 @@ body {
     font-family: "Lato", sans-serif;
   }
   
-  .sidebar {
-    width: 100%;
-    background-color: #f1f1f1;
-    position:relative;
-    height: 100%;
+.sidebar {
+    width: 200px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
   }
-  
-  .sidebar a {
-    display: block;
-    color: black;
-    padding: 16px;
-    text-decoration: none;
+  .sidebar .item {
+      display: flex;
+      align-items: center;
+      padding: 10px;
   }
-   
-  .sidebar a.active {
-    background-color: #04AA6D;
-    color: white;
+  .sidebar .item i {
+      margin-right: 10px;
   }
-  
-  .sidebar a:hover:not(.active) {
-    background-color: #555;
-    color: white;
+  .sidebar .item span {
+      transition: all 0.5s ease;
   }
-  
+  .sidebar.collapsed .item span  {
+      display: none;
+  }
+  .sidebar.collapsed{
+      width: 50px;
+  }
+    
   
   @media screen and (max-width: 700px) {
     .sidebar {
