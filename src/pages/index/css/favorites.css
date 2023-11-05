@@ -1,0 +1,54 @@
+.logo {
+    width: 100%;
+    pointer-events:auto;
+    margin: 10px 0 0 0; /* top | right | bottom | left */
+}
+
+.sidebar {
+    height: 100vh;
+}
+    .sidebar a {
+        text-decoration: none;
+        color: inherit;
+    }
+    .sidebar .item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        margin: 15px 5px 15px 5px; /* top | right | bottom | left */
+    }
+    .sidebar .item:not(.active):hover {
+        background: #ddd;
+        border-radius: 5px;
+    }
+    .sidebar .item.active{
+        background: #ddd;
+        border-right: 5px solid red; 
+        margin-left:-2px;
+        margin-right:-2px;
+    }
+    .custom-width {
+        width: 101px!important;
+        padding: 0!important; /* Remove padding */
+        background: #efefef;
+        box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+
+    }
+    .sidebar .item i {
+    font-size: 1.3em; /* Adjust this value as needed */
+    }
+    .sidebar .item1{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+        margin: 10px 0 10px 0; /* top | right | bottom | left */
+        pointer-events:none;
+    }
+
+.fill-remaining {
+    width: calc(100% - 100px); /* Fill remaining space */
+}

@@ -20,7 +20,7 @@
         <div class = "row row-flex"> <!-- Add the row-flex class -->
             <div class = "col-sm-1 custom-width"> <!-- Add the custom-width class -->
                 <div class="sidebar">
-                    <a href="index.php" class="item1">
+                    <a href="home.php" class="item1">
                         <img class="logo" src="src\assets\img\pizzahut-logo.png" alt="Pizza Hut Logo">
                     </a>
                     <a href="src\pages\index\favorites.php" class="item">
