@@ -22,7 +22,6 @@
                 <div class="sidebar">
                     <a href="index.php" class="item1">
                         <img class="logo" src="src\assets\img\pizzahut-logo.png" alt="Pizza Hut Logo">
-                    </a>
                     <a href="src\pages\index\favorites.php" class="item">
                         <i class="fa-regular fa-heart"></i>
                         <span>Favorites</span>
@@ -44,8 +43,6 @@
                         <span>Rewards</span>
                     </a>
 
-                    <!-- Removed toggle button -->
-                    <!-- Add more items as needed -->
                 </div>
             </div>
             <div class = "col-sm-11 fill-remaining" style="background: white;"> <!-- Add the fill-remaining class -->
