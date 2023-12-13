@@ -38,19 +38,101 @@
                     <i class="fa-solid fa-ticket"></i>
                         <span>Promo</span>
                     </a>
-                    <a href="src\pages\index\rewards.php" class="item">
+                    <a href="src\pages\index\rewards.php" class="item-last">
                     <i class="fa-solid fa-trophy"></i>
                         <span>Rewards</span>
+                    </a>
+                    <a href="src\pages\index\rewards.php" class="item">
+                    <i class="fa-solid fa-user"></i>
+                        <span>Profile</span>
+                    </a>
+                    <a href="src\pages\index\rewards.php" class="item">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>Logout</span>
                     </a>
 
                 </div>
             </div>
-            <div class = "col-sm-11 fill-remaining" style="background: white;"> <!-- Add the fill-remaining class -->
+            <!-- BEGINNING OF BODY -->
+            <div class = "col-sm-9" style="background: white;">
+                <div class = "container">
+                    <div class = "row">
+                        <div class = "col-sm-11">
+                            <div class="search-container">
+                                <input type="text" id="searchInput" placeholder="Search...">
+                                <ul id="searchResults"></ul>
+                            </div>
+                        </div>
+                        <div class = "col-sm-1">
+                            <div class = "notification-container">
+                                <i class="fas fa-bell notification-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            <!-- ENDING OF BODY -->
+
+            <!-- BEGINNING OF My Bag-->
+            <div class = "col-sm-2" style="background-color: pink;"> <!-- Add the fill-remaining class -->
                   
 
             </div>
+            <!-- ENDING OF My Bag -->
         </div>
     </div>
 </body>
 
 </html>
+
+<script>
+  const searchInput = document.getElementById('searchInput');
+  const searchResults = document.getElementById('searchResults');
+
+  // Dummy data for demonstration
+  const data = [
+    'Mag aaral',
+    'Mag cocode',
+    'Mag fofoodtrip',
+    'Mag dadasal',
+    'Mag kakalat',
+    'Mag ooverthink',
+    'Mag wawalwal'
+    // Add more data as needed
+  ];
+
+  searchInput.addEventListener('input', function() {
+    const inputValue = this.value.toLowerCase();
+    const filteredData = data.filter(item => item.toLowerCase().includes(inputValue));
+    displayResults(filteredData);
+  });
+
+  function displayResults(results) {
+    searchResults.innerHTML = '';
+    if (results.length === 0) {
+      searchResults.style.display = 'none';
+      return;
+    }
+
+    results.forEach(result => {
+      const li = document.createElement('li');
+      li.textContent = result;
+      li.addEventListener('click', function() {
+        searchInput.value = result;
+        searchResults.style.display = 'none';
+      });
+      searchResults.appendChild(li);
+    });
+
+    searchResults.style.display = 'block';
+  }
+
+  // Hide results on outside click
+  document.addEventListener('click', function(e) {
+    if (!searchResults.contains(e.target) && e.target !== searchInput) {
+      searchResults.style.display = 'none';
+    }
+  });
+</script>
