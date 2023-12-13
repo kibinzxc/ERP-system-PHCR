@@ -1,3 +1,20 @@
+<?php
+session_start();
+
+// Check if user is logged in
+if (isset($_SESSION['email'])) {
+    $loggedIn = true;
+} else {
+    $loggedIn = false;
+}
+
+if (isset($_GET['logout'])) {
+    session_destroy();
+    unset($_SESSION['email']); // Change 'user' to 'email' for consistency
+    header("Location: login.php");
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -43,14 +60,22 @@
                     <i class="fa-solid fa-trophy"></i>
                         <span>Rewards</span>
                     </a>
-                    <a href="src\pages\index\rewards.php" class="item">
-                    <i class="fa-solid fa-user"></i>
-                        <span>Profile</span>
-                    </a>
-                    <a href="src\pages\index\rewards.php" class="item">
-                    <i class="fa-solid fa-right-from-bracket"></i>
-                        <span>Logout</span>
-                    </a>
+                    <!-- Toggle Login/Logout link -->
+                    <?php if ($loggedIn) : ?>
+                        <a href="src\pages\index\rewards.php" class="item">
+                        <i class="fa-solid fa-user"></i>
+                            <span>Profile</span>
+                        </a>
+                        <a href="index.php?logout=1" class="item">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                            <span>Logout</span>
+                        </a>
+                    <?php else : ?>
+                        <a href="login.php" class="item">
+                            <i class="fa-solid fa-user"></i>
+                            <span>Login</span>
+                        </a>
+                    <?php endif; ?>
 
                 </div>
             </div>
