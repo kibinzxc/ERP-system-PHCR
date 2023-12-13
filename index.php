@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="src/bootstrap/css/bootstrap.css">
     <link rel="stylesheet" href="src/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="src\pages\index\css\styles.css">
+    <link rel="stylesheet" href="src/pages/index/css/styles.css">
     <script src="src/bootstrap/js/bootstrap.min.js"></script>
     <script src="src/bootstrap/js/bootstrap.js"></script>
     <script src="https://kit.fontawesome.com/0d118bca32.js" crossorigin="anonymous"></script>
@@ -22,6 +22,7 @@
                 <div class="sidebar">
                     <a href="index.php" class="item1">
                         <img class="logo" src="src\assets\img\pizzahut-logo.png" alt="Pizza Hut Logo">
+                    </a>
                     <a href="src\pages\index\favorites.php" class="item">
                         <i class="fa-regular fa-heart"></i>
                         <span>Favorites</span>
