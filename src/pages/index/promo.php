@@ -1,3 +1,20 @@
+<?php
+session_start();
+
+// Check if user is logged in
+if (isset($_SESSION['email'])) {
+    $loggedIn = true;
+} else {
+    $loggedIn = false;
+}
+
+if (isset($_GET['logout'])) {
+    session_destroy();
+    unset($_SESSION['email']); // Change 'user' to 'email' for consistency
+    header("Location: login.php");
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,6 +29,7 @@
     <script src="../../../src/bootstrap/js/bootstrap.min.js"></script>
     <script src="../../../src/bootstrap/js/bootstrap.js"></script>
     <script src="https://kit.fontawesome.com/0d118bca32.js" crossorigin="anonymous"></script>
+    
 </head>
 
 <body>
@@ -20,7 +38,7 @@
             <div class = "col-sm-1 custom-width"> <!-- Add the custom-width class -->
                 <div class="sidebar">
                     <a href="../../../index.php" class="item1">
-                        <img class="logo" src="../../../src\assets\img\pizzahut-logo.png" alt="Pizza Hut Logo">
+                        <img class="logo" src="../../assets/img/pizzahut-logo.png" alt="Pizza Hut Logo">
                     </a>
                     <a href="favorites.php" class="item">
                         <i class="fa-regular fa-heart"></i>
@@ -38,21 +56,111 @@
                     <i class="fa-solid fa-ticket"></i>
                         <span>Promo</span>
                     </a>
-                    <a href="rewards.php" class="item">
+                    <a href="rewards.php" class="item-last">
                     <i class="fa-solid fa-trophy"></i>
                         <span>Rewards</span>
                     </a>
+                    <!-- Toggle Login/Logout link -->
+                    <?php if ($loggedIn) : ?>
+                        <a href="profile.php" class="item">
+                        <i class="fa-solid fa-user"></i>
+                            <span>Profile</span>
+                        </a>
+                        <a href="promo.php?logout=1" class="item">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                            <span>Logout</span>
+                        </a>
+                    <?php else : ?><br><br>
+                        <a href="../../../login.php" class="item-login">
+                            <i class="fa-solid fa-user"></i>
+                            <span>Login</span>
+                        </a>
+                    <?php endif; ?>
 
-                    <!-- Removed toggle button -->
-                    <!-- Add more items as needed -->
                 </div>
             </div>
-            <div class = "col-sm-11 fill-remaining" style="background: white;"> <!-- Add the fill-remaining class -->
+            <!-- BEGINNING OF BODY -->
+            <div class = "col-sm-9" style="background: white;">
+                <div class = "container">
+                    <div class = "row">
+                        <div class = "col-sm-11">
+                            <div class="search-container">
+                                <input type="text" id="searchInput" placeholder="Search...">
+                                <ul id="searchResults"></ul>
+                            </div>
+                        </div>
+                        <div class = "col-sm-1">
+                            <div class = "notification-container">
+                                <a href="#" >
+                                <i class="fas fa-bell notification-icon"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            <!-- ENDING OF BODY -->
+
+            <!-- BEGINNING OF My Bag-->
+            <div class = "col-sm-2" style="background-color: pink;"> <!-- Add the fill-remaining class -->
                   
 
             </div>
+            <!-- ENDING OF My Bag -->
         </div>
     </div>
 </body>
 
 </html>
+
+<script>
+  const searchInput = document.getElementById('searchInput');
+  const searchResults = document.getElementById('searchResults');
+
+  // Dummy data for demonstration
+  const data = [
+    'Mag aaral',
+    'Mag cocode',
+    'Mag fofoodtrip',
+    'Mag dadasal',
+    'Mag kakalat',
+    'Mag ooverthink',
+    'Mag wawalwal'
+    // Add more data as needed
+  ];
+
+  searchInput.addEventListener('input', function() {
+    const inputValue = this.value.toLowerCase();
+    const filteredData = data.filter(item => item.toLowerCase().includes(inputValue));
+    displayResults(filteredData);
+  });
+
+  function displayResults(results) {
+    searchResults.innerHTML = '';
+    if (results.length === 0) {
+      searchResults.style.display = 'none';
+      return;
+    }
+
+    results.forEach(result => {
+      const li = document.createElement('li');
+      li.textContent = result;
+      li.addEventListener('click', function() {
+        searchInput.value = result;
+        searchResults.style.display = 'none';
+      });
+      searchResults.appendChild(li);
+    });
+
+    searchResults.style.display = 'block';
+  }
+
+  // Hide results on outside click
+  document.addEventListener('click', function(e) {
+    if (!searchResults.contains(e.target) && e.target !== searchInput) {
+      searchResults.style.display = 'none';
+    }
+  });
+</script>

@@ -23,11 +23,11 @@ if (isset($_GET['logout'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="src/bootstrap/css/bootstrap.css">
-    <link rel="stylesheet" href="src/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="src/pages/index/css/styles.css">
-    <script src="src/bootstrap/js/bootstrap.min.js"></script>
-    <script src="src/bootstrap/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="../../../src/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="../../../src/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/profile.css">
+    <script src="../../../src/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../../../src/bootstrap/js/bootstrap.js"></script>
     <script src="https://kit.fontawesome.com/0d118bca32.js" crossorigin="anonymous"></script>
     
 </head>
@@ -37,41 +37,41 @@ if (isset($_GET['logout'])) {
         <div class = "row row-flex"> <!-- Add the row-flex class -->
             <div class = "col-sm-1 custom-width"> <!-- Add the custom-width class -->
                 <div class="sidebar">
-                    <a href="index.php" class="item1">
-                        <img class="logo" src="src\assets\img\pizzahut-logo.png" alt="Pizza Hut Logo">
+                    <a href="../../../index.php" class="item1">
+                        <img class="logo" src="../../assets/img/pizzahut-logo.png" alt="Pizza Hut Logo">
                     </a>
-                    <a href="src\pages\index\favorites.php" class="item">
+                    <a href="favorites.php" class="item">
                         <i class="fa-regular fa-heart"></i>
                         <span>Favorites</span>
                     </a>
-                    <a href="src\pages\index\menu.php" class="item">
-                        <i class="fa-solid fa-utensils"></i>
+                    <a href="menu.php" class="item">
+                    <i class="fa-solid fa-utensils"></i>
                         <span>Menu</span>
                     </a>
-                    <a href="src\pages\index\order.php" class="item">
-                        <i class="fa-solid fa-receipt"></i>
+                    <a href="order.php" class="item">
+                    <i class="fa-solid fa-receipt"></i>
                         <span>Order</span>
                     </a>
-                    <a href="src\pages\index\promo.php" class="item">
-                        <i class="fa-solid fa-ticket"></i>
+                    <a href="promo.php" class="item">
+                    <i class="fa-solid fa-ticket"></i>
                         <span>Promo</span>
                     </a>
-                    <a href="src\pages\index\rewards.php" class="item-last">
-                        <i class="fa-solid fa-trophy"></i>
+                    <a href="rewards.php" class="item-last">
+                    <i class="fa-solid fa-trophy"></i>
                         <span>Rewards</span>
                     </a>
                     <!-- Toggle Login/Logout link -->
                     <?php if ($loggedIn) : ?>
-                        <a href="src\pages\index\profile.php" class="item">
+                        <a href="profile.php" class="item active">
                         <i class="fa-solid fa-user"></i>
                             <span>Profile</span>
                         </a>
-                        <a href="index.php?logout=1" class="item">
+                        <a href="profile.php?logout=1" class="item">
                             <i class="fa-solid fa-right-from-bracket"></i>
                             <span>Logout</span>
                         </a>
                     <?php else : ?><br><br>
-                        <a href="login.php" class="item-login">
+                        <a href="../../../login.php" class="item-login">
                             <i class="fa-solid fa-user"></i>
                             <span>Login</span>
                         </a>
@@ -83,19 +83,7 @@ if (isset($_GET['logout'])) {
             <div class = "col-sm-9" style="background: white;">
                 <div class = "container">
                     <div class = "row">
-                        <div class = "col-sm-11">
-                            <div class="search-container">
-                                <input type="text" id="searchInput" placeholder="Search...">
-                                <ul id="searchResults"></ul>
-                            </div>
-                        </div>
-                        <div class = "col-sm-1">
-                            <div class = "notification-container">
-                                <a href="#" >
-                                    <i class="fas fa-bell notification-icon"></i>
-                                </a>
-                            </div>
-                        </div>
+                        
                     </div>
                 </div>
 
@@ -103,12 +91,6 @@ if (isset($_GET['logout'])) {
             </div>
             <!-- ENDING OF BODY -->
 
-            <!-- BEGINNING OF My Bag-->
-            <div class = "col-sm-2" style="background-color: pink;"> <!-- Add the fill-remaining class -->
-                  
-
-            </div>
-            <!-- ENDING OF My Bag -->
         </div>
     </div>
 </body>
