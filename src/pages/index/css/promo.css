@@ -1,14 +1,15 @@
 .logo {
-width: 100%;
-pointer-events: auto;
+    width: 100%;
+    pointer-events: auto;
     margin: 10px 0 0 0;
     /* top | right | bottom | left */
 }
 
 .sidebar {
-height: auto;
+    height: auto;
 
 }
+
 .sidebar a {
     text-decoration: none;
     color: inherit;
@@ -24,7 +25,7 @@ height: auto;
     /* top | right | bottom | left */
 }
 
-.sidebar .item-last{
+.sidebar .item-last {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -34,7 +35,7 @@ height: auto;
     /* top | right | bottom | left */
 }
 
-.sidebar .item-login{
+.sidebar .item-login {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -44,12 +45,12 @@ height: auto;
     /* top | right | bottom | left */
 }
 
-.sidebar .item-last:not(.active):hover{
+.sidebar .item-last:not(.active):hover {
     background: #ddd;
     border-radius: 5px;
 }
 
-.sidebar .item-login:not(.active):hover{
+.sidebar .item-login:not(.active):hover {
     background: #ddd;
     border-radius: 5px;
 }
@@ -58,19 +59,20 @@ height: auto;
     background: #ddd;
     border-radius: 5px;
 }
+
 .sidebar .item.active {
     background: #ddd;
     border-right: 5px solid red;
-margin-left: -2px;
+    margin-left: -2px;
     margin-right: -2px;
 }
 
 .custom-width {
-width: 105px !important;
+    width: 105px !important;
     padding: 0 !important;
     /* Remove padding */
     background: #efefef;
-box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
         rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
 }
 
@@ -78,14 +80,17 @@ box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
     font-size: 1.3em;
     /* Adjust this value as needed */
 }
+
 .sidebar .item-last i {
     font-size: 1.3em;
     /* Adjust this value as needed */
 }
+
 .sidebar .item-login i {
     font-size: 1.3em;
     /* Adjust this value as needed */
 }
+
 .sidebar .item1 {
     display: flex;
     flex-direction: column;
@@ -105,107 +110,119 @@ box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
 .col-sm-9 {
     display: flex;
     justify-content: center;
-    height: 100vh; /* Adjust this value as needed */
-    margin-left:5px;
+    height: 100vh;
+    /* Adjust this value as needed */
+    margin-left: 5px;
 }
 
 body {
     scrollbar-width: thin;
-    scrollbar-color: #ff9999 #333; /* Matte red: #ff9999, Matte black: #333 */
-  }
-  
-  /* WebKit (Chrome, Safari) and Blink (Opera) */
-  body::-webkit-scrollbar {
-    width: 10px;
-  }
-  
-  body::-webkit-scrollbar-track {
-    background-color: #333;
-  }
-  
-  body::-webkit-scrollbar-thumb {
-    background-color: #ff9999; /* Matte red: #ff9999 */
-    border-radius: 10px;
-    border: 2px solid #333; /* Matte black: #333 */
-  }
+    scrollbar-color: #ff9999 #333;
+    /* Matte red: #ff9999, Matte black: #333 */
+}
 
-  /*
+/* WebKit (Chrome, Safari) and Blink (Opera) */
+body::-webkit-scrollbar {
+    width: 10px;
+}
+
+body::-webkit-scrollbar-track {
+    background-color: #333;
+}
+
+body::-webkit-scrollbar-thumb {
+    background-color: #ff9999;
+    /* Matte red: #ff9999 */
+    border-radius: 10px;
+    border: 2px solid #333;
+    /* Matte black: #333 */
+}
+
+/*
   Search Bar
   */
-  .search-container {
+.search-container {
     position: relative;
     margin: 30px 10px 10px 10px;
-  }
-  input[type="text"] {
-    padding: 10px 30px 10px 10px; /* Adjust padding to accommodate the icon */
+}
+
+input[type="text"] {
+    padding: 10px 30px 10px 10px;
+    /* Adjust padding to accommodate the icon */
     width: 100%;
     box-sizing: border-box;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-size: 16px;
-      outline: none;
-      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="%23676767" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>');
-      background-repeat: no-repeat;
-      background-position: right 10px center;
-      background-color: #ddd;
-    }
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    outline: none;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="%23676767" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-color: #ddd;
+}
 
-    ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      position:relative;
-      width: 100%;
-      background-color: #fff;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      display: none;
-    }
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    width: 100%;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: none;
+}
 
-    li {
-      padding: 10px;
-      cursor: pointer;
-    }
+li {
+    padding: 10px;
+    cursor: pointer;
+}
 
-    li:hover {
-      background-color: #f0f0f0;
-    }
+li:hover {
+    background-color: #f0f0f0;
+}
 
-    input[type="text"]:focus {
-        background-color: white;
-    }
-    /* End of Search Bar */
+input[type="text"]:focus {
+    background-color: white;
+}
 
-    .notification-container{
-        font-size:30px;
-        margin: 30px 0 0 35px;
-        /* top | right | bottom | left */
-    }
+/* End of Search Bar */
 
-    .notification-container a{
+.notification-container {
+    font-size: 30px;
+    margin: 30px 0 0 35px;
+    /* top | right | bottom | left */
+}
+
+.notification-container a {
     text-decoration: none;
-    color:black;
-    }
-    .notification-container a:hover{
-    color:#C23415;
-    }
-    @media (max-width: 1800px) {
-        .sidebar .item-last{
-            margin: 15px 5px 90px 5px;
-        }
-        .sidebar .item-login{
-            margin: 40px 5px 90px 5px;
-        }
+    color: black;
+}
+
+.notification-container a:hover {
+    color: #C23415;
+}
+
+@media (max-width: 1800px) {
+    .sidebar .item-last {
+        margin: 15px 5px 90px 5px;
     }
 
-    @media (max-width: 1700px) {
-        .sidebar .item-last{
-            margin: 15px 5px 10px 5px;
-            font-size: 0.99em;
-        }
-        .sidebar .item i{
-            font-size: 0.99em;
-        }
-        .sidebar .item-last i{
-            font-size: 0.99em;
-        }
+    .sidebar .item-login {
+        margin: 40px 5px 90px 5px;
     }
+}
+
+@media (max-width: 1700px) {
+    .sidebar .item-last {
+        margin: 15px 5px 10px 5px;
+        font-size: 0.99em;
+    }
+
+    .sidebar .item i {
+        font-size: 0.99em;
+    }
+
+    .sidebar .item-last i {
+        font-size: 0.99em;
+    }
+}

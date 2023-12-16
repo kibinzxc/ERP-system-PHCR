@@ -94,11 +94,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <div class="user-box">
                                     <label>Password</label>
                                     <input type="password" name="password" placeholder = "Password">
-                                    <a href="#" >Forgot Password?</a>
+                                    <a href="forgotPass.php" >Forgot Password?</a>
                                 </div>
                                     <input type="submit" value="Sign in" class="login-btn" name="login">
                                 <div class="additional-links">
-                                    <p>Don't have an account yet?<a href="#" class="register-link">Register here</a></p>
+                                    <p>Don't have an account yet?<a href="register.php" class="register-link">Register here</a></p>
                                 </div>
                             </form>
                     </div>

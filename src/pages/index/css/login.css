@@ -38,21 +38,22 @@ body {
     padding: 0;
 }
 
-.back-btn{
-position: absolute;
-top: 1.5%;
-left: 0.5%;
-font-size: 20px;
-border: none;
-background-color: white;
+.back-btn {
+    position: absolute;
+    top: 1.5%;
+    left: 0.5%;
+    font-size: 20px;
+    border: none;
+    background-color: white;
 }
 
-.back-btn:hover{
-color:#C23415;
+.back-btn:hover {
+    color: #C23415;
 }
-.row a{
-text-decoration: none;
-color: black;
+
+.row a {
+    text-decoration: none;
+    color: black;
 }
 
 
@@ -90,87 +91,96 @@ color: black;
     top: 50%;
     left: 72%;
     transform: translate(-50%, -50%);
-    height:65%;
+    height: 65%;
     width: 35%;
     background: #2c2c2c;
     border-radius: 15px;
 
-    color:white;
-    padding: 30px 70px 30px 70px; /* top | right | bottom | left */
+    color: white;
+    padding: 30px 70px 30px 70px;
+    /* top | right | bottom | left */
 }
 
-.title{
+.title {
     position: absolute;
     top: 12%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size:2.5em;
-    font-weight:800;
+    font-size: 2.5em;
+    font-weight: 800;
     letter-spacing: 1px;
 }
+
 .user-box {
-  position: relative;
-  margin-bottom: 30px;
+    position: relative;
+    margin-bottom: 30px;
 }
 
 .user-box input {
-  width: 100%;
-  padding: 10px 15px; /* Adjust padding for input */
-  border: 1px solid #aaa; /* Add border */
-  background-color: #fff; /* Set background color to white */
-  outline: none;
-  font-size: 17px;
-  border-radius: 5px; /* Add border radius for a softer look */
-  transition: all 0.3s ease; /* Add transition for animation */
+    width: 100%;
+    padding: 10px 15px;
+    /* Adjust padding for input */
+    border: 1px solid #aaa;
+    /* Add border */
+    background-color: #fff;
+    /* Set background color to white */
+    outline: none;
+    font-size: 17px;
+    border-radius: 5px;
+    /* Add border radius for a softer look */
+    transition: all 0.3s ease;
+    /* Add transition for animation */
     height: 6vh;
-border-radius: 5px;
+    border-radius: 5px;
 }
 
-.user-box label{
-font-size:1.4em;
+.user-box label {
+    font-size: 1.4em;
 }
 
 .user-box a {
-text-align: right;
-display: block;
-margin: 5px 0 0 0;
-text-decoration: none;
-color: white;
+    text-align: right;
+    display: block;
+    margin: 5px 0 0 0;
+    text-decoration: none;
+    color: white;
 }
 
-.user-box a:hover{
-color:#C23415;
-}
-.login-btn{
-  text-decoration: none;
-  height: 6vh;
-  padding: 10px;
-  font-size: 25px;
-  color: white;
-  width: 100%;
-border-radius: 5px;
-border: none;
-background-color: #C23415;
-margin: 0 0 30px 0;
+.user-box a:hover {
+    color: #C23415;
 }
 
-.login-btn:hover{
-background-color: #a12c12;
+.login-btn {
+    text-decoration: none;
+    height: 6vh;
+    padding: 10px;
+    font-size: 25px;
+    color: white;
+    width: 100%;
+    border-radius: 5px;
+    border: none;
+    background-color: #C23415;
+    margin: 0 0 30px 0;
+}
+
+.login-btn:hover {
+    background-color: #a12c12;
 }
 
 
-.additional-links{
-display: block;
-text-align: center;
+.additional-links {
+    display: block;
+    text-align: center;
 }
 
-.additional-links a{
-text-decoration: none;
-color:#C23415;
-font-weight: bold;
-margin: 0 0 0 10px; /* top | right | bottom | left */
+.additional-links a {
+    text-decoration: none;
+    color: #C23415;
+    font-weight: bold;
+    margin: 0 0 0 10px;
+    /* top | right | bottom | left */
 }
 
-.additional-links a:hover{
-color:#a12c12;
+.additional-links a:hover {
+    color: #a12c12;
 }

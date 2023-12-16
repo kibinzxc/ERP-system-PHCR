@@ -11,7 +11,7 @@ if (isset($_SESSION['email'])) {
 if (isset($_GET['logout'])) {
     session_destroy();
     unset($_SESSION['email']); // Change 'user' to 'email' for consistency
-    header("Location: login.php");
+    header("Location:../../../login.php");
     exit();
 }
 ?>
@@ -85,7 +85,7 @@ if (isset($_GET['logout'])) {
                     <div class = "row">
                         <div class = "col-sm-11">
                             <div class="search-container">
-                                <input type="text" id="searchInput" placeholder="Search...">
+                                <input type="text" id="searchInput" placeholder="Search your favorite dishes">
                                 <ul id="searchResults"></ul>
                             </div>
                         </div>
@@ -105,7 +105,9 @@ if (isset($_GET['logout'])) {
 
             <!-- BEGINNING OF My Bag-->
             <div class = "col-sm-2" style="background-color: pink;"> <!-- Add the fill-remaining class -->
-                  
+                <center>
+                    <h3 style="margin-top:25px;">My Bag</h3>
+                </center>                  
 
             </div>
             <!-- ENDING OF My Bag -->

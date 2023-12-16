@@ -11,7 +11,7 @@ if (isset($_SESSION['email'])) {
 if (isset($_GET['logout'])) {
     session_destroy();
     unset($_SESSION['email']); // Change 'user' to 'email' for consistency
-    header("Location: login.php");
+    header("Location:../../../login.php");
     exit();
 }
 ?>

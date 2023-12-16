@@ -21,7 +21,7 @@ if (isset($_GET['logout'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Pizza Hut Chino Roces Branch</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="src/bootstrap/css/bootstrap.css">
     <link rel="stylesheet" href="src/bootstrap/css/bootstrap.min.css">
@@ -85,7 +85,7 @@ if (isset($_GET['logout'])) {
                     <div class = "row">
                         <div class = "col-sm-11">
                             <div class="search-container">
-                                <input type="text" id="searchInput" placeholder="Search...">
+                                <input type="text" id="searchInput" placeholder="What would you like to eat?">
                                 <ul id="searchResults"></ul>
                             </div>
                         </div>
@@ -105,8 +105,9 @@ if (isset($_GET['logout'])) {
 
             <!-- BEGINNING OF My Bag-->
             <div class = "col-sm-2" style="background-color: pink;"> <!-- Add the fill-remaining class -->
-                  
-
+                <center>
+                    <h3 style="margin-top:25px;">My Bag</h3>
+                </center>
             </div>
             <!-- ENDING OF My Bag -->
         </div>
