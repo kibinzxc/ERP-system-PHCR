@@ -80,7 +80,7 @@ if (isset($_GET['logout'])) {
             </div>
             <!-- BEGINNING OF BODY -->
             <div class = "col-sm-11">
-                <div class = "container">
+                <div class = "container" style="padding:0;">
                     <div class = "row">
                         <div class = "col-sm-10">
                             <div class="search-container">

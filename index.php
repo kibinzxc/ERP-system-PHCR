@@ -104,7 +104,7 @@ if (isset($_GET['logout'])) {
             <!-- ENDING OF BODY -->
 
             <!-- BEGINNING OF My Bag-->
-            <div class = "col-sm-2" style="background-color: pink;"> <!-- Add the fill-remaining class -->
+            <div class = "col-sm-2" style="background-color: #efefef;"> <!-- Add the fill-remaining class -->
                 <center>
                     <h3 style="margin-top:25px;">My Bag</h3>
                 </center>
