@@ -31,9 +31,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($result->num_rows == 1) {
             // Login successful
             // Start a session
+            $user = $result->fetch_assoc();
+            $uid = $user['uid'];
             session_start();
             // Store username in the session
-            $_SESSION['email'] = $email;
+            $_SESSION['uid'] = $uid;
             // Redirect to a logged-in page
             header("Location: index.php");
             exit();

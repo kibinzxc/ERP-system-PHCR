@@ -2,18 +2,53 @@
 session_start();
 
 // Check if user is logged in
-if (isset($_SESSION['email'])) {
-    $loggedIn = true;
+
+// Check if user is logged in
+if (isset($_SESSION['uid'])) {
+$loggedIn = true;
+    $currentUserId = $_SESSION['uid'];
+// Database connection details
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "ph_db";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Retrieve the current user's ID from the session
+$currentUserId = $_SESSION['uid'];
+
+$sql = "SELECT address FROM users WHERE uid = $currentUserId"; // Replace 'users' with your table name
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    $userAddress = $row['address']; // Store the user's address in a variable
+    $currentUserId = $currentUserId;
 } else {
-    $loggedIn = false;
+    $userAddress = "House No, Street, City, Province"; // Set a default value if no address is found
 }
 
+$conn->close();
+} else {
+    $currentUserId = 01; // or any default value
+    $loggedIn = false;
+    $userAddress = "";
+}
+
+
 if (isset($_GET['logout'])) {
-    session_destroy();
-    unset($_SESSION['email']); // Change 'user' to 'email' for consistency
+    if (isset($_SESSION['uid'])) {
+        
+        session_destroy();
+        unset($_SESSION['uid']);
+    }
     header("Location: login.php");
     exit();
 }
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -85,7 +120,7 @@ if (isset($_GET['logout'])) {
                     <div class = "row">
                         <div class = "col-sm-11">
                             <div class="search-container">
-                                <input type="text" id="searchInput" placeholder="What would you like to eat?">
+                                <input type="text1" id="searchInput" placeholder="What would you like to eat?">
                                 <ul id="searchResults"></ul>
                             </div>
                         </div>
@@ -105,9 +140,80 @@ if (isset($_GET['logout'])) {
 
             <!-- BEGINNING OF My Bag-->
             <div class = "col-sm-2" style="background-color: #efefef;"> <!-- Add the fill-remaining class -->
-                <center>
-                    <h3 style="margin-top:25px;">My Bag</h3>
-                </center>
+                <div class = "container" style="margin:0;padding:0;">
+                    <div class = "row">
+                        <div class = "col-sm-12">
+                            <h3 style="margin-top:35px;margin-left:10px; color:#404040;">My Bag</h3><br><br>
+                        </div>
+                        <div class = "col-sm-12">
+                            <form method="post">
+                                <h6 style="margin-left:10px;"> Delivery Address</h6>
+                                <input style="font-weight:bold; color:#333; margin-left:10px;" type="text" value="<?php echo $userAddress; ?>"><br><br>
+                        </div>
+                            <div class = "col-sm-12 cart" style = "margin:0 0 -25px 0; padding:0; height:50vh; overflow-y: scroll; overflow:auto; ">
+
+                                        <?php
+                                            $db = new mysqli('localhost', 'root', '', 'ph_db');
+                                            $sql = "SELECT * FROM cart WHERE uid = $currentUserId";
+                                            $result = $db->query($sql);
+                                            $result1 = $db->query($sql);
+                                            $newrow = mysqli_fetch_array($result1);
+                                            if ($result->num_rows > 0) {
+                                                $cart = array();
+                                            // Display events
+                                            while ($row = $result->fetch_assoc()) {
+                                                $cart[] = $row;
+                                            }
+                                            $cart = array_reverse($cart);
+                                            foreach ($cart as $row) {
+                                            echo'
+                                            <div class = "box" style = "padding: 10px;border-radius:10px; margin: 10px 10px 10px 5px; position:relative; margin-left:10px;">
+                                                <div class = "container" style="margin:0; padding:0;">
+                                                    <div class ="row">
+                                                        <div class = "col-sm-3">
+                                                            <div class = "image" style="height:100%; width:100%">
+                                                                <img src="src/assets/img/menu/' . $row['img'] . '" alt="notif pic" style="width:100%; max-width:100%; min-width:100px; height:auto; overflow:hidden; border-radius:10px;">
+                                                            </div>
+                                                        </div>
+                                                        <div class = "col-sm-6">
+                                                            <div class = "caption">
+                                                                <p>'.$row['namesize'].'</p>
+                                                            </div>
+    <div class="remove-btn">
+    <a  href="#" class="remove-btn"><i class="fa-solid fa-xmark" style="font-size:25px;"></i></a> 
+    </div>
+                                                                
+                                                        </div>
+                                                        <div class = "col-sm-2">
+                                                        <div class = "price">
+                                                        <p><span class="price-display" data-id="'.$row['cart_id'].'">₱'.$row['price'].'</span></p>
+                                                        <input type="hidden" class="price" name="price" data-id="'.$row['cart_id'].'" value="'.$row['price'].'">
+                                                            <div class = "quantity1">
+                                                            <select class="quantity" name="quantity" data-id="'.$row['cart_id'].'">';
+                                                            for ($i = 1; $i <= 10; $i++) {
+                                                                echo '<option value="'.$i.'">'.$i.'</option>';
+                                                            }
+                                                            echo '</select>
+
+                                                            </div>
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>';
+                                            }
+                                            } else {
+
+                                            echo '<p style="text-align:center; margin-top:50px;">Please Login to Continue</p> ';
+                                            }
+                                            ?>
+
+                            </div>
+                            </form>
+                                  
+                    </div>
+                </div> 
             </div>
             <!-- ENDING OF My Bag -->
         </div>
@@ -164,4 +270,21 @@ if (isset($_GET['logout'])) {
       searchResults.style.display = 'none';
     }
   });
+</script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+    $('.quantity').on('change', function() {
+        var id = $(this).data('id'); // get the id
+        var quantity = $(this).val(); // get the quantity
+        var price = $('.price[data-id="'+id+'"]').val(); // get the price
+
+        // calculate the new price
+        var newPrice = quantity * price;
+
+        // update the price in the div
+        $('.price-display[data-id="'+id+'"]').text('₱ ' + newPrice);
+    });
+});
 </script>
