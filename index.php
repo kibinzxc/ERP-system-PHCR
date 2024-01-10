@@ -150,10 +150,16 @@ if (isset($_GET['logout'])) {
                             <h3 style="margin-top:35px;margin-left:10px; color:#404040;">My Bag</h3><br><br>
                         </div>
                         <div class="col-sm-12">
-                            <form method="post">
-                                <h6 style="margin-left:10px;"> Delivery Address</h6>
-                                <input style="font-weight:bold; color:#333; margin-left:10px;" type="text" value="<?php echo $userAddress; ?>" <?php if (!$loggedIn) echo 'disabled'; ?>><br><br>
+                            
+                                <button id="deliveryBtn" class="active">Delivery Address</button>
+                                <button id="counterBtn">Over the Counter</button>
+                                
                         </div>
+                        <div id="deliveryContent" style="display: block;">
+                        <form method="post">
+                        <div class = "col-sm-12">
+                        <input style="font-weight:bold; color:#333; margin-left:10px;" type="text" value="<?php echo $userAddress; ?>" <?php if (!$loggedIn) echo 'disabled'; ?>><br><br>
+                        </div>                  
                         <div class="col-sm-12 cart"
                             style="margin:0 0 -25px 0; padding:0; height:45vh; overflow-y: scroll; overflow:auto; ">
 
@@ -253,8 +259,12 @@ if (isset($_GET['logout'])) {
                         <div class = "col-sm-12" style="padding:0 20px 0 20px; margin-top:20px;">
                             <input type="submit" value="Checkout" class="checkout" name="checkout">
                         </div>
+                        </div>
                         </form>
-
+                        
+                        <div id="counterContent" style="display: none;">
+                        <!-- Your over the counter content here -->
+                        </div>   
                     </div>
                 </div>
             </div>
@@ -306,6 +316,8 @@ $(document).ready(function () {
 });
 
     </script>
+
+
 
 </body>
 
@@ -362,3 +374,22 @@ $(document).ready(function () {
 </script>
 
 
+
+
+<script>
+    // Get references to the buttons and sections
+document.getElementById('deliveryBtn').addEventListener('click', function() {
+    document.getElementById('deliveryContent').style.display = 'block';
+    document.getElementById('counterContent').style.display = 'none';
+    document.getElementById('deliveryBtn').classList.add('active');
+    document.getElementById('counterBtn').classList.remove('active');
+});
+
+document.getElementById('counterBtn').addEventListener('click', function() {
+    document.getElementById('deliveryContent').style.display = 'none';
+    document.getElementById('counterContent').style.display = 'block';
+    document.getElementById('counterBtn').classList.add('active');
+    document.getElementById('deliveryBtn').classList.remove('active');
+});
+
+</script>
