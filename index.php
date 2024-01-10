@@ -5,32 +5,32 @@ session_start();
 
 // Check if user is logged in
 if (isset($_SESSION['uid'])) {
-$loggedIn = true;
+    $loggedIn = true;
     $currentUserId = $_SESSION['uid'];
-// Database connection details
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "ph_db";
+    // Database connection details
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "ph_db";
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
+    // Create connection
+    $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Retrieve the current user's ID from the session
-$currentUserId = $_SESSION['uid'];
+    // Retrieve the current user's ID from the session
+    $currentUserId = $_SESSION['uid'];
 
-$sql = "SELECT address FROM users WHERE uid = $currentUserId"; // Replace 'users' with your table name
-$result = $conn->query($sql);
+    $sql = "SELECT address FROM users WHERE uid = $currentUserId"; // Replace 'users' with your table name
+    $result = $conn->query($sql);
 
-if ($result->num_rows > 0) {
-    $row = $result->fetch_assoc();
-    $userAddress = $row['address']; // Store the user's address in a variable
-    $currentUserId = $currentUserId;
-} else {
-    $userAddress = "House No, Street, City, Province"; // Set a default value if no address is found
-}
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $userAddress = $row['address']; // Store the user's address in a variable
+        $currentUserId = $currentUserId;
+    } else {
+        $userAddress = "House No, Street, City, Province"; // Set a default value if no address is found
+    }
 
-$conn->close();
+    $conn->close();
 } else {
     $currentUserId = 01; // or any default value
     $loggedIn = false;
@@ -40,7 +40,7 @@ $conn->close();
 
 if (isset($_GET['logout'])) {
     if (isset($_SESSION['uid'])) {
-        
+
         session_destroy();
         unset($_SESSION['uid']);
     }
@@ -64,13 +64,16 @@ if (isset($_GET['logout'])) {
     <script src="src/bootstrap/js/bootstrap.min.js"></script>
     <script src="src/bootstrap/js/bootstrap.js"></script>
     <script src="https://kit.fontawesome.com/0d118bca32.js" crossorigin="anonymous"></script>
-    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 
 <body>
+
     <div class="container-fluid">
-        <div class = "row row-flex"> <!-- Add the row-flex class -->
-            <div class = "col-sm-1 custom-width"> <!-- Add the custom-width class -->
+        <div class="row row-flex">
+            <!-- Add the row-flex class -->
+            <div class="col-sm-1 custom-width">
+                <!-- Add the custom-width class -->
                 <div class="sidebar">
                     <a href="index.php" class="item1">
                         <img class="logo" src="src\assets\img\pizzahut-logo.png" alt="Pizza Hut Logo">
@@ -96,16 +99,16 @@ if (isset($_GET['logout'])) {
                         <span>Rewards</span>
                     </a>
                     <!-- Toggle Login/Logout link -->
-                    <?php if ($loggedIn) : ?>
+                    <?php if ($loggedIn): ?>
                         <a href="src\pages\index\profile.php" class="item">
-                        <i class="fa-solid fa-user"></i>
+                            <i class="fa-solid fa-user"></i>
                             <span>Profile</span>
                         </a>
                         <a href="index.php?logout=1" class="item">
                             <i class="fa-solid fa-right-from-bracket"></i>
                             <span>Logout</span>
                         </a>
-                    <?php else : ?><br><br>
+                    <?php else: ?><br><br>
                         <a href="login.php" class="item-login">
                             <i class="fa-solid fa-user"></i>
                             <span>Login</span>
@@ -115,18 +118,18 @@ if (isset($_GET['logout'])) {
                 </div>
             </div>
             <!-- BEGINNING OF BODY -->
-            <div class = "col-sm-9" style="background: white;">
-                <div class = "container">
-                    <div class = "row">
-                        <div class = "col-sm-11">
+            <div class="col-sm-9" style="background: white;">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-11">
                             <div class="search-container">
                                 <input type="text1" id="searchInput" placeholder="What would you like to eat?">
                                 <ul id="searchResults"></ul>
                             </div>
                         </div>
-                        <div class = "col-sm-1">
-                            <div class = "notification-container">
-                                <a href="#" >
+                        <div class="col-sm-1">
+                            <div class="notification-container">
+                                <a href="#">
                                     <i class="fas fa-bell notification-icon"></i>
                                 </a>
                             </div>
@@ -139,34 +142,36 @@ if (isset($_GET['logout'])) {
             <!-- ENDING OF BODY -->
 
             <!-- BEGINNING OF My Bag-->
-            <div class = "col-sm-2" style="background-color: #efefef;"> <!-- Add the fill-remaining class -->
-                <div class = "container" style="margin:0;padding:0;">
-                    <div class = "row">
-                        <div class = "col-sm-12">
+            <div class="col-sm-2" style="background-color: #efefef;">
+                <!-- Add the fill-remaining class -->
+                <div class="container" style="margin:0;padding:0;">
+                    <div class="row">
+                        <div class="col-sm-12">
                             <h3 style="margin-top:35px;margin-left:10px; color:#404040;">My Bag</h3><br><br>
                         </div>
-                        <div class = "col-sm-12">
+                        <div class="col-sm-12">
                             <form method="post">
                                 <h6 style="margin-left:10px;"> Delivery Address</h6>
-                                <input style="font-weight:bold; color:#333; margin-left:10px;" type="text" value="<?php echo $userAddress; ?>"><br><br>
+                                <input style="font-weight:bold; color:#333; margin-left:10px;" type="text" value="<?php echo $userAddress; ?>" <?php if (!$loggedIn) echo 'disabled'; ?>><br><br>
                         </div>
-                            <div class = "col-sm-12 cart" style = "margin:0 0 -25px 0; padding:0; height:50vh; overflow-y: scroll; overflow:auto; ">
+                        <div class="col-sm-12 cart"
+                            style="margin:0 0 -25px 0; padding:0; height:45vh; overflow-y: scroll; overflow:auto; ">
 
-                                        <?php
-                                            $db = new mysqli('localhost', 'root', '', 'ph_db');
-                                            $sql = "SELECT * FROM cart WHERE uid = $currentUserId";
-                                            $result = $db->query($sql);
-                                            $result1 = $db->query($sql);
-                                            $newrow = mysqli_fetch_array($result1);
-                                            if ($result->num_rows > 0) {
-                                                $cart = array();
-                                            // Display events
-                                            while ($row = $result->fetch_assoc()) {
-                                                $cart[] = $row;
-                                            }
-                                            $cart = array_reverse($cart);
-                                            foreach ($cart as $row) {
-                                            echo'
+                            <?php
+                            $db = new mysqli('localhost', 'root', '', 'ph_db');
+                            $sql = "SELECT * FROM cart WHERE uid = $currentUserId";
+                            $result = $db->query($sql);
+                            $result1 = $db->query($sql);
+                            $newrow = mysqli_fetch_array($result1);
+                            if ($result->num_rows > 0) {
+                                $cart = array();
+                                // Display events
+                                while ($row = $result->fetch_assoc()) {
+                                    $cart[] = $row;
+                                }
+                                $cart = array_reverse($cart);
+                                foreach ($cart as $row) {
+                                    echo '
                                             <div class = "box" style = "padding: 10px;border-radius:10px; margin: 10px 10px 10px 5px; position:relative; margin-left:10px;">
                                                 <div class = "container" style="margin:0; padding:0;">
                                                     <div class ="row">
@@ -177,23 +182,22 @@ if (isset($_GET['logout'])) {
                                                         </div>
                                                         <div class = "col-sm-6">
                                                             <div class = "caption">
-                                                                <p>'.$row['namesize'].'</p>
+                                                                <p>' . $row['namesize'] . '</p>
                                                             </div>
-    <div class="remove-btn">
-    <a  href="#" class="remove-btn"><i class="fa-solid fa-xmark" style="font-size:25px;"></i></a> 
-    </div>
-                                                                
+                                                            <div class="remove-btn">
+                                                                <a  href="#" class="remove-btn"><i class="fa-solid fa-xmark" style="font-size:25px;"></i></a> 
+                                                            </div>    
                                                         </div>
                                                         <div class = "col-sm-2">
-                                                        <div class = "price">
-                                                        <p><span class="price-display" data-id="'.$row['cart_id'].'">₱'.$row['price'].'</span></p>
-                                                        <input type="hidden" class="price" name="price" data-id="'.$row['cart_id'].'" value="'.$row['price'].'">
+                                                            <div class = "price">
+                                                                <p><span class="price-display" data-id="' . $row['cart_id'] . '">₱' . $row['price'] . '</span></p>
+                                                                <input type="hidden" class="price" name="price" data-id="' . $row['cart_id'] . '" value="' . $row['price'] . '">
                                                             <div class = "quantity1">
-                                                            <select class="quantity" name="quantity" data-id="'.$row['cart_id'].'">';
-                                                            for ($i = 1; $i <= 10; $i++) {
-                                                                echo '<option value="'.$i.'">'.$i.'</option>';
-                                                            }
-                                                            echo '</select>
+                                                            <select class="quantity" name="quantity" data-id="' . $row['cart_id'] . '">';
+                                    for ($i = 1; $i <= 10; $i++) {
+                                        echo '<option value="' . $i . '">' . $i . '</option>';
+                                    }
+                                    echo '</select>
 
                                                             </div>
                                                         </div>
@@ -202,89 +206,159 @@ if (isset($_GET['logout'])) {
                                                 </div>
 
                                             </div>';
-                                            }
-                                            } else {
+                                }
+                            } else {
 
-                                            echo '<p style="text-align:center; margin-top:50px;">Please Login to Continue</p> ';
-                                            }
-                                            ?>
-
+                                echo '<p style="text-align:center; margin-top:50px;">Please Login to Continue</p> ';
+                            }
+                            ?>
+                           
+                        </div>
+                        <div class = "col-sm-12" style="margin: 30px 0 0 0;">
+                            <div class = "linebreak" style="margin:0 15px 0 5px;">
+                                <hr style="height:2px;">
                             </div>
-                            </form>
-                                  
+                        </div>
+                        <div class = "col-sm-12">
+                            <div class = "container">
+                                <div class = "row">
+                                    <div class = "col-sm-6" style="padding:0; margin:0;">
+                                    <p style="font-weight:550">Sub Total</p>
+                                    <p style="font-weight:550">Delivery Fee</p>
+                                    </div>
+                                     <div class = "col-sm-6" style = "padding:0; margin:0;">
+                                        <p id="subtotal" style="margin-left: 30px; font-weight:bold;">₱ 0</p>
+                                        <p style = "margin-left:30px; font-weight:bold;">₱ 70.00</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class = "col-sm-12">
+                            <div class = "linebreak" style="margin:0 15px 0 5px;">
+                                <hr style="height:2px;">
+                            </div>
+                        </div>
+                       <div class = "col-sm-12">
+                            <div class = "container">
+                                <div class = "row">
+                                    <div class = "col-sm-6" style="padding:0; margin:0;">
+                                    <p style="font-weight:550">Total</p>
+                                    </div>
+                                     <div class = "col-sm-6" style = "padding:0; margin:0;">
+                                        <p id="total_amount" style = "margin-left:30px; font-weight:bold;">₱ 0</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class = "col-sm-12" style="padding:0 20px 0 20px; margin-top:20px;">
+                            <input type="submit" value="Checkout" class="checkout" name="checkout">
+                        </div>
+                        </form>
+
                     </div>
-                </div> 
+                </div>
             </div>
             <!-- ENDING OF My Bag -->
         </div>
     </div>
+ <script>
+$(document).ready(function () {
+    // Function to update subtotal
+    function updateSubtotal() {
+        var subtotal = 0;
+
+        // Iterate through each item in the cart
+        $('.box').each(function () {
+            var quantity = parseInt($(this).find('.quantity').val()); // Parse quantity to integer
+            var price = parseFloat($(this).find('.price').text().replace('₱', '').trim()); // Parse and extract price
+
+            subtotal += quantity * price;
+        });
+
+        $('#subtotal').text('₱ ' + subtotal.toFixed(2)); // Display subtotal with two decimal places
+
+        updateTotalAmount(subtotal); // Call function to update total amount
+    }
+
+    // Function to update total amount
+    function updateTotalAmount(subtotal) {
+        var deliveryFee = 70; // Fixed delivery fee
+        var totalAmount = subtotal + deliveryFee; // Calculate total amount
+
+        $('#total_amount').text('₱ ' + totalAmount.toFixed(2)); // Display total amount with two decimal places
+    }
+
+    // Event listener for quantity change
+    $('.quantity').on('change', function () {
+        var id = $(this).data('id');
+        var quantity = parseInt($(this).val());
+        var price = parseFloat($('.price[data-id="' + id + '"]').val());
+
+        var newPrice = quantity * price;
+
+        $('.price-display[data-id="' + id + '"]').text('₱' + newPrice.toFixed(0));
+
+        updateSubtotal();
+    });
+
+    // Initial update of subtotal when the page loads
+    updateSubtotal();
+});
+
+    </script>
+
 </body>
 
 </html>
 
 <script>
-  const searchInput = document.getElementById('searchInput');
-  const searchResults = document.getElementById('searchResults');
+    const searchInput = document.getElementById('searchInput');
+    const searchResults = document.getElementById('searchResults');
 
-  // Dummy data for demonstration
-  const data = [
-    'Mag aaral',
-    'Mag cocode',
-    'Mag fofoodtrip',
-    'Mag dadasal',
-    'Mag kakalat',
-    'Mag ooverthink',
-    'Mag wawalwal'
-    // Add more data as needed
-  ];
+    // Dummy data for demonstration
+    const data = [
+        'Mag aaral',
+        'Mag cocode',
+        'Mag fofoodtrip',
+        'Mag dadasal',
+        'Mag kakalat',
+        'Mag ooverthink',
+        'Mag wawalwal'
+        // Add more data as needed
+    ];
 
-  searchInput.addEventListener('input', function() {
-    const inputValue = this.value.toLowerCase();
-    const filteredData = data.filter(item => item.toLowerCase().includes(inputValue));
-    displayResults(filteredData);
-  });
-
-  function displayResults(results) {
-    searchResults.innerHTML = '';
-    if (results.length === 0) {
-      searchResults.style.display = 'none';
-      return;
-    }
-
-    results.forEach(result => {
-      const li = document.createElement('li');
-      li.textContent = result;
-      li.addEventListener('click', function() {
-        searchInput.value = result;
-        searchResults.style.display = 'none';
-      });
-      searchResults.appendChild(li);
+    searchInput.addEventListener('input', function () {
+        const inputValue = this.value.toLowerCase();
+        const filteredData = data.filter(item => item.toLowerCase().includes(inputValue));
+        displayResults(filteredData);
     });
 
-    searchResults.style.display = 'block';
-  }
+    function displayResults(results) {
+        searchResults.innerHTML = '';
+        if (results.length === 0) {
+            searchResults.style.display = 'none';
+            return;
+        }
 
-  // Hide results on outside click
-  document.addEventListener('click', function(e) {
-    if (!searchResults.contains(e.target) && e.target !== searchInput) {
-      searchResults.style.display = 'none';
+        results.forEach(result => {
+            const li = document.createElement('li');
+            li.textContent = result;
+            li.addEventListener('click', function () {
+                searchInput.value = result;
+                searchResults.style.display = 'none';
+            });
+            searchResults.appendChild(li);
+        });
+
+        searchResults.style.display = 'block';
     }
-  });
-</script>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script>
-$(document).ready(function(){
-    $('.quantity').on('change', function() {
-        var id = $(this).data('id'); // get the id
-        var quantity = $(this).val(); // get the quantity
-        var price = $('.price[data-id="'+id+'"]').val(); // get the price
-
-        // calculate the new price
-        var newPrice = quantity * price;
-
-        // update the price in the div
-        $('.price-display[data-id="'+id+'"]').text('₱ ' + newPrice);
+    // Hide results on outside click
+    document.addEventListener('click', function (e) {
+        if (!searchResults.contains(e.target) && e.target !== searchInput) {
+            searchResults.style.display = 'none';
+        }
     });
-});
 </script>
+
+

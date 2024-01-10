@@ -151,7 +151,7 @@ input[type="text"] {
     padding: 10px 30px 10px 0;
     /* Adjust padding to accommodate the icon */
     width: 100%;
-    height:50px;
+    height: 50px;
     box-sizing: border-box;
     border: none;
     border-radius: 4px;
@@ -199,7 +199,7 @@ li:hover {
 
 input[type="text"]:focus {
     background-color: white;
-   border: 1px solid #ccc;
+    border: 1px solid #ccc;
 }
 
 input[type="text1"]:focus {
@@ -248,6 +248,7 @@ input[type="text1"]:focus {
         font-size: 0.99em;
     }
 }
+
 .cart {
     scrollbar-width: thin;
     scrollbar-color: #ff9999 #333;
@@ -259,8 +260,7 @@ input[type="text1"]:focus {
     width: 7px;
 }
 
-.cart::-webkit-scrollbar-track {
-}
+.cart::-webkit-scrollbar-track {}
 
 .cart::-webkit-scrollbar-thumb {
     background-color: gray;
@@ -269,14 +269,15 @@ input[type="text1"]:focus {
     /* Matte black: #333 */
 }
 
-.image{
-width: 100%;
+.image {
+    width: 100%;
 
 }
-.caption{
-margin-left:35px;
-font-weight: 500;
-color:#333;
+
+.caption {
+    margin-left: 35px;
+    font-weight: 500;
+    color: #333;
 }
 
 
@@ -285,23 +286,25 @@ textarea {
     box-sizing: border-box;
     border: none;
     outline: none;
-    font-weight:600;
+    font-weight: 600;
     background-repeat: no-repeat;
-    resize: none; /* Add this line */
-    width: 100%; /* Add this line */
+    resize: none;
+    /* Add this line */
+    width: 100%;
+    /* Add this line */
     background: none;
-    height:auto;
+    height: auto;
 }
 
-.price p{
-font-weight: bold;
-font-size:1.2rem;
-margin-left:-5px;
+.price p {
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-left: -5px;
 }
 
-.quantity1{
-margin-top:-5px;
-margin-left:-8px;
+.quantity1 {
+    margin-top: -5px;
+    margin-left: -8px;
 }
 
 .box {
@@ -311,18 +314,19 @@ margin-left:-8px;
 .remove-btn {
     position: absolute;
     display: none;
-top:25px;
-right:5px;
-font-size:3px;
-border:none;
-outline: none;
-text-decoration: none;
-color:gray;
+    top: 25px;
+    right: 5px;
+    font-size: 3px;
+    border: none;
+    outline: none;
+    text-decoration: none;
+    color: gray;
 }
 
 .remove-btn:hover {
-color:#a12c12;
+    color: #a12c12;
 }
+
 .box:hover {
     background-color: white;
     border-radius: 5px;
@@ -334,4 +338,20 @@ color:#a12c12;
 }
 
 
+.checkout {
+    text-decoration: none;
+    height: 5vh;
+    padding: 10px;
+    font-size: 1.2rem;
+    font-weight:550;
+    color: white;
+    width: 100%;
+    border-radius: 5px;
+    border: none;
+    background-color: #C23415;
+    margin: 0 0 30px 0;
+}
 
+.checkout:hover {
+    background-color: #a12c12;
+}
