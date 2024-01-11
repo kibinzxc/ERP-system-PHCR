@@ -226,3 +226,30 @@ input[type="text"]:focus {
         font-size: 0.99em;
     }
 }
+
+.notification-container a[disabled] {
+    /* Define styles for the disabled state */
+    color: gray;
+    /* Adjust the color to your preference */
+    cursor: not-allowed;
+    pointer-events: none;
+    /* Optionally, you can add additional styles for the disabled state */
+    /* For example, you might want to change the background color or opacity */
+    opacity: 0.7;
+}
+
+/* Add any other styles you need for the notification button in its normal state */
+.notification-container a {
+    /* Define styles for the normal state */
+    color: #333;
+    /* Adjust the color to your preference */
+    text-decoration: none;
+    /* Add any other styles you need for the normal state */
+}
+
+/* Add hover styles if desired */
+.notification-container a:hover {
+    /* Define styles for the hover state */
+    text-decoration: underline;
+    /* Add any other styles you need for the hover state */
+}

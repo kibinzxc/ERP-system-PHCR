@@ -105,6 +105,7 @@
 
 .col-sm-2 {
     flex-grow: 1;
+
 }
 
 .col-sm-9 {
@@ -147,6 +148,21 @@ body::-webkit-scrollbar-thumb {
 }
 
 input[type="text"] {
+    padding: 10px 30px 10px 0;
+    /* Adjust padding to accommodate the icon */
+    width: 100%;
+    height: 50px;
+    box-sizing: border-box;
+    border: none;
+    border-radius: 4px;
+    font-size: 1.35rem;
+    outline: none;
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-color: #efefef;
+}
+
+input[type="text1"] {
     padding: 10px 30px 10px 10px;
     /* Adjust padding to accommodate the icon */
     width: 100%;
@@ -183,6 +199,12 @@ li:hover {
 
 input[type="text"]:focus {
     background-color: white;
+    border: 1px solid #ccc;
+}
+
+input[type="text1"]:focus {
+    background-color: white;
+
 }
 
 /* End of Search Bar */
@@ -225,4 +247,164 @@ input[type="text"]:focus {
     .sidebar .item-last i {
         font-size: 0.99em;
     }
+}
+
+.cart {
+    scrollbar-width: thin;
+    scrollbar-color: #ff9999 #333;
+    /* Matte red: #ff9999, Matte black: #333 */
+}
+
+/* WebKit (Chrome, Safari) and Blink (Opera) */
+.cart::-webkit-scrollbar {
+    width: 7px;
+}
+
+.cart::-webkit-scrollbar-track {}
+
+.cart::-webkit-scrollbar-thumb {
+    background-color: gray;
+    /* Matte red: #ff9999 */
+    border-radius: 10px;
+    /* Matte black: #333 */
+}
+
+.image {
+    width: 100%;
+
+}
+
+.caption {
+    margin-left: 35px;
+    font-weight: 500;
+    color: #333;
+}
+
+
+textarea {
+    /* Adjust padding to accommodate the icon */
+    box-sizing: border-box;
+    border: none;
+    outline: none;
+    font-weight: 600;
+    background-repeat: no-repeat;
+    resize: none;
+    /* Add this line */
+    width: 100%;
+    /* Add this line */
+    background: none;
+    height: auto;
+}
+
+.price p {
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-left: -5px;
+}
+
+.quantity1 {
+    margin-top: -5px;
+    margin-left: -8px;
+}
+
+.box {
+    position: relative;
+}
+
+.remove-btn {
+    position: absolute;
+    display: none;
+    top: 25px;
+    right: 5px;
+    font-size: 3px;
+    border: none;
+    outline: none;
+    text-decoration: none;
+    color: gray;
+}
+
+.remove-btn:hover {
+    color: #a12c12;
+}
+
+.box:hover {
+    background-color: white;
+    border-radius: 5px;
+}
+
+.box:hover .remove-btn {
+    display: block;
+
+}
+
+
+.checkout {
+    text-decoration: none;
+    height: 5vh;
+    padding: 10px;
+    font-size: 1.2rem;
+    font-weight: 550;
+    color: white;
+    width: 100%;
+    border-radius: 5px;
+    border: none;
+    background-color: #C23415;
+    margin: 0 0 30px 0;
+}
+
+.checkout:hover {
+    background-color: #a12c12;
+}
+
+button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 5px 10px;
+    font-size: 16px;
+}
+
+button.active {
+    color: black;
+    /* Default color for active button */
+}
+
+button:not(.active) {
+    color: gray;
+    /* Color for inactive button */
+}
+
+/* Add this CSS to style the disabled button */
+.checkout:disabled {
+    background-color: #ccc;
+    /* You can change the color to fit your design */
+    cursor: not-allowed;
+}
+
+/* Add this CSS to your existing styles or create a new CSS file */
+.notification-container a[disabled] {
+    /* Define styles for the disabled state */
+    color: gray;
+    /* Adjust the color to your preference */
+    cursor: not-allowed;
+    pointer-events: none;
+    /* Optionally, you can add additional styles for the disabled state */
+    /* For example, you might want to change the background color or opacity */
+    opacity: 0.7;
+}
+
+/* Add any other styles you need for the notification button in its normal state */
+.notification-container a {
+    /* Define styles for the normal state */
+    color: #333;
+    /* Adjust the color to your preference */
+    text-decoration: none;
+    /* Add any other styles you need for the normal state */
+}
+
+/* Add hover styles if desired */
+.notification-container a:hover {
+    /* Define styles for the hover state */
+    text-decoration: underline;
+    /* Add any other styles you need for the hover state */
 }
