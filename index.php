@@ -32,7 +32,7 @@ if (isset($_SESSION['uid'])) {
 
     $conn->close();
 } else {
-    $currentUserId = 01; // or any default value
+    $currentUserId = 123; // or any default value
     $loggedIn = false;
     $userAddress = "";
 }
@@ -129,7 +129,8 @@ if (isset($_GET['logout'])) {
                         </div>
                         <div class="col-sm-1">
                             <div class="notification-container">
-                                <a href="#">
+                                <a href="#" <?php if (!$loggedIn)
+                                    echo 'disabled'; ?>>
                                     <i class="fas fa-bell notification-icon"></i>
                                 </a>
                             </div>
@@ -149,35 +150,38 @@ if (isset($_GET['logout'])) {
                         <div class="col-sm-12">
                             <h3 style="margin-top:35px;margin-left:10px; color:#404040;">My Bag</h3><br><br>
                         </div>
-                        <div class="col-sm-12">
-                            
-                                <button id="deliveryBtn" class="active">Delivery Address</button>
-                                <button id="counterBtn">Over the Counter</button>
-                                
-                        </div>
-                        <div id="deliveryContent" style="display: block;">
-                        <form method="post">
-                        <div class = "col-sm-12">
-                        <input style="font-weight:bold; color:#333; margin-left:10px;" type="text" value="<?php echo $userAddress; ?>" <?php if (!$loggedIn) echo 'disabled'; ?>><br><br>
-                        </div>                  
-                        <div class="col-sm-12 cart"
-                            style="margin:0 0 -25px 0; padding:0; height:45vh; overflow-y: scroll; overflow:auto; ">
 
-                            <?php
-                            $db = new mysqli('localhost', 'root', '', 'ph_db');
-                            $sql = "SELECT * FROM cart WHERE uid = $currentUserId";
-                            $result = $db->query($sql);
-                            $result1 = $db->query($sql);
-                            $newrow = mysqli_fetch_array($result1);
-                            if ($result->num_rows > 0) {
-                                $cart = array();
-                                // Display events
-                                while ($row = $result->fetch_assoc()) {
-                                    $cart[] = $row;
-                                }
-                                $cart = array_reverse($cart);
-                                foreach ($cart as $row) {
-                                    echo '
+                        <?php if ($currentUserId !== '1'): ?>
+                            <div class="col-sm-12">
+                                <button id="counterBtn" style="font-weight:550; cursor:auto;" class="active"
+                                    disabled>Delivery Address</button>
+                            </div>
+                            <div id="deliveryContent" style="display: block;">
+                                <form method="post">
+                                    <div class="col-sm-12">
+                                        <input style="font-weight:bold; color:#333; margin-left:10px;" type="text"
+                                            value="<?php echo $userAddress; ?>" <?php if (!$loggedIn)
+                                                   echo 'disabled'; ?>><br><br>
+                                    </div>
+                                    <div class="col-sm-12 cart"
+                                        style="margin:0 0 -25px 0; padding:0; height:45vh; overflow-y: scroll; overflow:auto; ">
+
+                                        <?php
+                                        $db = new mysqli('localhost', 'root', '', 'ph_db');
+                                        if ($loggedIn) {
+                                            $sql = "SELECT * FROM cart WHERE uid = $currentUserId";
+                                            $result = $db->query($sql);
+                                            $result1 = $db->query($sql);
+                                            $newrow = mysqli_fetch_array($result1);
+                                            if ($result->num_rows > 0) {
+                                                $cart = array();
+                                                // Display events
+                                                while ($row = $result->fetch_assoc()) {
+                                                    $cart[] = $row;
+                                                }
+                                                $cart = array_reverse($cart);
+                                                foreach ($cart as $row) {
+                                                    echo '
                                             <div class = "box" style = "padding: 10px;border-radius:10px; margin: 10px 10px 10px 5px; position:relative; margin-left:10px;">
                                                 <div class = "container" style="margin:0; padding:0;">
                                                     <div class ="row">
@@ -200,10 +204,10 @@ if (isset($_GET['logout'])) {
                                                                 <input type="hidden" class="price" name="price" data-id="' . $row['cart_id'] . '" value="' . $row['price'] . '">
                                                             <div class = "quantity1">
                                                             <select class="quantity" name="quantity" data-id="' . $row['cart_id'] . '">';
-                                    for ($i = 1; $i <= 10; $i++) {
-                                        echo '<option value="' . $i . '">' . $i . '</option>';
-                                    }
-                                    echo '</select>
+                                                    for ($i = 1; $i <= 10; $i++) {
+                                                        echo '<option value="' . $i . '">' . $i . '</option>';
+                                                    }
+                                                    echo '</select>
 
                                                             </div>
                                                         </div>
@@ -212,111 +216,209 @@ if (isset($_GET['logout'])) {
                                                 </div>
 
                                             </div>';
-                                }
-                            } else {
+                                                }
+                                            } else {
 
-                                echo '<p style="text-align:center; margin-top:50px;">Please Login to Continue</p> ';
-                            }
-                            ?>
-                           
-                        </div>
-                        <div class = "col-sm-12" style="margin: 30px 0 0 0;">
-                            <div class = "linebreak" style="margin:0 15px 0 5px;">
-                                <hr style="height:2px;">
-                            </div>
-                        </div>
-                        <div class = "col-sm-12">
-                            <div class = "container">
-                                <div class = "row">
-                                    <div class = "col-sm-6" style="padding:0; margin:0;">
-                                    <p style="font-weight:550">Sub Total</p>
-                                    <p style="font-weight:550">Delivery Fee</p>
+                                                echo '<p style="text-align:center; margin-top:50px;">Add Items to your Bag</p> ';
+                                            }
+                                        } else {
+                                            echo '<p style="text-align:center; margin-top:50px;">Please Login to Continue</p> ';
+                                        }
+                                        ?>
+
                                     </div>
-                                     <div class = "col-sm-6" style = "padding:0; margin:0;">
-                                        <p id="subtotal" style="margin-left: 30px; font-weight:bold;">₱ 0</p>
-                                        <p style = "margin-left:30px; font-weight:bold;">₱ 70.00</p>
+                                    <div class="col-sm-12" style="margin: 30px 0 0 0;">
+                                        <div class="linebreak" style="margin:0 15px 0 5px;">
+                                            <hr style="height:2px;">
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class = "col-sm-12">
-                            <div class = "linebreak" style="margin:0 15px 0 5px;">
-                                <hr style="height:2px;">
-                            </div>
-                        </div>
-                       <div class = "col-sm-12">
-                            <div class = "container">
-                                <div class = "row">
-                                    <div class = "col-sm-6" style="padding:0; margin:0;">
-                                    <p style="font-weight:550">Total</p>
+                                    <div class="col-sm-12">
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-sm-6" style="padding:0; margin:0;">
+                                                    <p style="font-weight:550">Sub Total</p>
+                                                    <p style="font-weight:550">Delivery Fee</p>
+                                                </div>
+                                                <div class="col-sm-6" style="padding:0; margin:0;">
+                                                    <p id="subtotal" style="margin-left: 30px; font-weight:bold;"></p>
+                                                    <p id="delivery_fee" style="margin-left:30px; font-weight:bold;"></p>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                     <div class = "col-sm-6" style = "padding:0; margin:0;">
-                                        <p id="total_amount" style = "margin-left:30px; font-weight:bold;">₱ 0</p>
+                                    <div class="col-sm-12">
+                                        <div class="linebreak" style="margin:0 15px 0 5px;">
+                                            <hr style="height:2px;">
+                                        </div>
                                     </div>
-                                </div>
+                                    <div class="col-sm-12">
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-sm-6" style="padding:0; margin:0;">
+                                                    <p style="font-weight:550">Total</p>
+                                                </div>
+                                                <div class="col-sm-6" style="padding:0; margin:0;">
+                                                    <p id="total_amount" style="margin-left:30px; font-weight:bold;"></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12" style="padding:0 20px 0 20px; margin-top:20px;">
+                                        <input type="submit" value="Checkout" class="checkout" name="checkout" <?php if (!$loggedIn)
+                                            echo 'disabled'; ?>>
+                                    </div>
                             </div>
+                            </form>
+                        <?php else: ?>
+                            <div class="col-sm-12">
+                                <button id="deliveryBtn" class="active" style="font-weight:550">Over the Counter</button>
+                            </div>
+                            <div id="counterContent" style="display: block;">
+                                <form method="post">
+                                    <div class="col-sm-12"><br>
+                                    </div>
+                                    <div class="col-sm-12 cart"
+                                        style="margin:0 0 -25px 0; padding:0; height:61.8vh; overflow-y: scroll; overflow:auto; ">
+
+                                        <?php
+                                        $db = new mysqli('localhost', 'root', '', 'ph_db');
+                                        if ($loggedIn) {
+                                            $sql3 = "SELECT * FROM cart WHERE uid = $currentUserId";
+                                            $result3 = $db->query($sql3);
+                                            $newrow3 = mysqli_fetch_array($result);
+                                            if ($result3->num_rows > 0) {
+                                                $cart3 = array();
+                                                // Display events
+                                                while ($row3 = $result3->fetch_assoc()) {
+                                                    $cart3[] = $row3;
+                                                }
+                                                $cart3 = array_reverse($cart3);
+                                                foreach ($cart3 as $row3) {
+                                                    echo '
+                                            <div class = "box" style = "padding: 10px;border-radius:10px; margin: 10px 10px 10px 5px; position:relative; margin-left:10px;">
+                                                <div class = "container" style="margin:0; padding:0;">
+                                                    <div class ="row">
+                                                        <div class = "col-sm-3">
+                                                            <div class = "image" style="height:100%; width:100%">
+                                                                <img src="src/assets/img/menu/' . $row3['img'] . '" alt="notif pic" style="width:100%; max-width:100%; min-width:100px; height:auto; overflow:hidden; border-radius:10px;">
+                                                            </div>
+                                                        </div>
+                                                        <div class = "col-sm-6">
+                                                            <div class = "caption">
+                                                                <p>' . $row3['namesize'] . '</p>
+                                                            </div>
+                                                            <div class="remove-btn">
+                                                                <a  href="#" class="remove-btn"><i class="fa-solid fa-xmark" style="font-size:25px;"></i></a> 
+                                                            </div>    
+                                                        </div>
+                                                        <div class = "col-sm-2">
+                                                            <div class = "price">
+                                                                <p><span class="price-display" data-id="' . $row3['cart_id'] . '">₱' . $row3['price'] . '</span></p>
+                                                                <input type="hidden" class="price" name="price" data-id="' . $row3['cart_id'] . '" value="' . $row3['price'] . '">
+                                                            <div class = "quantity1">
+                                                            <select class="quantity" name="quantity" data-id="' . $row3['cart_id'] . '">';
+                                                    for ($i = 1; $i <= 10; $i++) {
+                                                        echo '<option value="' . $i . '">' . $i . '</option>';
+                                                    }
+                                                    echo '</select>
+
+                                                            </div>
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>';
+                                                }
+                                            } else {
+
+                                                echo '<p style="text-align:center; margin-top:100px;">Add items to your bag</p> ';
+                                            }
+                                        } else {
+                                            echo '<p style="text-align:center; margin-top:100px;">Please Login to Continue</p> ';
+                                        }
+
+                                        ?>
+
+                                    </div>
+                                    <div class="col-sm-12" style="margin: 30px 0 0 0;">
+                                        <div class="linebreak" style="margin:0 15px 0 5px;">
+                                            <hr style="height:2px;">
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-sm-12">
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-sm-6" style="padding:0; margin:0;">
+                                                    <p style="font-weight:550">Total</p>
+                                                </div>
+                                                <div class="col-sm-6" style="padding:0; margin:0;">
+                                                    <p id="total_amount1" style="margin-left:30px; font-weight:bold;">₱ 0
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12" style="padding:0 20px 0 20px; margin-top:20px;">
+                                        <input type="submit" value="Checkout" class="checkout" name="checkout">
+                                    </div>
+                            </div>
+                            </form>
+
                         </div>
-                        <div class = "col-sm-12" style="padding:0 20px 0 20px; margin-top:20px;">
-                            <input type="submit" value="Checkout" class="checkout" name="checkout">
-                        </div>
-                        </div>
-                        </form>
-                        
-                        <div id="counterContent" style="display: none;">
-                        <!-- Your over the counter content here -->
-                        </div>   
-                    </div>
+                    <?php endif; ?>
                 </div>
             </div>
-            <!-- ENDING OF My Bag -->
         </div>
+        <!-- ENDING OF My Bag -->
     </div>
- <script>
-$(document).ready(function () {
-    // Function to update subtotal
-    function updateSubtotal() {
-        var subtotal = 0;
+    </div>
+    <script>
+        $(document).ready(function () {
+            // Function to calculate and update subtotal
+            function updateSubtotal(cartId) {
+                var subtotal = 0;
+                $('.price-display').each(function () {
+                    var currentCartId = $(this).data('id');
+                    var quantity = parseInt($(`select[data-id="${currentCartId}"]`).val());
+                    var price = parseFloat($(`.price[data-id="${currentCartId}"]`).val());
+                    var newPrice = quantity * price;
+                    $(this).text('₱' + newPrice.toFixed(0));
+                    subtotal += newPrice;
+                });
 
-        // Iterate through each item in the cart
-        $('.box').each(function () {
-            var quantity = parseInt($(this).find('.quantity').val()); // Parse quantity to integer
-            var price = parseFloat($(this).find('.price').text().replace('₱', '').trim()); // Parse and extract price
+                var deliveryFee = 50; // Change this to your actual delivery fee
+                var total = subtotal + deliveryFee;
 
-            subtotal += quantity * price;
+                $('#subtotal').text('₱' + subtotal.toFixed(0));
+                $('#delivery_fee').text('₱' + deliveryFee.toFixed(0));
+                $('#total_amount').text('₱' + total.toFixed(0));
+
+                // For cart3
+                $('#total_amount1').text('₱' + subtotal.toFixed(0));
+            }
+
+            // Event listener for quantity change
+            $('.quantity').change(function () {
+                var cartId = $(this).data('id');
+                updateSubtotal(cartId);
+            });
+
+            // Initial update of subtotal, delivery fee, and total amount
+            $('.quantity').each(function () {
+                var cartId = $(this).data('id');
+                var quantity = parseInt($(this).val());
+                var price = parseFloat($('.price[data-id="' + cartId + '"]').val());
+                var newPrice = quantity * price;
+                $('.price-display[data-id="' + cartId + '"]').text('₱' + newPrice.toFixed(0));
+                updateSubtotal(cartId);
+            });
         });
 
-        $('#subtotal').text('₱ ' + subtotal.toFixed(2)); // Display subtotal with two decimal places
-
-        updateTotalAmount(subtotal); // Call function to update total amount
-    }
-
-    // Function to update total amount
-    function updateTotalAmount(subtotal) {
-        var deliveryFee = 70; // Fixed delivery fee
-        var totalAmount = subtotal + deliveryFee; // Calculate total amount
-
-        $('#total_amount').text('₱ ' + totalAmount.toFixed(2)); // Display total amount with two decimal places
-    }
-
-    // Event listener for quantity change
-    $('.quantity').on('change', function () {
-        var id = $(this).data('id');
-        var quantity = parseInt($(this).val());
-        var price = parseFloat($('.price[data-id="' + id + '"]').val());
-
-        var newPrice = quantity * price;
-
-        $('.price-display[data-id="' + id + '"]').text('₱' + newPrice.toFixed(0));
-
-        updateSubtotal();
-    });
-
-    // Initial update of subtotal when the page loads
-    updateSubtotal();
-});
 
     </script>
-
 
 
 </body>
@@ -371,25 +473,4 @@ $(document).ready(function () {
             searchResults.style.display = 'none';
         }
     });
-</script>
-
-
-
-
-<script>
-    // Get references to the buttons and sections
-document.getElementById('deliveryBtn').addEventListener('click', function() {
-    document.getElementById('deliveryContent').style.display = 'block';
-    document.getElementById('counterContent').style.display = 'none';
-    document.getElementById('deliveryBtn').classList.add('active');
-    document.getElementById('counterBtn').classList.remove('active');
-});
-
-document.getElementById('counterBtn').addEventListener('click', function() {
-    document.getElementById('deliveryContent').style.display = 'none';
-    document.getElementById('counterContent').style.display = 'block';
-    document.getElementById('counterBtn').classList.add('active');
-    document.getElementById('deliveryBtn').classList.remove('active');
-});
-
 </script>

@@ -343,7 +343,7 @@ textarea {
     height: 5vh;
     padding: 10px;
     font-size: 1.2rem;
-    font-weight:550;
+    font-weight: 550;
     color: white;
     width: 100%;
     border-radius: 5px;
@@ -357,17 +357,54 @@ textarea {
 }
 
 button {
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 5px 10px;
-  font-size: 16px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 5px 10px;
+    font-size: 16px;
 }
 
 button.active {
-  color: black; /* Default color for active button */
+    color: black;
+    /* Default color for active button */
 }
 
 button:not(.active) {
-  color: gray; /* Color for inactive button */
+    color: gray;
+    /* Color for inactive button */
+}
+
+/* Add this CSS to style the disabled button */
+.checkout:disabled {
+    background-color: #ccc;
+    /* You can change the color to fit your design */
+    cursor: not-allowed;
+}
+
+/* Add this CSS to your existing styles or create a new CSS file */
+.notification-container a[disabled] {
+    /* Define styles for the disabled state */
+    color: gray;
+    /* Adjust the color to your preference */
+    cursor: not-allowed;
+    pointer-events: none;
+    /* Optionally, you can add additional styles for the disabled state */
+    /* For example, you might want to change the background color or opacity */
+    opacity: 0.7;
+}
+
+/* Add any other styles you need for the notification button in its normal state */
+.notification-container a {
+    /* Define styles for the normal state */
+    color: #333;
+    /* Adjust the color to your preference */
+    text-decoration: none;
+    /* Add any other styles you need for the normal state */
+}
+
+/* Add hover styles if desired */
+.notification-container a:hover {
+    /* Define styles for the hover state */
+    text-decoration: underline;
+    /* Add any other styles you need for the hover state */
 }
