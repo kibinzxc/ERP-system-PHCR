@@ -2,8 +2,6 @@
 session_start();
 
 // Check if user is logged in
-
-// Check if user is logged in
 if (isset($_SESSION['uid'])) {
     $loggedIn = true;
     $currentUserId = $_SESSION['uid'];
