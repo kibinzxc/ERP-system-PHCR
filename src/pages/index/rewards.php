@@ -151,7 +151,7 @@ if (isset($_GET['logout'])) {
                             <h3 style="margin-top:35px;margin-left:10px; color:#404040;">My Bag</h3><br><br>
                         </div>
 
-                        <?php if ($currentUserId !== '1'): ?>
+                        <?php if ($currentUserId !== '1001'): ?>
                             <div class="col-sm-12">
                                 <button id="counterBtn" style="font-weight:550; cursor:auto;" class="active"
                                     disabled>Delivery Address</button>
@@ -271,7 +271,7 @@ if (isset($_GET['logout'])) {
                             </form>
                         <?php else: ?>
                             <div class="col-sm-12">
-                                <button id="deliveryBtn" class="active" style="font-weight:550">Over the Counter</button>
+                                <button id="deliveryBtn" class="active" style="font-weight:550; cursor:auto;" disabled>Over the Counter</button>
                             </div>
                             <div id="counterContent" style="display: block;">
                                 <form method="post">
@@ -300,7 +300,7 @@ if (isset($_GET['logout'])) {
                                                     <div class ="row">
                                                         <div class = "col-sm-3">
                                                             <div class = "image" style="height:100%; width:100%">
-                                                                <img src="src/assets/img/menu/' . $row3['img'] . '" alt="notif pic" style="width:100%; max-width:100%; min-width:100px; height:auto; overflow:hidden; border-radius:10px;">
+                                                                <img src="../../../src/assets/img/menu/' . $row3['img'] . '" alt="notif pic" style="width:100%; max-width:100%; min-width:100px; height:auto; overflow:hidden; border-radius:10px;">
                                                             </div>
                                                         </div>
                                                         <div class = "col-sm-6">
