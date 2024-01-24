@@ -69,10 +69,10 @@ if (isset($_GET['logout'])) {
 
 <body>
 
-    <div class="container-fluid">
+    <div class="container-fluid" style="overflow:hidden;">
         <div class = "row row-flex"> <!-- Add the row-flex class -->
-            <div class = "col-sm-1 custom-width"> <!-- Add the custom-width class -->
-                <div class="sidebar">
+            <div class = "col-sm-1 custom-width" style="height:100vh;"> <!-- Add the custom-width class -->
+                <div class="sidebar" style="height:100vh;">
                     <a href="../../../index.php" class="item1">
                         <img class="logo" src="../../assets/img/pizzahut-logo.png" alt="Pizza Hut Logo">
                     </a>
@@ -84,9 +84,13 @@ if (isset($_GET['logout'])) {
                     <i class="fa-solid fa-utensils"></i>
                         <span>Menu</span>
                     </a>
-                    <a href="order.php" class="item-last">
+                    <a href="order.php" class="item">
                     <i class="fa-solid fa-receipt"></i>
                         <span>Order</span>
+                    </a>
+                    <a href="promo.php" class="item-last">
+                    <i class="fa-solid fa-envelope"></i>
+                        <span>Messages</span>
                     </a>
                     
                     <!-- Toggle Login/Logout link -->
@@ -112,25 +116,57 @@ if (isset($_GET['logout'])) {
             <div class="col-sm-9" style="background: white;">
                 <div class="container">
                     <div class="row">
-                        <div class="col-sm-11" style="padding:0; margin:0">
+                        <div class="col-sm-12" style="padding:0; margin:0">
                             <div class="search-container" style="margin-left:0; margin-right:0;">
                                 <input type="text1" id="searchInput" placeholder="Looking for something delicious?">
                                 <ul id="searchResults"></ul>
-                            </div>
-                        </div>
-                        <div class="col-sm-1" style="margin:0; padding:0;">
-                            <div class="notification-container">
-                                <a href="#" <?php if (!$loggedIn)
-                                    echo 'disabled'; ?>>
-                                    <i class="fas fa-bell notification-icon"></i>
-                                </a>
                             </div>
                         </div>
                         <div class = "col-sm-12" style="padding:0; height:100%; overflow:hidden; border-radius:15px!important; margin-top:20px; width:100%;">
                             <img class="banner" src="../../assets/img/ph_banner2.png" alt="Banner" style="width:100%; max-width:100%; min-width:100px; height:auto; overflow:hidden;">
                         </div>
                         <div class = "col-sm-12" style="padding:0; margin:0; margin-top:50px;">
-                            <div class = "menu-buttons" style="background:pink; height:50px;">
+                            <div class = "container" style="padding:0;">
+                                <div class = "row" style="padding:0px 15px 0 12px;">
+                                    <div class = "col-sm-3" style="text-align:center; border-bottom:5px solid red; margin-bottom:-20px;padding-bottom:20px;">
+                                        <a href="promo.php" class="menu-item active">
+                                            <span>All</span>
+                                        </a>
+                                    </div>
+                                    <div class = "col-sm-3" style="text-align:center;">
+                                        <a href="menu.php" class="menu-item">
+                                            <span>Pizza</span>
+                                        </a>
+                                    </div>
+                                    <div class = "col-sm-3" style="text-align:center;">
+                                        <a href="order.php" class="menu-item">
+                                            <span>Pasta</span>
+                                        </a>
+                                    </div>
+                                    <div class = "col-sm-3" style="text-align:center;">
+                                        <a href="order.php" class="menu-item">
+                                            <span>Beverages</span>
+                                        </a>    
+                                    </div>
+                                </div>
+                            </div>
+                            <hr style="">
+                        </div>
+                        <div class="col-sm-12" style="overflow-y: auto;">
+                           <div class="flex-container">
+                                <div class="flex-item">This is item item item</div>
+                                <div class="flex-item">This is item item item</div>
+                                <div class="flex-item">This is item item item</div>
+                                <div class="flex-item">This is item item item</div>
+                                <div class="flex-item">This is item item item</div>
+                                <div class="flex-item">This is item item item</div>                                <div class="flex-item">This is item item item</div>
+
+                                <div class="flex-item">This is item item item</div>                                <div class="flex-item">This is item item item</div>
+                                <div class="flex-item">This is item item item</div>
+                                <div class="flex-item">This is item item item</div>                                <div class="flex-item">This is item item item</div>
+                                <div class="flex-item">This is item item item</div>
+                                <div class="flex-item">This is item item item</div>
+                                <!-- Add more items as needed -->
                             </div>
                         </div>
                     </div>
@@ -141,7 +177,7 @@ if (isset($_GET['logout'])) {
             <!-- ENDING OF BODY -->
 
             <!-- BEGINNING OF My Bag-->
-            <div class="col-sm-2" style="background-color: #efefef;">
+            <div class="col-sm-2" style="background-color: #efefef;" >
                 <!-- Add the fill-remaining class -->
                 <div class="container" style="margin:0;padding:0;">
                     <div class="row">

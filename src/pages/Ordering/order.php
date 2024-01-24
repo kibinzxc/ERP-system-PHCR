@@ -82,9 +82,13 @@ if (isset($_GET['logout'])) {
                     <i class="fa-solid fa-utensils"></i>
                         <span>Menu</span>
                     </a>
-                    <a href="order.php" class="item-last active">
+                    <a href="order.php" class="item active">
                     <i class="fa-solid fa-receipt"></i>
                         <span>Order</span>
+                    </a>
+                    <a href="promo.php" class="item-last">
+                        <i class="fa-solid fa-envelope"></i>
+                        <span>Notification</span>
                     </a>
                     <!-- Toggle Login/Logout link -->
                     <?php if ($loggedIn) : ?>
