@@ -32,7 +32,7 @@
     align-items: center;
     justify-content: center;
     padding: 20px;
-    margin: 15px 5px 160px 5px;
+    margin: 15px 5px 380px 5px;
     /* top | right | bottom | left */
 }
 
@@ -62,6 +62,13 @@
 }
 
 .sidebar .item.active {
+    background: #ddd;
+    border-right: 5px solid red;
+    margin-left: -2px;
+    margin-right: -2px;
+}
+
+.sidebar .item-last.active {
     background: #ddd;
     border-right: 5px solid red;
     margin-left: -2px;
@@ -204,7 +211,7 @@ input[type="text"]:focus {
 
 @media (max-width: 1800px) {
     .sidebar .item-last {
-        margin: 15px 5px 90px 5px;
+        margin: 15px 5px 280px 5px;
     }
 
     .sidebar .item-login {
@@ -214,7 +221,7 @@ input[type="text"]:focus {
 
 @media (max-width: 1700px) {
     .sidebar .item-last {
-        margin: 15px 5px 10px 5px;
+        margin: 15px 5px 200px 5px;
         font-size: 0.99em;
     }
 

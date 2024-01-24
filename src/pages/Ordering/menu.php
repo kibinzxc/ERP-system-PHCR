@@ -84,18 +84,11 @@ if (isset($_GET['logout'])) {
                     <i class="fa-solid fa-utensils"></i>
                         <span>Menu</span>
                     </a>
-                    <a href="order.php" class="item">
+                    <a href="order.php" class="item-last">
                     <i class="fa-solid fa-receipt"></i>
                         <span>Order</span>
                     </a>
-                    <a href="promo.php" class="item">
-                    <i class="fa-solid fa-ticket"></i>
-                        <span>Promo</span>
-                    </a>
-                    <a href="rewards.php" class="item-last">
-                    <i class="fa-solid fa-trophy"></i>
-                        <span>Rewards</span>
-                    </a>
+                    
                     <!-- Toggle Login/Logout link -->
                     <?php if ($loggedIn) : ?>
                         <a href="profile.php" class="item">
@@ -119,18 +112,25 @@ if (isset($_GET['logout'])) {
             <div class="col-sm-9" style="background: white;">
                 <div class="container">
                     <div class="row">
-                        <div class="col-sm-11">
-                            <div class="search-container">
+                        <div class="col-sm-11" style="padding:0; margin:0">
+                            <div class="search-container" style="margin-left:0; margin-right:0;">
                                 <input type="text1" id="searchInput" placeholder="Looking for something delicious?">
                                 <ul id="searchResults"></ul>
                             </div>
                         </div>
-                        <div class="col-sm-1">
+                        <div class="col-sm-1" style="margin:0; padding:0;">
                             <div class="notification-container">
                                 <a href="#" <?php if (!$loggedIn)
                                     echo 'disabled'; ?>>
                                     <i class="fas fa-bell notification-icon"></i>
                                 </a>
+                            </div>
+                        </div>
+                        <div class = "col-sm-12" style="padding:0; height:100%; overflow:hidden; border-radius:15px!important; margin-top:20px; width:100%;">
+                            <img class="banner" src="../../assets/img/ph_banner2.png" alt="Banner" style="width:100%; max-width:100%; min-width:100px; height:auto; overflow:hidden;">
+                        </div>
+                        <div class = "col-sm-12" style="padding:0; margin:0; margin-top:50px;">
+                            <div class = "menu-buttons" style="background:pink; height:50px;">
                             </div>
                         </div>
                     </div>
