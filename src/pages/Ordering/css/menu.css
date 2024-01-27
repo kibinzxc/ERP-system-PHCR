@@ -366,9 +366,8 @@ textarea {
 .edit-btn:hover {
     color: #a12c12;
 }
-.box:hover .edit-btn {
+.quantity1:hover .edit-btn {
     display: block;
-
 }
 
 .checkout {

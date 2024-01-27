@@ -343,12 +343,15 @@ if (isset($_POST['checkout'])) {
                                                                 <a  href="#" class="remove-btn"><i class="fa-solid fa-xmark" style="font-size:25px;"></i></a> 
                                                             </div>    
                                                         </div>
-                                                        <div class = "col-sm-2">
+                                                        <div class = "col-sm-2 bottom-footer">
                                                             <div class = "price">
                                                                 <p><span class="price-display" data-id="' . $row['cart_id'] . '">₱' . $row['price'] . '</span></p>
                                                                 <input type="hidden" class="price" name="price" data-id="' . $row['cart_id'] . '" value="' . $row['price'] . '">
                                                             
                                                             <div class = "quantity1">
+                                                             <div class="edit-btn">
+                                                            <a  href="#" class="edit-btn"><i class="fa-solid fa-pencil"  style="font-size:20px;"></i></a> 
+                                                            </div>
                                                             <select class="quantity" name="quantity" data-id="' . $row['cart_id'] . '" disabled>';
                                                  $sizes = explode(',', $row['qty']);
 
