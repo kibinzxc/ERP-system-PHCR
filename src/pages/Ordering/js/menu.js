@@ -82,3 +82,4 @@ const searchInput = document.getElementById('searchInput');
             searchResults.style.display = 'none';
         }
     });
+

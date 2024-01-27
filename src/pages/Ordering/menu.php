@@ -46,8 +46,80 @@ if (isset($_GET['logout'])) {
     exit();
 }
 
+if (isset($_POST['addtobag'])) {
+    $dbz = new mysqli('localhost', 'root', '', 'ph_db');
+    $uid = $_SESSION['uid'];
+    $name = $_POST['name'];
+    $price = $_POST['price'];
+    $img = $_POST['img'];
+    $size1 = $_POST['size'];
+    $size = ''.$size1.'"';
+    $dish_id = $_POST['dish_id'];
+    $quantity = 1;  // default quantity
+    // Check if the dish_id already exists in the cart
+    $check_sql = "SELECT * FROM cart WHERE dish_id = '$dish_id' AND uid = '$uid'";
+    $result = mysqli_query($dbz, $check_sql);
+
+    if (mysqli_num_rows($result) > 0) {
+        // If the dish_id exists, update the quantity and multiply the price
+        $update_sql = "UPDATE cart SET qty = qty + $quantity, totalprice = totalprice + ($quantity * $price) WHERE dish_id = '$dish_id' AND uid = '$uid'";
+        mysqli_query($dbz, $update_sql);
+    } else {
+        // If the dish_id doesn't exist, insert a new row with the multiplied price
+        $total_price = $quantity * $price;
+        $insert_sql = "INSERT INTO cart (dish_id, uid, name, size, qty, price, img,totalprice) 
+                        VALUES ('$dish_id', '$uid', '$name', '$size', '$quantity', '$price', '$img','$total_price')";
+        mysqli_query($dbz, $insert_sql);
+    }
+}
+
+
+if (isset($_POST['checkout'])) {
+    $uid = $_SESSION['uid']; 
+
+    // Connect to the database
+    $db = new mysqli('localhost', 'root', '', 'ph_db');
+
+    // Check for a successful connection
+    if ($db->connect_error) {
+        die("Connection failed: " . $db->connect_error);
+    }
+
+    // Get the quantity from the form
+    $address = $_POST['address'];
+
+    // Retrieve data from the 'cart' table based on the current user's UID
+    $cartQuery = "SELECT * FROM cart WHERE uid = '$uid'";
+    $cartResult = $db->query($cartQuery);
+
+    // Check if the retrieval was successful
+    if ($cartResult) {
+        $name = array();
+        
+        while ($row = $cartResult->fetch_assoc()) {
+            $orderDetails = array($row['size'], $row['name'], $row['qty'], $row['totalprice']);
+            $names[] = $orderDetails;
+        }
+    
+
+        $details = json_encode($names);
+
+        $orderInsertQuery = "INSERT INTO `test` (uid, address, details) VALUES ('$uid', '$address', '$details')";
+        $db->query($orderInsertQuery);
+        
+
+        header("Location:order.php");
+        exit();
+    } else {
+        echo "Error retrieving data from cart: " . $db->error;
+    }
+
+    $db->close();
+}
 
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -70,44 +142,41 @@ if (isset($_GET['logout'])) {
 <body>
 
     <div class="container-fluid" style="overflow:hidden;">
-        <div class = "row row-flex"> <!-- Add the row-flex class -->
-            <div class = "col-sm-1 custom-width" style="height:100vh;"> <!-- Add the custom-width class -->
+        <div class="row row-flex">
+            <!-- Add the row-flex class -->
+            <div class="col-sm-1 custom-width" style="height:100vh;">
+                <!-- Add the custom-width class -->
                 <div class="sidebar" style="height:100vh;">
                     <a href="../../../index.php" class="item1">
                         <img class="logo" src="../../assets/img/pizzahut-logo.png" alt="Pizza Hut Logo">
                     </a>
-                    <a href="favorites.php" class="item">
-                        <i class="fa-regular fa-heart"></i>
-                        <span>Favorites</span>
-                    </a>
                     <a href="menu.php" class="item active">
-                    <i class="fa-solid fa-utensils"></i>
+                        <i class="fa-solid fa-utensils"></i>
                         <span>Menu</span>
                     </a>
-                    <a href="order.php" class="item">
-                    <i class="fa-solid fa-receipt"></i>
+                    <a href="order.php" class="item" id="orderLink">
+                        <i class="fa-solid fa-receipt"></i>
                         <span>Order</span>
                     </a>
-                    <a href="promo.php" class="item-last">
-                    <i class="fa-solid fa-envelope"></i>
+                    <a href="promo.php" class="item-last" id="messagesLink">
+                        <i class="fa-solid fa-envelope"></i>
                         <span>Messages</span>
                     </a>
-                    
                     <!-- Toggle Login/Logout link -->
                     <?php if ($loggedIn) : ?>
-                        <a href="profile.php" class="item">
+                    <a href="profile.php" class="item">
                         <i class="fa-solid fa-user"></i>
-                            <span>Profile</span>
-                        </a>
-                        <a href="favorites.php?logout=1" class="item">
-                            <i class="fa-solid fa-right-from-bracket"></i>
-                            <span>Logout</span>
-                        </a>
+                        <span>Profile</span>
+                    </a>
+                    <a href="favorites.php?logout=1" class="item">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>Logout</span>
+                    </a>
                     <?php else : ?><br><br>
-                        <a href="../../../login.php" class="item-login">
-                            <i class="fa-solid fa-user"></i>
-                            <span>Login</span>
-                        </a>
+                    <a href="../../../login.php" class="item-login">
+                        <i class="fa-solid fa-user"></i>
+                        <span>Login</span>
+                    </a>
                     <?php endif; ?>
 
                 </div>
@@ -116,56 +185,95 @@ if (isset($_GET['logout'])) {
             <div class="col-sm-9" style="background: white;">
                 <div class="container">
                     <div class="row">
-                        <div class="col-sm-12" style="padding:0; margin:0">
-                            <div class="search-container" style="margin-left:0; margin-right:0;">
-                                <input type="text1" id="searchInput" placeholder="Looking for something delicious?">
-                                <ul id="searchResults"></ul>
-                            </div>
+                        
+                        <div class="col-sm-12"
+                            style="padding:0; height:100%; overflow:hidden; border-radius:5px!important; margin-top:40px; width:100%;">
+                            <img class="banner" src="../../assets/img/ph_banner2.png" alt="Banner"
+                                style="width:100%; max-width:100%; min-width:100px; height:auto; overflow:hidden;">
                         </div>
-                        <div class = "col-sm-12" style="padding:0; height:100%; overflow:hidden; border-radius:15px!important; margin-top:20px; width:100%;">
-                            <img class="banner" src="../../assets/img/ph_banner2.png" alt="Banner" style="width:100%; max-width:100%; min-width:100px; height:auto; overflow:hidden;">
-                        </div>
-                        <div class = "col-sm-12" style="padding:0; margin:0; margin-top:50px;">
-                            <div class = "container" style="padding:0;">
-                                <div class = "row" style="padding:0px 15px 0 12px;">
-                                    <div class = "col-sm-3" style="text-align:center; border-bottom:5px solid red; margin-bottom:-20px;padding-bottom:20px;">
+                        <div class="col-sm-12" style="padding:0; margin:0; margin-top:30px;">
+                            <div class="container" style="padding:0;">
+                                <div class="row" style="padding:0px 15px 0 12px;">
+                                    <div class="col-sm-4"
+                                        style="text-align:center; border-bottom:5px solid red; margin-bottom:-20px;padding-bottom:20px;">
                                         <a href="promo.php" class="menu-item active">
-                                            <span>All</span>
-                                        </a>
-                                    </div>
-                                    <div class = "col-sm-3" style="text-align:center;">
-                                        <a href="menu.php" class="menu-item">
                                             <span>Pizza</span>
                                         </a>
                                     </div>
-                                    <div class = "col-sm-3" style="text-align:center;">
-                                        <a href="order.php" class="menu-item">
+                                    <div class="col-sm-4" style="text-align:center;">
+                                        <a href="menu.php" class="menu-item">
                                             <span>Pasta</span>
                                         </a>
                                     </div>
-                                    <div class = "col-sm-3" style="text-align:center;">
+                                    <div class="col-sm-4" style="text-align:center;">
                                         <a href="order.php" class="menu-item">
                                             <span>Beverages</span>
-                                        </a>    
+                                        </a>
                                     </div>
                                 </div>
                             </div>
                             <hr style="">
                         </div>
-                        <div class="col-sm-12" style="overflow-y: auto;">
-                           <div class="flex-container">
-                                <div class="flex-item">This is item item item</div>
-                                <div class="flex-item">This is item item item</div>
-                                <div class="flex-item">This is item item item</div>
-                                <div class="flex-item">This is item item item</div>
-                                <div class="flex-item">This is item item item</div>
-                                <div class="flex-item">This is item item item</div>                                <div class="flex-item">This is item item item</div>
+                        <div class="col-sm-12 scroll" style="overflow-y: auto; height: 50vh; margin:0; padding:0;">
 
-                                <div class="flex-item">This is item item item</div>                                <div class="flex-item">This is item item item</div>
-                                <div class="flex-item">This is item item item</div>
-                                <div class="flex-item">This is item item item</div>                                <div class="flex-item">This is item item item</div>
-                                <div class="flex-item">This is item item item</div>
-                                <div class="flex-item">This is item item item</div>
+                            <div class="flex-container">
+
+                                <?php
+                $db = new mysqli('localhost', 'root', '', 'ph_db');
+                $sql = 'SELECT * FROM dishes ORDER BY dish_id desc';
+                $result = $db->query($sql);
+                $result1 = $db->query($sql);
+                $newrow = mysqli_fetch_array($result1);
+
+
+                if ($result->num_rows > 0) {
+                    $appointment = array();
+
+
+                    while ($row = $result->fetch_assoc()) {
+
+                        echo '
+                <form method="post" action="">
+                <div class="flex-item" style="border-radius:5px;">
+                    <div class="head-card" style = " width:300px;  border-radius:5px;">
+                        <div class="header-img">
+                        <img src="../../assets/img/menu/' . $row['img'] . '" alt="notif pic" style="width:100%; max-width:100%; min-width:50px;min-height:50px; height:auto;">
+                        </div>
+                        <div class="body-card" style="padding:10px 20px 10px 20px; text-align:justify; background:#D9D9D9; height:13vh;">
+                            <input type="hidden" id="hiddenField" name="name" value="' . $row['name'] . '">
+                            <input type="hidden" id="hiddenField" name="dish_id" value="' . $row['dish_id'] . '">
+                            <input type="hidden" id="hiddenField" name="price" value="' . $row['price'] . '">
+                            <input type="hidden" id="hiddenField" name="img" value="' . $row['img'] . '">
+                            <h5 style="font-weight:700;">' . $row['name'] . '</h5>
+                            <p style="font-size:12px; color:black; overflow: hidden; margin-top:10px;">' . $row['slogan'] . '</p>
+                    </div>
+                        <div class="footer-card" style="padding:10px 20px 10px 20px; text-align:center; background:#D9D9D9;">
+                             <select class="size" name="size" style="width:100%; text-align:center;"">';
+ // Split the 'size' data into an array
+        $sizes = explode(',', $row['size']);
+
+        // Iterate over the 'size' data and create an option for each size
+        foreach ($sizes as $size) {
+            echo '<option value="' . $size . '">' . ucfirst($size) . '</option>';
+        }
+
+        echo '
+                            </select>
+                        <input type="submit" class="addtobag" id="confirmation" value="Add to Bag - ₱' . $row['price'] . '" name="addtobag">
+                            
+                </div>  
+                </div>
+                </div>
+</form>
+                ';
+                    }
+                } else {
+
+                    echo '<p style="text-align:center; margin-top:50px;">No Pizza Available Yet</p> ';
+                }
+                ?>
+
+
                                 <!-- Add more items as needed -->
                             </div>
                         </div>
@@ -177,7 +285,7 @@ if (isset($_GET['logout'])) {
             <!-- ENDING OF BODY -->
 
             <!-- BEGINNING OF My Bag-->
-            <div class="col-sm-2" style="background-color: #efefef;" >
+            <div class="col-sm-2" style="background-color: #efefef;">
                 <!-- Add the fill-remaining class -->
                 <div class="container" style="margin:0;padding:0;">
                     <div class="row">
@@ -186,21 +294,21 @@ if (isset($_GET['logout'])) {
                         </div>
 
                         <?php if ($currentUserId !== '1001'): ?>
+                        <form method="post" action="">
                             <div class="col-sm-12">
                                 <button id="counterBtn" style="font-weight:550; cursor:auto;" class="active"
                                     disabled>Delivery Address</button>
                             </div>
                             <div id="deliveryContent" style="display: block;">
-                                <form method="post">
-                                    <div class="col-sm-12">
-                                        <input style="font-weight:bold; color:#333; margin-left:10px;" type="text"
-                                            value="<?php echo $userAddress; ?>" <?php if (!$loggedIn)
-                                                   echo 'disabled'; ?>><br><br>
-                                    </div>
-                                    <div class="col-sm-12 cart"
-                                        style="margin:0 0 -25px 0; padding:0; height:45vh; overflow-y: scroll; overflow:auto; ">
 
-                                        <?php
+                                <div class="col-sm-12">
+                                    <input style="font-weight:bold; color:#333; margin-left:10px;" type="text" name="address" 
+                                    value="<?php echo $userAddress; ?>" <?php if (!$loggedIn) echo 'disabled'; else echo 'readonly'; ?>><br><br>
+                                </div>
+                                <div class="col-sm-12 cart"
+                                    style="margin:0 0 -25px 0; padding:0; height:45vh; overflow-y: scroll; overflow:auto; ">
+
+                                    <?php
                                         $db = new mysqli('localhost', 'root', '', 'ph_db');
                                         if ($loggedIn) {
                                             $sql = "SELECT * FROM cart WHERE uid = $currentUserId";
@@ -226,7 +334,10 @@ if (isset($_GET['logout'])) {
                                                         </div>
                                                         <div class = "col-sm-6">
                                                             <div class = "caption">
-                                                                <p>' . $row['namesize'] . '</p>
+                                                                <p>' . $row['size'] . ' ' . $row['name'] . '</p>
+                                                            </div>
+                                                            <div class="edit-btn">
+                                                            <a  href="#" class="edit-btn"><i class="fa-solid fa-pencil"  style="font-size:20px;"></i></a> 
                                                             </div>
                                                             <div class="remove-btn">
                                                                 <a  href="#" class="remove-btn"><i class="fa-solid fa-xmark" style="font-size:25px;"></i></a> 
@@ -236,20 +347,25 @@ if (isset($_GET['logout'])) {
                                                             <div class = "price">
                                                                 <p><span class="price-display" data-id="' . $row['cart_id'] . '">₱' . $row['price'] . '</span></p>
                                                                 <input type="hidden" class="price" name="price" data-id="' . $row['cart_id'] . '" value="' . $row['price'] . '">
+                                                            
                                                             <div class = "quantity1">
-                                                            <select class="quantity" name="quantity" data-id="' . $row['cart_id'] . '">';
-                                                    for ($i = 1; $i <= 10; $i++) {
-                                                        echo '<option value="' . $i . '">' . $i . '</option>';
-                                                    }
-                                                    echo '</select>
+                                                            <select class="quantity" name="quantity" data-id="' . $row['cart_id'] . '" disabled>';
+                                                 $sizes = explode(',', $row['qty']);
 
+        // Iterate over the 'size' data and create an option for each size
+        foreach ($sizes as $size) {
+            echo '<option value="' . $size . '">' . ucfirst($size) . '</option>';
+        }
+                                                    echo '</select>
+                                                    
                                                             </div>
                                                         </div>
-                                                        </div>
+                                                       </div>
                                                     </div>
                                                 </div>
 
-                                            </div>';
+                                            </div>
+                                            ';
                                                 }
                                             } else {
 
@@ -260,61 +376,63 @@ if (isset($_GET['logout'])) {
                                         }
                                         ?>
 
+                                </div>
+                                <div class="col-sm-12" style="margin: 30px 0 0 0;">
+                                    <div class="linebreak" style="margin:0 15px 0 5px;">
+                                        <hr style="height:2px;">
                                     </div>
-                                    <div class="col-sm-12" style="margin: 30px 0 0 0;">
-                                        <div class="linebreak" style="margin:0 15px 0 5px;">
-                                            <hr style="height:2px;">
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-12">
-                                        <div class="container">
-                                            <div class="row">
-                                                <div class="col-sm-6" style="padding:0; margin:0;">
-                                                    <p style="font-weight:550">Sub Total</p>
-                                                    <p style="font-weight:550">Delivery Fee</p>
-                                                </div>
-                                                <div class="col-sm-6" style="padding:0; margin:0;">
-                                                    <p id="subtotal" style="margin-left: 30px; font-weight:bold;"></p>
-                                                    <p id="delivery_fee" style="margin-left:30px; font-weight:bold;"></p>
-                                                </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-sm-6" style="padding:0; margin:0;">
+                                                <p style="font-weight:550">Sub Total</p>
+                                                <p style="font-weight:550">Delivery Fee</p>
+                                            </div>
+                                            <div class="col-sm-6" style="padding:0; margin:0;">
+                                                <p id="subtotal" style="margin-left: 30px; font-weight:bold;"></p>
+                                                <p id="delivery_fee" style="margin-left:30px; font-weight:bold;"></p>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-12">
-                                        <div class="linebreak" style="margin:0 15px 0 5px;">
-                                            <hr style="height:2px;">
-                                        </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div class="linebreak" style="margin:0 15px 0 5px;">
+                                        <hr style="height:2px;">
                                     </div>
-                                    <div class="col-sm-12">
-                                        <div class="container">
-                                            <div class="row">
-                                                <div class="col-sm-6" style="padding:0; margin:0;">
-                                                    <p style="font-weight:550">Total</p>
-                                                </div>
-                                                <div class="col-sm-6" style="padding:0; margin:0;">
-                                                    <p id="total_amount" style="margin-left:30px; font-weight:bold;"></p>
-                                                </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-sm-6" style="padding:0; margin:0;">
+                                                <p style="font-weight:550">Total</p>
+                                            </div>
+                                            <div class="col-sm-6" style="padding:0; margin:0;">
+                                                <p id="total_amount" style="margin-left:30px; font-weight:bold;"></p>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-12" style="padding:0 20px 0 20px; margin-top:20px;">
-                                        <input type="submit" value="Checkout" class="checkout" name="checkout" <?php if (!$loggedIn)
+                                </div>
+                                <div class="col-sm-12" style="padding:0 20px 0 20px; margin-top:20px;">
+                                    <input type="submit" value="Checkout" class="checkout" name="checkout" <?php if (!$loggedIn)
                                             echo 'disabled'; ?>>
-                                    </div>
-                            </div>
-                            </form>
-                        <?php else: ?>
-                            <div class="col-sm-12">
-                                <button id="deliveryBtn" class="active" style="font-weight:550; cursor:auto;" disabled>Over the Counter</button>
-                            </div>
-                            <div id="counterContent" style="display: block;">
-                                <form method="post">
-                                    <div class="col-sm-12"><br>
-                                    </div>
-                                    <div class="col-sm-12 cart"
-                                        style="margin:0 0 -25px 0; padding:0; height:61.8vh; overflow-y: scroll; overflow:auto; ">
+                        </form>
+                    </div>
+                </div>
 
-                                        <?php
+                <?php else: ?>
+                <div class="col-sm-12">
+                    <button id="deliveryBtn" class="active" style="font-weight:550; cursor:auto;" disabled>Over the
+                        Counter</button>
+                </div>
+                <div id="counterContent" style="display: block;">
+                    <form method="post">
+                        <div class="col-sm-12"><br>
+                        </div>
+                        <div class="col-sm-12 cart"
+                            style="margin:0 0 -25px 0; padding:0; height:61.8vh; overflow-y: scroll; overflow:auto; ">
+
+                            <?php
                                         $db = new mysqli('localhost', 'root', '', 'ph_db');
                                         if ($loggedIn) {
                                             $sql3 = "SELECT * FROM cart WHERE uid = $currentUserId";
@@ -374,41 +492,50 @@ if (isset($_GET['logout'])) {
 
                                         ?>
 
-                                    </div>
-                                    <div class="col-sm-12" style="margin: 30px 0 0 0;">
-                                        <div class="linebreak" style="margin:0 15px 0 5px;">
-                                            <hr style="height:2px;">
-                                        </div>
-                                    </div>
-
-
-                                    <div class="col-sm-12">
-                                        <div class="container">
-                                            <div class="row">
-                                                <div class="col-sm-6" style="padding:0; margin:0;">
-                                                    <p style="font-weight:550">Total</p>
-                                                </div>
-                                                <div class="col-sm-6" style="padding:0; margin:0;">
-                                                    <p id="total_amount1" style="margin-left:30px; font-weight:bold;">₱ 0
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-12" style="padding:0 20px 0 20px; margin-top:20px;">
-                                        <input type="submit" value="Checkout" class="checkout" name="checkout">
-                                    </div>
-                            </div>
-                            </form>
-
                         </div>
-                    <?php endif; ?>
+                        <div class="col-sm-12" style="margin: 30px 0 0 0;">
+                            <div class="linebreak" style="margin:0 15px 0 5px;">
+                                <hr style="height:2px;">
+                            </div>
+                        </div>
+
+
+                        <div class="col-sm-12">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-sm-6" style="padding:0; margin:0;">
+                                        <p style="font-weight:550">Total</p>
+                                    </div>
+                                    <div class="col-sm-6" style="padding:0; margin:0;">
+                                        <p id="total_amount1" style="margin-left:30px; font-weight:bold;">₱ 0
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12" style="padding:0 20px 0 20px; margin-top:20px;">
+                            <input type="submit" value="Checkout" class="checkout" name="checkout">
+                    </form>
                 </div>
             </div>
+
+
         </div>
-        <!-- ENDING OF My Bag -->
+        <?php endif; ?>
     </div>
     </div>
+    </div>
+    <!-- ENDING OF My Bag -->
+    </div>
+    </div>
+
+
+<script>
+    <?php if (!$loggedIn) : ?>
+        document.getElementById('messagesLink').classList.add('disabled');
+        document.getElementById('orderLink').classList.add('disabled');
+    <?php endif; ?>
+</script>
 
 
 

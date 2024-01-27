@@ -31,7 +31,7 @@
     align-items: center;
     justify-content: center;
     padding: 20px;
-    margin: 15px 5px 250px 5px;
+    margin: 15px 5px 350px 5px;
     /* top | right | bottom | left */
 }
 
@@ -226,7 +226,7 @@ input[type="text1"]:focus {
 
 @media (max-width: 1800px) {
     .sidebar .item-last {
-        margin: 15px 5px 180px 5px;
+        margin: 15px 5px 280px 5px;
     }
 
     .sidebar .item-login {
@@ -236,7 +236,7 @@ input[type="text1"]:focus {
 
 @media (max-width: 1700px) {
     .sidebar .item-last {
-        margin: 15px 5px 100px 5px;
+        margin: 15px 5px 200px 5px;
         font-size: 0.99em;
     }
 
@@ -252,6 +252,19 @@ input[type="text1"]:focus {
     }
 }
 
+.scroll{
+ scrollbar-width: thin;
+    scrollbar-color: #ff9999 #333;
+}
+.scroll::-webkit-scrollbar {
+    width: 7px;
+}
+.scroll::-webkit-scrollbar-thumb {
+    background-color: gray;
+    /* Matte red: #ff9999 */
+    border-radius: 10px;
+    /* Matte black: #333 */
+}
 .cart {
     scrollbar-width: thin;
     scrollbar-color: #ff9999 #333;
@@ -339,7 +352,24 @@ textarea {
     display: block;
 
 }
+.edit-btn {
+    position: absolute;
+    display: none;
+    top: 26px;
+    right: 20px;
+    font-size: 3px;
+    border: none;
+    outline: none;
+    text-decoration: none;
+    color: gray;
+}
+.edit-btn:hover {
+    color: #a12c12;
+}
+.box:hover .edit-btn {
+    display: block;
 
+}
 
 .checkout {
     text-decoration: none;
@@ -424,13 +454,44 @@ button:not(.active) {
  .flex-container {
       display: flex;
       flex-wrap: wrap; /* Allow items to wrap to the next line */
-      justify-content:left; 
+      justify-content:center; 
+
+
     }
 
     .flex-item {
 
-        margin: 5px;
-      padding: 10px;
+        margin: 30px 30px 20px 30px;
       border: 1px solid #ccc;
       box-sizing: border-box;
     }
+
+.container-fluid {
+    overflow: hidden;
+}
+
+.addtobag {
+    text-decoration: none;
+    height: 3vh;
+    font-size: 1rem;
+    font-weight: 550;
+    color: white;
+    width: 100%;
+    border-radius: 5px;
+    border: none;
+    background-color: #C23415;
+    margin: 10px 0 0 0;
+}
+
+.addtobag:hover {
+    background-color: #a12c12;
+}
+
+#messagesLink.disabled {
+    pointer-events: none;
+    opacity: 0.5; /* Optional: You can adjust the opacity to visually indicate that the link is disabled */
+}
+#orderLink.disabled {
+    pointer-events: none;
+    opacity: 0.5; /* Optional: You can adjust the opacity to visually indicate that the link is disabled */
+}

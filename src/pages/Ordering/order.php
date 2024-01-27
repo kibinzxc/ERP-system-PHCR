@@ -112,10 +112,17 @@ if (isset($_GET['logout'])) {
             <div class = "col-sm-11">
                 <div class = "container" style="padding:0;">
                     <div class = "row">
-                        <div class = "col-sm-10">
+                        <div class = "col-sm-9">
                             <div class="search-container">
-                                <input type="text" id="searchInput" placeholder="Find your previous selections">
-                                <ul id="searchResults"></ul>
+                                
+                            </div>
+                        </div>
+                        <div class = "col-sm-1">
+                            <div class = "notification-container">
+                                <a href="#" <?php if (!$loggedIn)
+                                    echo 'disabled'; ?>>
+                                    <i class="fas fa-bell notification-icon"></i>
+                                </a>
                             </div>
                         </div>
                         <div class = "col-sm-1">
