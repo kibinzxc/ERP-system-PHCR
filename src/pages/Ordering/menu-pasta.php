@@ -186,7 +186,7 @@ if (isset($_POST['checkout'])) {
             <div class="col-sm-9" style="background: white;">
                 <div class="container">
                     <div class="row">
-                        
+
                         <div class="col-sm-12"
                             style="padding:0; height:100%; overflow:hidden; border-radius:5px!important; margin-top:40px; width:100%;">
                             <img class="banner" src="../../assets/img/ph_banner2.png" alt="Banner"
@@ -195,13 +195,13 @@ if (isset($_POST['checkout'])) {
                         <div class="col-sm-12" style="padding:0; margin:0; margin-top:30px;">
                             <div class="container" style="padding:0;">
                                 <div class="row" style="padding:0px 15px 0 12px;">
-                                    <div class="col-sm-4"
-                                        style="text-align:center; border-bottom:5px solid red; margin-bottom:-20px;padding-bottom:20px;">
-                                        <a href="menu.php" class="menu-item active">
+                                    <div class="col-sm-4" style="text-align:center;">
+                                        <a href="menu.php" class="menu-item">
                                             <span>Pizza</span>
                                         </a>
                                     </div>
-                                    <div class="col-sm-4" style="text-align:center;">
+                                    <div class="col-sm-4"
+                                        style="text-align:center; border-bottom:5px solid red; margin-bottom:-20px;padding-bottom:20px;">
                                         <a href="menu-pasta.php" class="menu-item">
                                             <span>Pasta</span>
                                         </a>
@@ -221,7 +221,7 @@ if (isset($_POST['checkout'])) {
 
                                 <?php
                 $db = new mysqli('localhost', 'root', '', 'ph_db');
-                $sql = "SELECT * FROM dishes where categoryID ='1' ORDER BY name desc ";
+                $sql = "SELECT * FROM dishes where categoryID ='2' ORDER BY name desc ";
                 $result = $db->query($sql);
                 $result1 = $db->query($sql);
                 $newrow = mysqli_fetch_array($result1);
@@ -304,8 +304,9 @@ if (isset($_POST['checkout'])) {
                             <div id="deliveryContent" style="display: block;">
 
                                 <div class="col-sm-12">
-                                    <input style="font-weight:bold; color:#333; margin-left:10px;" type="text" name="address" 
-                                    value="<?php echo $userAddress; ?>" <?php if (!$loggedIn) echo 'disabled'; else echo 'readonly'; ?>><br><br>
+                                    <input style="font-weight:bold; color:#333; margin-left:10px;" type="text"
+                                        name="address" value="<?php echo $userAddress; ?>"
+                                        <?php if (!$loggedIn) echo 'disabled'; else echo 'readonly'; ?>><br><br>
                                 </div>
                                 <div class="col-sm-12 cart"
                                     style="margin:0 0 -25px 0; padding:0; height:45vh; overflow-y: scroll; overflow:auto; ">
@@ -352,7 +353,7 @@ if (isset($_POST['checkout'])) {
                                                             
                                                             <div class = "quantity1">
                                                              <div class="edit-btn">
-                                                            <a  href="edit_item.php?edit_item='.$row['dish_id'].'" class="edit-btn"><i class="fa-solid fa-pencil"  style="font-size:20px;"></i></a> 
+                                                            <a  href="edit_item2.php?edit_item='.$row['dish_id'].'" class="edit-btn"><i class="fa-solid fa-pencil"  style="font-size:20px;"></i></a> 
                                                             </div>
                                                             <select class="quantity" name="quantity" data-id="' . $row['cart_id'] . '" disabled>';
                                                  $sizes = explode(',', $row['qty']);
@@ -535,12 +536,12 @@ if (isset($_POST['checkout'])) {
     </div>
 
 
-<script>
+    <script>
     <?php if (!$loggedIn) : ?>
-        document.getElementById('messagesLink').classList.add('disabled');
-        document.getElementById('orderLink').classList.add('disabled');
+    document.getElementById('messagesLink').classList.add('disabled');
+    document.getElementById('orderLink').classList.add('disabled');
     <?php endif; ?>
-</script>
+    </script>
 
 
 

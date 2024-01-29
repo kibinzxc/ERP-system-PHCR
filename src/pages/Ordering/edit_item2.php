@@ -1,6 +1,9 @@
 <?php
 session_start();
 
+$g = $_GET['edit_item'];
+ // Create connection
+
 // Check if user is logged in
 if (isset($_SESSION['uid'])) {
     $loggedIn = true;
@@ -53,7 +56,7 @@ if (isset($_POST['addtobag'])) {
     $price = $_POST['price'];
     $img = $_POST['img'];
     $size1 = $_POST['size'];
-    $size = ''.$size1.'';
+    $size = ''.$size1.'"';
     $dish_id = $_POST['dish_id'];
     $quantity = 1;  // default quantity
     // Check if the dish_id already exists in the cart
@@ -72,6 +75,23 @@ if (isset($_POST['addtobag'])) {
         mysqli_query($dbz, $insert_sql);
     }
 }
+
+if (isset($_POST["confirmation"])) {
+     $conn = new mysqli('localhost', 'root', '', 'ph_db');
+    $selectedQty = $_POST["qty"];
+    $dish_id = $_GET['edit_item'];
+  $updateQuery = "UPDATE cart SET qty = '$selectedQty' WHERE dish_id = '$dish_id'";
+    header("Location:redirect_back.php");
+    // Execute the update query
+    $result = mysqli_query($conn, $updateQuery);
+
+    // Check if the update was successful
+    if ($result) {
+        echo "Update successful!";
+    } else {
+        echo "Update failed: " . mysqli_error($conn);
+}}
+
 
 
 if (isset($_POST['checkout'])) {
@@ -186,7 +206,7 @@ if (isset($_POST['checkout'])) {
             <div class="col-sm-9" style="background: white;">
                 <div class="container">
                     <div class="row">
-                        
+
                         <div class="col-sm-12"
                             style="padding:0; height:100%; overflow:hidden; border-radius:5px!important; margin-top:40px; width:100%;">
                             <img class="banner" src="../../assets/img/ph_banner2.png" alt="Banner"
@@ -195,13 +215,14 @@ if (isset($_POST['checkout'])) {
                         <div class="col-sm-12" style="padding:0; margin:0; margin-top:30px;">
                             <div class="container" style="padding:0;">
                                 <div class="row" style="padding:0px 15px 0 12px;">
+
                                     <div class="col-sm-4"
-                                        style="text-align:center; border-bottom:5px solid red; margin-bottom:-20px;padding-bottom:20px;">
+                                        style="text-align:center;">
                                         <a href="menu.php" class="menu-item active">
                                             <span>Pizza</span>
                                         </a>
                                     </div>
-                                    <div class="col-sm-4" style="text-align:center;">
+                                    <div class="col-sm-4" style="text-align:center; border-bottom:5px solid red; margin-bottom:-20px;padding-bottom:20px;">
                                         <a href="menu-pasta.php" class="menu-item">
                                             <span>Pasta</span>
                                         </a>
@@ -221,7 +242,7 @@ if (isset($_POST['checkout'])) {
 
                                 <?php
                 $db = new mysqli('localhost', 'root', '', 'ph_db');
-                $sql = "SELECT * FROM dishes where categoryID ='1' ORDER BY name desc ";
+                $sql = "SELECT * FROM dishes where categoryID ='2' ORDER BY name desc ";
                 $result = $db->query($sql);
                 $result1 = $db->query($sql);
                 $newrow = mysqli_fetch_array($result1);
@@ -304,8 +325,9 @@ if (isset($_POST['checkout'])) {
                             <div id="deliveryContent" style="display: block;">
 
                                 <div class="col-sm-12">
-                                    <input style="font-weight:bold; color:#333; margin-left:10px;" type="text" name="address" 
-                                    value="<?php echo $userAddress; ?>" <?php if (!$loggedIn) echo 'disabled'; else echo 'readonly'; ?>><br><br>
+                                    <input style="font-weight:bold; color:#333; margin-left:10px;" type="text"
+                                        name="address" value="<?php echo $userAddress; ?>"
+                                        <?php if (!$loggedIn) echo 'disabled'; else echo 'readonly'; ?>><br><br>
                                 </div>
                                 <div class="col-sm-12 cart"
                                     style="margin:0 0 -25px 0; padding:0; height:45vh; overflow-y: scroll; overflow:auto; ">
@@ -352,7 +374,7 @@ if (isset($_POST['checkout'])) {
                                                             
                                                             <div class = "quantity1">
                                                              <div class="edit-btn">
-                                                            <a  href="edit_item.php?edit_item='.$row['dish_id'].'" class="edit-btn"><i class="fa-solid fa-pencil"  style="font-size:20px;"></i></a> 
+                                                            <a  href="#" class="edit-btn"><i class="fa-solid fa-pencil"  style="font-size:20px;"></i></a> 
                                                             </div>
                                                             <select class="quantity" name="quantity" data-id="' . $row['cart_id'] . '" disabled>';
                                                  $sizes = explode(',', $row['qty']);
@@ -383,43 +405,103 @@ if (isset($_POST['checkout'])) {
 
                                 </div>
                                 <div class="col-sm-12" style="margin: 30px 0 0 0;">
-                                    <div class="linebreak" style="margin:0 15px 0 5px;">
-                                        <hr style="height:2px;">
-                                    </div>
-                                </div>
-                                <div class="col-sm-12">
-                                    <div class="container">
-                                        <div class="row">
-                                            <div class="col-sm-6" style="padding:0; margin:0;">
-                                                <p style="font-weight:550">Sub Total</p>
-                                                <p style="font-weight:550">Delivery Fee</p>
+                                    <?php  $sql = "SELECT * FROM cart WHERE dish_id = '{$_GET['edit_item']}'";
+                                            $result = $db->query($sql);
+                                            $newrow = mysqli_fetch_array($result);
+                                    ?>
+                                    <div class="mpopup1" id="mpopup1">
+                                        <div class="modal-content1">
+                                            <div class="modal-header1">
+                                                <h4 style="text-align:center; font-size:2rem;"><?php echo $newrow['name']; ?></h4>
                                             </div>
-                                            <div class="col-sm-6" style="padding:0; margin:0;">
-                                                <p id="subtotal" style="margin-left: 30px; font-weight:bold;"></p>
-                                                <p id="delivery_fee" style="margin-left:30px; font-weight:bold;"></p>
+                                            <div class="modal-body1">
+                                                <form method="POST" action="">
+                                                    <label for="numberSelect">Select Quantity:</label>
+                                                    <select id="numberSelect" id="numberSelect" name="qty"
+                                                        style="width: 50px; text-align:center;">
+                                                        <script>
+                                                        // Get the select element
+                                                        var selectElement = document.getElementById("numberSelect");
+
+                                                        // Get the current quantity value from PHP (assuming it's echoed into JavaScript)
+                                                        var currentQuantity =
+                                                        <?php echo json_encode($newrow['qty']); ?>;
+
+                                                        // Loop to generate options
+                                                        for (var i = 1; i <= 10; i++) {
+                                                            // Create an option element
+                                                            var option = document.createElement("option");
+                                                            option.value = i;
+                                                            option.text = i;
+
+                                                            // Set the selected attribute if it matches the current quantity
+                                                            if (i == currentQuantity) {
+                                                                option.selected = true;
+                                                            }
+
+                                                            // Append the option to the select element
+                                                            selectElement.appendChild(option);
+                                                        }
+                                                        </script>
+                                                    </select>
+
                                             </div>
+                                            <div class="modal-footer1">
+
+
+                                                <input type="submit" class="confirmation" id="confirmation"
+                                                    value="Confirm" name="confirmation">
+                                                <input type="button" class="cancellation" value="Cancel"
+                                                    name="cancel_btn" onclick="closeModal()">
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-12">
-                                    <div class="linebreak" style="margin:0 15px 0 5px;">
-                                        <hr style="height:2px;">
-                                    </div>
+                        </form>
+                        <script>
+                        function closeModal() {
+                            window.history.back();
+
+                        }
+                        </script>
+                        <div class="linebreak" style="margin:0 15px 0 5px;">
+                            <hr style="height:2px;">
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-sm-6" style="padding:0; margin:0;">
+                                    <p style="font-weight:550">Sub Total</p>
+                                    <p style="font-weight:550">Delivery Fee</p>
                                 </div>
-                                <div class="col-sm-12">
-                                    <div class="container">
-                                        <div class="row">
-                                            <div class="col-sm-6" style="padding:0; margin:0;">
-                                                <p style="font-weight:550">Total</p>
-                                            </div>
-                                            <div class="col-sm-6" style="padding:0; margin:0;">
-                                                <p id="total_amount" style="margin-left:30px; font-weight:bold;"></p>
-                                            </div>
-                                        </div>
-                                    </div>
+                                <div class="col-sm-6" style="padding:0; margin:0;">
+                                    <p id="subtotal" style="margin-left: 30px; font-weight:bold;"></p>
+                                    <p id="delivery_fee" style="margin-left:30px; font-weight:bold;"></p>
                                 </div>
-                                <div class="col-sm-12" style="padding:0 20px 0 20px; margin-top:20px;">
-                                    <input type="submit" value="Checkout" class="checkout" name="checkout" <?php if (!$loggedIn)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="linebreak" style="margin:0 15px 0 5px;">
+                            <hr style="height:2px;">
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-sm-6" style="padding:0; margin:0;">
+                                    <p style="font-weight:550">Total</p>
+                                </div>
+                                <div class="col-sm-6" style="padding:0; margin:0;">
+                                    <p id="total_amount" style="margin-left:30px; font-weight:bold;"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12" style="padding:0 20px 0 20px; margin-top:20px;">
+                        <input type="submit" value="Checkout" class="checkout" name="checkout" <?php if (!$loggedIn)
                                             echo 'disabled'; ?>>
                         </form>
                     </div>
@@ -535,14 +617,18 @@ if (isset($_POST['checkout'])) {
     </div>
 
 
-<script>
+    <script>
     <?php if (!$loggedIn) : ?>
-        document.getElementById('messagesLink').classList.add('disabled');
-        document.getElementById('orderLink').classList.add('disabled');
+    document.getElementById('messagesLink').classList.add('disabled');
+    document.getElementById('orderLink').classList.add('disabled');
     <?php endif; ?>
-</script>
+    </script>
 
-
+    <!-- All Jquery -->
+    <script src="js/lib/jquery/jquery.min.js"></script>
+    <!-- Bootstrap tether Core JavaScript -->
+    <script src="js/lib/bootstrap/js/popper.min.js"></script>
+    <script src="js/lib/bootstrap/js/bootstrap.min.js"></script>
 
 </body>
 
