@@ -56,7 +56,7 @@ if (isset($_POST['addtobag'])) {
     $price = $_POST['price'];
     $img = $_POST['img'];
     $size1 = $_POST['size'];
-    $size = ''.$size1.'"';
+    $size = ''.$size1.'';
     $dish_id = $_POST['dish_id'];
     $quantity = 1;  // default quantity
     // Check if the dish_id already exists in the cart
@@ -81,7 +81,7 @@ if (isset($_POST["confirmation"])) {
     $selectedQty = $_POST["qty"];
     $dish_id = $_GET['edit_item'];
   $updateQuery = "UPDATE cart SET qty = '$selectedQty' WHERE dish_id = '$dish_id'";
-    header("Location:redirect_back.php");
+    header("Location:menu-beverages.php");
     // Execute the update query
     $result = mysqli_query($conn, $updateQuery);
 
@@ -461,7 +461,7 @@ if (isset($_POST['checkout'])) {
                         </form>
                         <script>
                         function closeModal() {
-                            window.history.back();
+                            window.location.href = 'menu-beverages.php'
 
                         }
                         </script>
@@ -500,7 +500,7 @@ if (isset($_POST['checkout'])) {
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-12" style="padding:0 20px 0 20px; margin-top:20px;">
+                    <div class="col-sm-12" style="padding:0 32px 0 32px; margin-top:20px;">
                         <input type="submit" value="Checkout" class="checkout" name="checkout" <?php if (!$loggedIn)
                                             echo 'disabled'; ?>>
                         </form>

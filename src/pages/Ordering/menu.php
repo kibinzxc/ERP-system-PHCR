@@ -53,7 +53,7 @@ if (isset($_POST['addtobag'])) {
     $price = $_POST['price'];
     $img = $_POST['img'];
     $size1 = $_POST['size'];
-    $size = ''.$size1.'';
+    $size = ''.$size1.'"';
     $dish_id = $_POST['dish_id'];
     $quantity = 1;  // default quantity
     // Check if the dish_id already exists in the cart
@@ -221,7 +221,7 @@ if (isset($_POST['checkout'])) {
 
                                 <?php
                 $db = new mysqli('localhost', 'root', '', 'ph_db');
-                $sql = "SELECT * FROM dishes where categoryID ='1' ORDER BY name desc ";
+                $sql = "SELECT * FROM dishes where categoryID ='1' ORDER BY price asc ";
                 $result = $db->query($sql);
                 $result1 = $db->query($sql);
                 $newrow = mysqli_fetch_array($result1);
@@ -255,7 +255,7 @@ if (isset($_POST['checkout'])) {
 
         // Iterate over the 'size' data and create an option for each size
         foreach ($sizes as $size) {
-            echo '<option value="' . $size . '">' . ucfirst($size) . '</option>';
+            echo '<option value="' . $size . ' "">' . ucfirst($size) . '</option>';
         }
 
         echo '
@@ -352,7 +352,7 @@ if (isset($_POST['checkout'])) {
                                                             
                                                             <div class = "quantity1">
                                                              <div class="edit-btn">
-                                                            <a  href="edit_item.php?edit_item='.$row['dish_id'].'" class="edit-btn"><i class="fa-solid fa-pencil"  style="font-size:20px;"></i></a> 
+                                                            <a  href="edit_item1.php?edit_item='.$row['dish_id'].'" class="edit-btn"><i class="fa-solid fa-pencil"  style="font-size:20px;"></i></a> 
                                                             </div>
                                                             <select class="quantity" name="quantity" data-id="' . $row['cart_id'] . '" disabled>';
                                                  $sizes = explode(',', $row['qty']);

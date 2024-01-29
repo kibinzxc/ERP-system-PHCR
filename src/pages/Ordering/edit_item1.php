@@ -81,7 +81,7 @@ if (isset($_POST["confirmation"])) {
     $selectedQty = $_POST["qty"];
     $dish_id = $_GET['edit_item'];
   $updateQuery = "UPDATE cart SET qty = '$selectedQty' WHERE dish_id = '$dish_id'";
-    header("Location:redirect_back.php");
+    header("Location:menu.php");
     // Execute the update query
     $result = mysqli_query($conn, $updateQuery);
 
@@ -242,7 +242,7 @@ if (isset($_POST['checkout'])) {
 
                                 <?php
                 $db = new mysqli('localhost', 'root', '', 'ph_db');
-                $sql = "SELECT * FROM dishes where categoryID ='1' ORDER BY name desc ";
+                $sql = "SELECT * FROM dishes where categoryID ='1' ORDER BY price asc ";
                 $result = $db->query($sql);
                 $result1 = $db->query($sql);
                 $newrow = mysqli_fetch_array($result1);
@@ -461,7 +461,7 @@ if (isset($_POST['checkout'])) {
                         </form>
                         <script>
                         function closeModal() {
-                            window.history.back();
+                            window.location.href = 'menu.php'
 
                         }
                         </script>
@@ -500,7 +500,7 @@ if (isset($_POST['checkout'])) {
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-12" style="padding:0 20px 0 20px; margin-top:20px;">
+                    <div class="col-sm-12" style="padding:0 32px 0 32px; margin-top:20px;">
                         <input type="submit" value="Checkout" class="checkout" name="checkout" <?php if (!$loggedIn)
                                             echo 'disabled'; ?>>
                         </form>
@@ -600,7 +600,7 @@ if (isset($_POST['checkout'])) {
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-12" style="padding:0 20px 0 20px; margin-top:20px;">
+                        <div class="col-sm-12">
                             <input type="submit" value="Checkout" class="checkout" name="checkout">
                     </form>
                 </div>
@@ -624,11 +624,7 @@ if (isset($_POST['checkout'])) {
     <?php endif; ?>
     </script>
 
-    <!-- All Jquery -->
-    <script src="js/lib/jquery/jquery.min.js"></script>
-    <!-- Bootstrap tether Core JavaScript -->
-    <script src="js/lib/bootstrap/js/popper.min.js"></script>
-    <script src="js/lib/bootstrap/js/bootstrap.min.js"></script>
+
 
 </body>
 
