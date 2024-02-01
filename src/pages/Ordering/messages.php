@@ -1,0 +1,249 @@
+<?php
+session_start();
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "ph_db";
+
+// Create connection
+$db= new mysqli($servername, $username, $password, $dbname);
+// Check if user is logged in
+if (isset($_SESSION['uid'])) {
+    $loggedIn = true;
+    $currentUserId = $_SESSION['uid'];
+    // Database connection details
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "ph_db";
+
+    // Create connection
+    $conn = new mysqli($servername, $username, $password, $dbname);
+
+    // Retrieve the current user's ID from the session
+    $currentUserId = $_SESSION['uid'];
+
+    $sql = "SELECT address FROM users WHERE uid = $currentUserId"; // Replace 'users' with your table name
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $userAddress = $row['address']; // Store the user's address in a variable
+        $currentUserId = $currentUserId;
+    } else {
+        $userAddress = "House No, Street, City, Province"; // Set a default value if no address is found
+    }
+
+    $conn->close();
+} else {
+ header("Location: menu.php");
+}
+
+
+if (isset($_GET['logout'])) {
+    if (isset($_SESSION['uid'])) {
+
+        session_destroy();
+        unset($_SESSION['uid']);
+    }
+    header("Location:../../../login.php");
+    exit();
+}
+
+
+$queryz = "SELECT COUNT(*) as unread_count FROM msg_users WHERE status = 'unread' AND uid =" . $_SESSION['uid'];
+$result41 = $db->query($queryz);
+
+if ($result41) {
+    $row41 = $result41->fetch_assoc();
+    $unreadNotificationCount = $row41['unread_count'];
+} else {
+    $unreadNotificationCount = 0; // Default to 0 if query fails
+}
+if (isset($_POST['mark_all_read'])) {
+    $updateQuery = "UPDATE msg_users SET status = 'read' WHERE uid =". $_SESSION['uid'];
+    if ($db->query($updateQuery) === TRUE) {
+        //
+        header("Location:messages.php ");
+    } else {
+        
+    }
+}
+
+	function convertDateTimeFormat($dateTime) {
+		// Convert date to 'F d, Y' format
+		$date = date("F d, Y", strtotime($dateTime));
+	  
+		// Convert time to 12-hour format with AM and PM
+		$time = date("h:i A", strtotime($dateTime));
+	  
+		// Combine date and time
+		$convertedDateTime = $date . ' ' . $time;
+	  
+		return $convertedDateTime;
+	  }
+
+?>
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../../assets/img/pizzahut-logo.png">
+    <title>Messages | Pizza Hut Chino Roces</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../../../src/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="../../../src/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/messages.css">
+    <script src="../../../src/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../../../src/bootstrap/js/bootstrap.js"></script>
+    <script src="https://kit.fontawesome.com/0d118bca32.js" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="js/menu.js"></script>
+    <script src="js/search-index.js"></script>
+</head>
+
+<body>
+
+    <div class="container-fluid" style="overflow:hidden;">
+        <div class="row row-flex">
+            <!-- Add the row-flex class -->
+            <div class="col-sm-1 custom-width" style="height:100vh;">
+                <!-- Add the custom-width class -->
+                <div class="sidebar" style="height:100vh;">
+                    <a href="../../../index.php" class="item1">
+                        <img class="logo" src="../../assets/img/pizzahut-logo.png" alt="Pizza Hut Logo">
+                    </a>
+                    <a href="menu.php" class="item">
+                        <i class="fa-solid fa-utensils"></i>
+                        <span>Menu</span>
+                    </a>
+                    <a href="order.php" class="item" id="orderLink">
+                        <i class="fa-solid fa-receipt"></i>
+                        <span>Order</span>
+                    </a>
+                    <a href="messages.php" class="item-last active" id="messagesLink">
+                        <i class="fa-solid fa-envelope"></i>
+                        <span>Messages</span>
+                    </a>
+                    <!-- Toggle Login/Logout link -->
+                    <?php if ($loggedIn) : ?>
+                    <a href="profile.php" class="item">
+                        <i class="fa-solid fa-user"></i>
+                        <span>Profile</span>
+                    </a>
+                    <a href="favorites.php?logout=1" class="item">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>Logout</span>
+                    </a>
+                    <?php else : ?><br><br>
+                    <a href="../../../login.php" class="item-login">
+                        <i class="fa-solid fa-user"></i>
+                        <span>Login</span>
+                    </a>
+                    <?php endif; ?>
+
+                </div>
+            </div>
+            <!-- BEGINNING OF BODY -->
+            <div class="col-sm-11" style="background: white;">
+                <div class="row">
+                    <div class="col-md-5" style="height:100vh; border-right:2px solid #B6B6B6; overflow: auto;">
+                        <div class = "notifs" style=" margin: 0 20px 0 10px">
+                        <h3 style="font-weight:700; margin-top:40px;"> Messages</h3>
+                        <?php
+                        if ($unreadNotificationCount > 0) {
+                            echo '<form style="position: fixed; top: 45px; left: 630px;" method="post">';
+                            echo '<button type="submit" name="mark_all_read" class="read-all-button" style="border:none; text-decoration:none; background-color:white; color:#D24545;">Mark All Read</button>';
+                            echo '</form>';
+                        }
+                        ?>
+                        <a href="#" class="archive1"><i class="fa-solid fa-box-archive" style="position: fixed; top: 45px; left: 765px; font-size:30px;"></i></a>
+                        <hr>
+                        <?php
+
+                    $sql = "SELECT * FROM msg_users where uid=" . $_SESSION['uid'];
+                    $result = $db->query($sql);
+                    $result1 = $db->query($sql);
+                    $newrow = mysqli_fetch_array($result1);
+
+
+                    // Check if any notifications were found
+                    if ($result->num_rows > 0) {
+                        $notifications = array();
+                        // Display notifications
+                        while ($row = $result->fetch_assoc()) {
+                            $notifications[] = $row;
+                        }
+                        $notifications = array_reverse($notifications);
+                     
+                        foreach ($notifications as $row) {
+
+                        $category = $row['category'];
+                        $iconMapping = [
+                            "unread" => "bi bi-bell",
+                            "Announcement" => "fa-solid fa-bullhorn",
+        
+                            ];
+                        $defaultIcon = "bi bi-question"; // Adjust the default icon class name
+
+                        $icon = isset($iconMapping[$category]) ? $iconMapping[$category] : $defaultIcon;
+                            // Define an array that maps categories to their corresponding icons
+
+
+                            $dateString = $row['date_created']; // Your input date string
+                            $inputFormat = "Y-m-d"; // Format of the input date string
+                            $outputFormat = "F d, Y"; // Desired output format
+                            $timestamp = strtotime($dateString);
+
+                            // Format the timestamp into the desired output format
+                            $outputDate = date($outputFormat, $timestamp);
+                            $dateTime = $row['date_created'];
+                            $convertedDateTime = convertDateTimeFormat($dateTime);
+                            
+                            echo '<a class="notif" style="text-decoration:none; color:black;" href="view.php?id=' . $row['msgID'] . '">
+                            <div class="' . $row['status'] . '" style = "padding:20px 20px 5px 20px; width:100%; border-bottom:1px solid #B6B6B6; border-radius:5px; margin-bottom:10px;">
+                                <div style = "float:left; margin-top:10px;"> 
+                                    
+                                    <i class="' . $icon . '" alt="Category Icon" style="font-size:35px; color:#605D5D;"></i>
+                                </div>
+                                <div style = "float:center; margin-left:60px;">
+                                    <h5>' . $row['title'] . '</h5>
+                                    <p style="overflow:hidden; white-space: nowrap; text-overflow: ellipsis;">' . $row['category'] . ': ' . $row['description'] . '</p>
+                                    <p style = "margin-top:-15px;">' . $outputDate . '</p>
+                                    </div>
+                            </div>
+                            </a>';
+
+                        }
+                    } else {
+                        echo '<h4 style="text-align:center; margin-top:320px;">No Notifications</h4>';
+                    }
+                    ?>
+                    </div>
+                    </div>
+                    <div class="col-md-7" style="background:pink;">
+                        <h4 style="text-align:center; margin-top:400px;">No Message Selected</h4>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+
+        <!-- ENDING OF BODY -->
+
+    <script>
+    <?php if (!$loggedIn) : ?>
+    document.getElementById('messagesLink').classList.add('disabled');
+    document.getElementById('orderLink').classList.add('disabled');
+    <?php endif; ?>
+    </script>
+
+
+
+</body>
+
+</html>

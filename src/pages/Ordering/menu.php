@@ -159,7 +159,7 @@ if (isset($_POST['checkout'])) {
                         <i class="fa-solid fa-receipt"></i>
                         <span>Order</span>
                     </a>
-                    <a href="promo.php" class="item-last" id="messagesLink">
+                    <a href="messages.php" class="item-last" id="messagesLink">
                         <i class="fa-solid fa-envelope"></i>
                         <span>Messages</span>
                     </a>
@@ -221,7 +221,7 @@ if (isset($_POST['checkout'])) {
 
                                 <?php
                 $db = new mysqli('localhost', 'root', '', 'ph_db');
-                $sql = "SELECT * FROM dishes where categoryID ='1' ORDER BY price asc ";
+                $sql = "SELECT * FROM dishes where categoryID ='1' ORDER BY price asc "; 
                 $result = $db->query($sql);
                 $result1 = $db->query($sql);
                 $newrow = mysqli_fetch_array($result1);

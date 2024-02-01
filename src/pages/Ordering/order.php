@@ -42,114 +42,103 @@ if (isset($_GET['logout'])) {
         session_destroy();
         unset($_SESSION['uid']);
     }
-    header("Location: login.php");
+    header("Location:../../../login.php");
     exit();
 }
 
+
+
+
+
+
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="icon" href="../../assets/img/pizzahut-logo.png">
+    <title>Menu | Pizza Hut Chino Roces</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../../../src/bootstrap/css/bootstrap.css">
     <link rel="stylesheet" href="../../../src/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/order.css">
+    <link rel="stylesheet" href="css/messages.css">
     <script src="../../../src/bootstrap/js/bootstrap.min.js"></script>
     <script src="../../../src/bootstrap/js/bootstrap.js"></script>
     <script src="https://kit.fontawesome.com/0d118bca32.js" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="js/menu.js"></script>
     <script src="js/search-index.js"></script>
-    
 </head>
 
 <body>
-    <div class="container-fluid">
-        <div class = "row row-flex"> <!-- Add the row-flex class -->
-            <div class = "col-sm-1 custom-width"> <!-- Add the custom-width class -->
-                <div class="sidebar">
+
+    <div class="container-fluid" style="overflow:hidden;">
+        <div class="row row-flex">
+            <!-- Add the row-flex class -->
+            <div class="col-sm-1 custom-width" style="height:100vh;">
+                <!-- Add the custom-width class -->
+                <div class="sidebar" style="height:100vh;">
                     <a href="../../../index.php" class="item1">
                         <img class="logo" src="../../assets/img/pizzahut-logo.png" alt="Pizza Hut Logo">
                     </a>
-                    <a href="favorites.php" class="item">
-                        <i class="fa-regular fa-heart"></i>
-                        <span>Favorites</span>
-                    </a>
                     <a href="menu.php" class="item">
-                    <i class="fa-solid fa-utensils"></i>
+                        <i class="fa-solid fa-utensils"></i>
                         <span>Menu</span>
                     </a>
-                    <a href="order.php" class="item active">
-                    <i class="fa-solid fa-receipt"></i>
+                    <a href="order.php" class="item active" id="orderLink">
+                        <i class="fa-solid fa-receipt"></i>
                         <span>Order</span>
                     </a>
-                    <a href="promo.php" class="item-last">
+                    <a href="messages.php" class="item-last" id="messagesLink">
                         <i class="fa-solid fa-envelope"></i>
-                        <span>Notification</span>
+                        <span>Messages</span>
                     </a>
                     <!-- Toggle Login/Logout link -->
                     <?php if ($loggedIn) : ?>
-                        <a href="profile.php" class="item">
+                    <a href="profile.php" class="item">
                         <i class="fa-solid fa-user"></i>
-                            <span>Profile</span>
-                        </a>
-                        <a href="order.php?logout=1" class="item">
-                            <i class="fa-solid fa-right-from-bracket"></i>
-                            <span>Logout</span>
-                        </a>
+                        <span>Profile</span>
+                    </a>
+                    <a href="favorites.php?logout=1" class="item">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>Logout</span>
+                    </a>
                     <?php else : ?><br><br>
-                        <a href="../../../login.php" class="item-login">
-                            <i class="fa-solid fa-user"></i>
-                            <span>Login</span>
-                        </a>
+                    <a href="../../../login.php" class="item-login">
+                        <i class="fa-solid fa-user"></i>
+                        <span>Login</span>
+                    </a>
                     <?php endif; ?>
+
                 </div>
             </div>
             <!-- BEGINNING OF BODY -->
-            <div class = "col-sm-11">
-                <div class = "container" style="padding:0;">
-                    <div class = "row">
-                        <div class = "col-sm-9">
-                            <div class="search-container">
-                                
-                            </div>
-                        </div>
-                        <div class = "col-sm-1">
-                            <div class = "notification-container">
-                                <a href="#" <?php if (!$loggedIn)
-                                    echo 'disabled'; ?>>
-                                    <i class="fas fa-bell notification-icon"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class = "col-sm-1">
-                            <div class = "notification-container">
-                                <a href="#" <?php if (!$loggedIn)
-                                    echo 'disabled'; ?>>
-                                    <i class="fas fa-bell notification-icon"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class = "col-sm-1">
-                            <div class = "notification-container">
-                                <a href="#" <?php if (!$loggedIn)
-                                    echo 'disabled'; ?>>
-                                <i class="fa-solid fa-bag-shopping"></i>
-                                </a>
-                            </div>
-                        </div>
+            <div class="col-sm-11" style="background: white;">
+                <div class="container">
+                    <div class="row">
+                        
+                       
                     </div>
                 </div>
 
-
             </div>
             <!-- ENDING OF BODY -->
-            
         </div>
+
     </div>
+<script>
+    <?php if (!$loggedIn) : ?>
+        document.getElementById('messagesLink').classList.add('disabled');
+        document.getElementById('orderLink').classList.add('disabled');
+    <?php endif; ?>
+</script>
+
+
+
 </body>
 
 </html>
