@@ -186,7 +186,7 @@ if ($result41) {
                     </a>
                     <a href="order.php" class="item" id="orderLink">
                         <i class="fa-solid fa-receipt"></i>
-                        <span>Order</span>
+                        <span>Orders</span>
                     </a>
                     <a href="promo.php" class="item-last" id="messagesLink">
                         <i class="fa-solid fa-envelope"></i>

@@ -63,8 +63,9 @@ if ($result41) {
 if (isset($_POST['mark_all_read'])) {
     $updateQuery = "UPDATE msg_users SET status = 'read' WHERE uid =" . $_SESSION['uid'] . " AND status = 'unread'";
     if ($db->query($updateQuery) === TRUE) {
-        //
+        $_SESSION['success1']  = "All messages have been marked as read";
         header("Location:messages.php ");
+        exit();
     } else {
         
     }
@@ -123,7 +124,7 @@ if (isset($_POST['mark_all_read'])) {
                     </a>
                     <a href="order.php" class="item" id="orderLink">
                         <i class="fa-solid fa-receipt"></i>
-                        <span>Order</span>
+                        <span>Orders</span>
                     </a>
                     <a href="messages.php" class="item-last active" id="messagesLink">
                         <i class="fa-solid fa-envelope"></i>
@@ -159,6 +160,20 @@ if (isset($_POST['mark_all_read'])) {
             <!-- BEGINNING OF BODY -->
             <div class="col-sm-11" style="background: white;">
                 <div class="row">
+                        <?php
+                        if (isset($_SESSION['success1']) && !empty($_SESSION['success1'])) {
+                            echo '<div class="success" id="message-box">';
+                            echo $_SESSION['success1'];
+                            unset($_SESSION['success1']);
+                            echo '</div>';
+                        }
+                        if (isset($_SESSION['error1']) && !empty($_SESSION['error1'])) {
+                            echo '<div class="error" id="message-box">';
+                            echo $_SESSION['error1'];
+                            unset($_SESSION['error1']);
+                            echo '</div>';
+                        }
+                        ?>
                     <div class="col-md-5" style="height:100vh; border-right:2px solid #B6B6B6; overflow: auto;">
                         <div class = "notifs" style=" margin: 0 20px 0 10px">
                         <h3 style="font-weight:700; margin-top:40px;"> Messages</h3>
@@ -249,7 +264,21 @@ if (isset($_POST['mark_all_read'])) {
     document.getElementById('orderLink').classList.add('disabled');
     <?php endif; ?>
     </script>
+    <script>
+    <?php if (!$loggedIn) : ?>
+    document.getElementById('messagesLink').classList.add('disabled');
+    document.getElementById('orderLink').classList.add('disabled');
+    <?php endif; ?>
+    </script>
 
+    <script>
+    setTimeout(function() {
+        var messageBox = document.getElementById('message-box');
+        if (messageBox) {
+            messageBox.style.display = 'none';
+        }
+    }, 2000);
+    </script>
 
 
 </body>

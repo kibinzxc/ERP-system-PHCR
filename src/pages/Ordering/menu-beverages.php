@@ -24,13 +24,28 @@ if (isset($_SESSION['uid'])) {
         $row = $result->fetch_assoc();
         $userAddress = $row['address']; // Store the user's address in a variable
         $currentUserId = $currentUserId;
+
     } else {
         $userAddress = "House No, Street, City, Province"; // Set a default value if no address is found
     }
+        
+    $queryz = "SELECT COUNT(*) as unread_count FROM msg_users WHERE status = 'unread' AND uid =" . $_SESSION['uid'];
+    $result41 = $conn->query($queryz);
+
+    if ($result41) {
+        $row41 = $result41->fetch_assoc();
+        $unreadNotificationCount = $row41['unread_count'];
+    } else {
+        $unreadNotificationCount = 0; // Default to 0 if query fails
+    }
+
 
     $conn->close();
 } else {
-header("Location: ../../../login.php");
+    $currentUserId = 123; // or any default value
+    $loggedIn = false;
+    $userAddress = "";
+     $unreadNotificationCount = 0;
 }
 
 
@@ -45,6 +60,11 @@ if (isset($_GET['logout'])) {
 }
 
 if (isset($_POST['addtobag'])) {
+if (!isset($_SESSION['uid'])) {
+        // User is not logged in, redirect to login page
+        header("Location: ../../../login.php");
+        exit();
+    }
     $dbz = new mysqli('localhost', 'root', '', 'ph_db');
     $uid = $_SESSION['uid'];
     $name = $_POST['name'];
@@ -82,6 +102,8 @@ if (isset($_POST['addtobag'])) {
         $_SESSION['success']  = "Successfully added into your bag";
     }
 }
+
+
 
 if (isset($_POST['checkout'])) {
     $uid = $_SESSION['uid']; 
@@ -126,23 +148,6 @@ if (isset($_POST['checkout'])) {
     $db->close();
 }
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "ph_db";
-
-// Create connection
-$db= new mysqli($servername, $username, $password, $dbname);
-
-$queryz = "SELECT COUNT(*) as unread_count FROM msg_users WHERE status = 'unread' AND uid =" . $_SESSION['uid'];
-$result41 = $db->query($queryz);
-
-if ($result41) {
-    $row41 = $result41->fetch_assoc();
-    $unreadNotificationCount = $row41['unread_count'];
-} else {
-    $unreadNotificationCount = 0; // Default to 0 if query fails
-}
 ?>
 
 
@@ -183,7 +188,7 @@ if ($result41) {
                     </a>
                     <a href="order.php" class="item" id="orderLink">
                         <i class="fa-solid fa-receipt"></i>
-                        <span>Order</span>
+                        <span>Orders</span>
                     </a>
                     <a href="messages.php" class="item-last" id="messagesLink">
                         <i class="fa-solid fa-envelope"></i>

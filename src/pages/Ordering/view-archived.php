@@ -79,7 +79,9 @@ if (isset($_GET['delete'])) {
     $notificationId = $_GET['delete'];
     $deleteQuery = "DELETE FROM msg_users WHERE msgID = $notificationId AND uid=". $_SESSION['uid'];
     if ($db->query($deleteQuery) === TRUE) {
-        header("Location:messages.php ");
+        $_SESSION['success2']  = "Message has been successfully deleted";
+        header("Location:archives.php ");
+        exit();
     } else {
         
     }
@@ -89,7 +91,9 @@ if (isset($_GET['inbox'])) {
     $notificationId = $_GET['archive'];
     $updateQuery = "UPDATE msg_users SET status = 'read' WHERE uid =". $_SESSION['uid'];
     if ($db->query($updateQuery) === TRUE) {
+        $_SESSION['success2']  = "Message has been successfully restored";
         header("Location:archives.php ");
+        exit();
     } else {
         
     }
@@ -192,6 +196,20 @@ if ($result42) {
             <!-- BEGINNING OF BODY -->
             <div class="col-sm-11" style="background: white;">
                 <div class="row">
+                    <?php
+                        if (isset($_SESSION['success2']) && !empty($_SESSION['success2'])) {
+                            echo '<div class="success" id="message-box">';
+                            echo $_SESSION['success2'];
+                            unset($_SESSION['success2']);
+                            echo '</div>';
+                        }
+                        if (isset($_SESSION['error2']) && !empty($_SESSION['error2'])) {
+                            echo '<div class="error" id="message-box">';
+                            echo $_SESSION['error2'];
+                            unset($_SESSION['error2']);
+                            echo '</div>';
+                        }
+                        ?>
                     <div class="col-md-5" style="height:100vh; border-right:2px solid #B6B6B6; overflow: auto;">
                         <div class="notifs" style=" margin: 0 20px 0 10px">
                             <h3 style="font-weight:700; margin-top:40px;">Archived Messages</h3>
@@ -202,8 +220,10 @@ if ($result42) {
                             echo '</form>';
                         }
                         ?>
-                        <a href="messages.php" class="archive1" title="Messages"><i class="fa-solid fa-envelope-open" style="position: fixed; top: 45px; left: 765px; font-size:30px;"></i></a>
-                        <hr>
+                            <a href="messages.php" class="archive1" title="Messages"><i
+                                    class="fa-solid fa-envelope-open"
+                                    style="position: fixed; top: 45px; left: 765px; font-size:30px;"></i></a>
+                            <hr>
                             <?php
 
                     $sql = "SELECT * FROM msg_users WHERE uid=" . $_SESSION['uid'] . " AND status = 'archived'";
@@ -317,7 +337,21 @@ if ($result42) {
         document.getElementById('orderLink').classList.add('disabled');
         <?php endif; ?>
         </script>
+        <script>
+        <?php if (!$loggedIn) : ?>
+        document.getElementById('messagesLink').classList.add('disabled');
+        document.getElementById('orderLink').classList.add('disabled');
+        <?php endif; ?>
+        </script>
 
+        <script>
+        setTimeout(function() {
+            var messageBox = document.getElementById('message-box');
+            if (messageBox) {
+                messageBox.style.display = 'none';
+            }
+        }, 2000);
+        </script>
 
 
 </body>

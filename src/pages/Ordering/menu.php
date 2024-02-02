@@ -103,11 +103,6 @@ if (!isset($_SESSION['uid'])) {
     }
 }
 
-if (!isset($_SESSION['uid'])) {
-        // User is not logged in, redirect to login page
-        header("Location: ../../../login.php");
-        exit();
-    }
 
 
 if (isset($_POST['checkout'])) {
@@ -195,7 +190,7 @@ if (isset($_POST['checkout'])) {
                     </a>
                     <a href="order.php" class="item" id="orderLink">
                         <i class="fa-solid fa-receipt"></i>
-                        <span>Order</span>
+                        <span>Orders</span>
                     </a>
                     <a href="messages.php" class="item-last" id="messagesLink">
                         <i class="fa-solid fa-envelope"></i>

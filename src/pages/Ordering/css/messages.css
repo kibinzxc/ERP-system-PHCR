@@ -715,3 +715,57 @@ button:not(.active) {
 .tooltip:hover .tooltiptext {
   visibility: visible;
 }
+
+.error {
+
+	color: #a94442; 
+	background: #f2dede; 
+	width: 15%; 
+	margin: 0px auto; 
+	padding: 5px; 
+	border-radius: 25px; 
+	text-align: left;
+  text-align: center;
+  position:absolute;
+  font-family: "Outfit";
+  bottom:50px;
+  left:100px;
+  right:300px;
+  animation:flyIn 0.5s ease-in-out;
+    
+}
+
+.success {
+	color: #3c763d; 
+	width: 20%; 
+	margin: 0px auto; 
+	padding: 5px; 
+	border: 1px solid #3c763d; 
+	background: #dff0d8; 
+	border-radius: 25px; 
+	text-align: left;
+  text-align: center;
+  position:absolute;
+  font-family: "Outfit";
+  bottom:50px;
+  left:100px;
+  right:300px;
+  animation:flyIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes flyIn {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}

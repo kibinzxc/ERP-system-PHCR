@@ -36,7 +36,7 @@ if (isset($_SESSION['uid'])) {
 
     $conn->close();
 } else {
- header("Location: ../../../login.php");
+ header("Location: menu.php");
 }
 
 
@@ -53,6 +53,7 @@ if (isset($_GET['logout'])) {
 
 $queryz = "SELECT COUNT(*) as unread_count FROM msg_users WHERE status = 'unread' AND uid =" . $_SESSION['uid'];
 $result41 = $db->query($queryz);
+
 if ($result41) {
     $row41 = $result41->fetch_assoc();
     $unreadNotificationCount = $row41['unread_count'];
@@ -60,28 +61,6 @@ if ($result41) {
     $unreadNotificationCount = 0; // Default to 0 if query fails
 }
 
-$queryz1 = "SELECT COUNT(*) as archived_count FROM msg_users WHERE status = 'archived' AND uid =" . $_SESSION['uid'];
-$result42 = $db->query($queryz1);
-
-if ($result42) {
-    $row42= $result42->fetch_assoc();
-    $unreadArchivedCount = $row42['archived_count'];
-} else {
-    $unreadArchivedCount  = 0; // Default to 0 if query fails
-}
-
-
-
-if (isset($_POST['mark_all_read'])) {
-    $deleteQuery = "DELETE FROM msg_users WHERE uid =" . $_SESSION['uid'] . " AND status = 'archived'";
-    
-    if ($db->query($deleteQuery) === TRUE) {
-        // Deletion successful
-    } else {
-        // Handle deletion error
-        echo "Error deleting record: " . $db->error;
-    }
-}
 
 	function convertDateTimeFormat($dateTime) {
 		// Convert date to 'F d, Y' format
@@ -95,6 +74,51 @@ if (isset($_POST['mark_all_read'])) {
 	  
 		return $convertedDateTime;
 	  }
+
+if (isset($_GET['delete'])) {
+    $notificationId = $_GET['delete'];
+    $deleteQuery = "DELETE FROM msg_users WHERE msgID = $notificationId AND uid=". $_SESSION['uid'];
+    if ($db->query($deleteQuery) === TRUE) {
+        $_SESSION['success2']  = "Message has been successfully deleted";
+        header("Location:archives.php ");
+        exit();
+    } else {
+        
+    }
+}
+
+if (isset($_GET['inbox'])) {
+    $notificationId = $_GET['archive'];
+    $updateQuery = "UPDATE msg_users SET status = 'read' WHERE uid =". $_SESSION['uid'];
+    if ($db->query($updateQuery) === TRUE) {
+        $_SESSION['success2']  = "Message has been successfully restored";
+        header("Location:archives.php ");
+        exit();
+    } else {
+        
+    }
+}
+
+if (isset($_POST['mark_all_read'])) {
+    $deleteQuery = "DELETE FROM msg_users WHERE uid =" . $_SESSION['uid'] . " AND status = 'archived'";
+    
+    if ($db->query($deleteQuery) === TRUE) {
+        $_SESSION['success2']  = "Message has been successfully deleted";
+    } else {
+        // Handle deletion error
+        echo "Error deleting record: " . $db->error;
+    }
+}
+
+$queryz1 = "SELECT COUNT(*) as archived_count FROM msg_users WHERE status = 'archived' AND uid =" . $_SESSION['uid'];
+$result42 = $db->query($queryz1);
+
+if ($result42) {
+    $row42= $result42->fetch_assoc();
+    $unreadArchivedCount = $row42['archived_count'];
+} else {
+    $unreadArchivedCount  = 0; // Default to 0 if query fails
+}
 
 ?>
 
@@ -136,7 +160,7 @@ if (isset($_POST['mark_all_read'])) {
                     </a>
                     <a href="order.php" class="item" id="orderLink">
                         <i class="fa-solid fa-receipt"></i>
-                        <span>Order</span>
+                        <span>Orders</span>
                     </a>
                     <a href="messages.php" class="item-last active" id="messagesLink">
                         <i class="fa-solid fa-envelope"></i>
@@ -172,6 +196,20 @@ if (isset($_POST['mark_all_read'])) {
             <!-- BEGINNING OF BODY -->
             <div class="col-sm-11" style="background: white;">
                 <div class="row">
+                        <?php
+                        if (isset($_SESSION['success2']) && !empty($_SESSION['success2'])) {
+                            echo '<div class="success" id="message-box">';
+                            echo $_SESSION['success2'];
+                            unset($_SESSION['success2']);
+                            echo '</div>';
+                        }
+                        if (isset($_SESSION['error2']) && !empty($_SESSION['error2'])) {
+                            echo '<div class="error" id="message-box">';
+                            echo $_SESSION['error2'];
+                            unset($_SESSION['error2']);
+                            echo '</div>';
+                        }
+                        ?>
                     <div class="col-md-5" style="height:100vh; border-right:2px solid #B6B6B6; overflow: auto;">
                         <div class = "notifs" style=" margin: 0 20px 0 10px">
                         <h3 style="font-weight:700; margin-top:40px;"> Archived Messages</h3>
@@ -262,7 +300,21 @@ if (isset($_POST['mark_all_read'])) {
     document.getElementById('orderLink').classList.add('disabled');
     <?php endif; ?>
     </script>
+    <script>
+    <?php if (!$loggedIn) : ?>
+    document.getElementById('messagesLink').classList.add('disabled');
+    document.getElementById('orderLink').classList.add('disabled');
+    <?php endif; ?>
+    </script>
 
+    <script>
+    setTimeout(function() {
+        var messageBox = document.getElementById('message-box');
+        if (messageBox) {
+            messageBox.style.display = 'none';
+        }
+    }, 2000);
+    </script>
 
 
 </body>

@@ -63,8 +63,9 @@ if ($result41) {
 if (isset($_POST['mark_all_read'])) {
     $updateQuery = "UPDATE notif_users SET status = 'read' WHERE uid =". $_SESSION['uid'];
     if ($db->query($updateQuery) === TRUE) {
-        //
-        header("Location:notifications.php ");
+        $_SESSION['success1']  = "All messages have been marked as read";
+        header("Location:messages.php ");
+        exit();
     } else {
         
     }
@@ -87,7 +88,9 @@ if (isset($_GET['delete'])) {
     $notificationId = $_GET['delete'];
     $deleteQuery = "DELETE FROM msg_users WHERE msgID = $notificationId AND uid=". $_SESSION['uid'];
     if ($db->query($deleteQuery) === TRUE) {
+        $_SESSION['success1']  = "Message has been successfully deleted";
         header("Location:messages.php ");
+        exit();
     } else {
         
     }
@@ -97,7 +100,9 @@ if (isset($_GET['archive'])) {
     $notificationId = $_GET['archive'];
     $updateQuery = "UPDATE msg_users SET status = 'archived' WHERE uid =". $_SESSION['uid'];
     if ($db->query($updateQuery) === TRUE) {
+         $_SESSION['success1']  = "Message has been successfully archived";
         header("Location:messages.php ");
+        exit();
     } else {
         
     }
@@ -178,6 +183,20 @@ if (isset($_GET['archive'])) {
             <!-- BEGINNING OF BODY -->
             <div class="col-sm-11" style="background: white;">
                 <div class="row">
+                        <?php
+                        if (isset($_SESSION['success1']) && !empty($_SESSION['success1'])) {
+                            echo '<div class="success" id="message-box">';
+                            echo $_SESSION['success1'];
+                            unset($_SESSION['success1']);
+                            echo '</div>';
+                        }
+                        if (isset($_SESSION['error1']) && !empty($_SESSION['error1'])) {
+                            echo '<div class="error" id="message-box">';
+                            echo $_SESSION['error1'];
+                            unset($_SESSION['error1']);
+                            echo '</div>';
+                        }
+                        ?>
                     <div class="col-md-5" style="height:100vh; border-right:2px solid #B6B6B6; overflow: auto;">
                         <div class="notifs" style=" margin: 0 20px 0 10px">
                             <h3 style="font-weight:700; margin-top:40px;"> Messages</h3>
@@ -282,10 +301,10 @@ if (isset($_GET['archive'])) {
                         <p style="font-family:verdana; font-size:15px; margin-top:20px; line-height: 1.8; text-align:justify;">' . $rowz['description'] . '</p>
                         <div>';
                             } else {
-                                echo '<h4 style="text-align:center; margin-top:400px;">No Notification Selected</h4>';
+                                echo '<h4 style="text-align:center; margin-top:400px;">No Message Selected</h4>';
                             }
                         } else {
-                            echo '<h4 style="text-align:center; margin-top:400px;">Invalid Notification ID!</h4>';
+                            echo '<h4 style="text-align:center; margin-top:400px;">Invalid Message ID!</h4>';
                         }
 
                         ?>
@@ -305,7 +324,21 @@ if (isset($_GET['archive'])) {
         <?php endif; ?>
         </script>
 
+    <script>
+    <?php if (!$loggedIn) : ?>
+    document.getElementById('messagesLink').classList.add('disabled');
+    document.getElementById('orderLink').classList.add('disabled');
+    <?php endif; ?>
+    </script>
 
+    <script>
+    setTimeout(function() {
+        var messageBox = document.getElementById('message-box');
+        if (messageBox) {
+            messageBox.style.display = 'none';
+        }
+    }, 2000);
+    </script>
 
 </body>
 
