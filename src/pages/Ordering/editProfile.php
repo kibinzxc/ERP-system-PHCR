@@ -1,6 +1,6 @@
 <?php
 session_start();
-
+error_reporting(0);
 // Check if user is logged in
 if (isset($_SESSION['uid'])) {
     $loggedIn = true;
@@ -98,21 +98,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $zipCode = $_POST['zipCode'];
     $contactNum = $_POST['contactNum'];
     $email = $_POST['email'];
+    //empty fields validation
+    if (empty($firstName) || empty($lastName) || empty($houseNo) || empty($street) || empty($baranggay) || empty($city) || empty($province) || empty($zipCode) || empty($contactNum) || empty($email)) {
+        $_SESSION['errorMessage1'] = "All fields are required";
+    }else if (!preg_match("/^[a-zA-Z'-]+$/", $firstName) || !preg_match("/^[a-zA-Z'-]+$/", $lastName)) {
+        $_SESSION['errorMessage1'] = "Invalid name format";
+    } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $_SESSION['errorMessage1'] = "Invalid email format";
+    } else if (!preg_match("/^[0-9]{11}+$/", $contactNum)) {
+        $_SESSION['errorMessage1'] = "Invalid contact number format";
+    } else if (!preg_match("/^[0-9]{4}+$/", $zipCode)) {
+        $_SESSION['errorMessage1'] = "Invalid zip code format";
+    }
+    else{
     //combine the firstname and lastName
     $fullName = $lastName . ", " . $firstName;
     $fullName = strtoupper($fullName);
     //combine the address
     $fullAddress = $houseNo . ", " . $street . ", " . $baranggay . ", " . $city . ", " . $province . ", " . $zipCode;
-    $sql = "UPDATE customerInfo SET name='$fullName', address='$fullAddress', contactNum='$contactNum', email='$email' WHERE uid=$currentUserId";
+     $sql = "UPDATE customerInfo SET name='$fullName', address='$fullAddress', contactNum='$contactNum', email='$email' WHERE uid=$currentUserId";
 
-if ($db->query($sql) === TRUE) {
-    $_SESSION['update'] = "Personal information updated successfully";
-} else {
-    $_SESSION['errorMessage'] = "Error updating record: " . $db->error;
-}
+    if ($db->query($sql) === TRUE) {
+        $_SESSION['update'] = "Personal information updated successfully";
+    } else {
+        $_SESSION['errorMessage1'] = "Error updating record: " . $db->error;
+    }
 
-header('location: profile.php');
-exit();
+    header('location: profile.php');
+    exit();
+    }
 }
 ?>
 
@@ -195,6 +209,20 @@ exit();
             $row = $result->fetch_assoc();
             ?>
             <div class="col-sm-11 wrap" style="padding:15px; height:100vh;">
+                <?php
+                        if (isset($_SESSION['update']) && !empty($_SESSION['update'])) {
+                            echo '<div class="success" id="message-box">';
+                            echo $_SESSION['update'];
+                            unset($_SESSION['update']);
+                            echo '</div>';
+                        }
+                        if (isset($_SESSION['errorMessage1']) && !empty($_SESSION['errorMessage1'])) {
+                            echo '<div class="error" id="message-box">';
+                            echo $_SESSION['errorMessage1'];
+                            unset($_SESSION['errorMessage1']);
+                            echo '</div>';
+                        }
+                        ?>
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="wrapper">
