@@ -1,12 +1,6 @@
 <?php
 session_start();
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "ph_db";
 
-// Create connection
-$db= new mysqli($servername, $username, $password, $dbname);
 // Check if user is logged in
 if (isset($_SESSION['uid'])) {
     $loggedIn = true;
@@ -33,12 +27,23 @@ if (isset($_SESSION['uid'])) {
     } else {
         $userAddress = "House No, Street, City, Province"; // Set a default value if no address is found
     }
+        
+    $queryz = "SELECT COUNT(*) as unread_count FROM msg_users WHERE status = 'unread' AND uid =" . $_SESSION['uid'];
+    $result41 = $conn->query($queryz);
+
+    if ($result41) {
+        $row41 = $result41->fetch_assoc();
+        $unreadNotificationCount = $row41['unread_count'];
+    } else {
+        $unreadNotificationCount = 0; // Default to 0 if query fails
+    }
 
     $conn->close();
 } else {
     $currentUserId = 123; // or any default value
     $loggedIn = false;
     $userAddress = "";
+     $unreadNotificationCount = 0;
 }
 
 
@@ -123,15 +128,7 @@ if (isset($_POST['checkout'])) {
     $db->close();
 }
 
-$queryz = "SELECT COUNT(*) as unread_count FROM msg_users WHERE status = 'unread' AND uid =" . $_SESSION['uid'];
-$result41 = $db->query($queryz);
 
-if ($result41) {
-    $row41 = $result41->fetch_assoc();
-    $unreadNotificationCount = $row41['unread_count'];
-} else {
-    $unreadNotificationCount = 0; // Default to 0 if query fails
-}
 
 ?>
 
@@ -193,7 +190,7 @@ if ($result41) {
                         <i class="fa-solid fa-user"></i>
                         <span>Profile</span>
                     </a>
-                    <a href="favorites.php?logout=1" class="item">
+                    <a href="menu.php?logout=1" class="item">
                         <i class="fa-solid fa-right-from-bracket"></i>
                         <span>Logout</span>
                     </a>
