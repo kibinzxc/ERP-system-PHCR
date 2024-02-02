@@ -81,68 +81,68 @@ if(isset($_POST['submitz'] )){
     } else if(!preg_match("#[a-z]+#",$password)) {
         $_SESSION['errorMessage'] = 'Password must include at least one lowercase letter!';
     } else if(!preg_match('/[\'^£$%&*()}{@#~?>!<>,|=_+¬-]/', $password)) {
-        $_SESSION['errorMessage'] = 'Password must include at least one special character!';
+    $_SESSION['errorMessage'] = 'Password must include at least one special character!';
     }//else if password is the same as the old password
     else if (md5($password) == $row['password']) {
-        $_SESSION['errorMessage'] = 'Password must be different from the old password';
+    $_SESSION['errorMessage'] = 'Password must be different from the old password';
     }
-  else {   
-        $password1 = md5($password);
-        mysqli_query($db,"UPDATE users SET password='$password1' WHERE uid=". $_SESSION['uid']);
-        $_SESSION['update'] = "Password has been updated successfully";
-        header('location: profile.php');
-        
-        exit();
+    else {
+    $password1 = md5($password);
+    mysqli_query($db,"UPDATE users SET password='$password1' WHERE uid=". $_SESSION['uid']);
+    $_SESSION['update'] = "Password has been updated successfully";
+    header('location: profile.php');
+
+    exit();
     }
-}
+    }
 
 
-?>
+    ?>
 
 
-<!DOCTYPE html>
-<html lang="en">
+    <!DOCTYPE html>
+    <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="../../assets/img/pizzahut-logo.png">
-    <title>Edit Profile | Pizza Hut Chino Roces</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="../../../src/bootstrap/css/bootstrap.css">
-    <link rel="stylesheet" href="../../../src/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/profile.css">
-    <script src="../../../src/bootstrap/js/bootstrap.min.js"></script>
-    <script src="../../../src/bootstrap/js/bootstrap.js"></script>
-    <script src="https://kit.fontawesome.com/0d118bca32.js" crossorigin="anonymous"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="js/menu.js"></script>
-    <script src="js/search-index.js"></script>
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" href="../../assets/img/pizzahut-logo.png">
+        <title>Edit Profile | Pizza Hut Chino Roces</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        <link rel="stylesheet" href="../../../src/bootstrap/css/bootstrap.css">
+        <link rel="stylesheet" href="../../../src/bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/profile.css">
+        <script src="../../../src/bootstrap/js/bootstrap.min.js"></script>
+        <script src="../../../src/bootstrap/js/bootstrap.js"></script>
+        <script src="https://kit.fontawesome.com/0d118bca32.js" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="js/menu.js"></script>
+        <script src="js/search-index.js"></script>
+    </head>
 
-<body>
+    <body>
 
-    <div class="container-fluid" style="overflow:hidden;">
-        <div class="row row-flex">
-            <!-- Add the row-flex class -->
-            <div class="col-sm-1 custom-width" style="height:100vh;">
-                <!-- Add the custom-width class -->
-                <div class="sidebar" style="height:100vh;">
-                    <a href="../../../index.php" class="item1">
-                        <img class="logo" src="../../assets/img/pizzahut-logo.png" alt="Pizza Hut Logo">
-                    </a>
-                    <a href="menu.php" class="item">
-                        <i class="fa-solid fa-utensils"></i>
-                        <span>Menu</span>
-                    </a>
-                    <a href="order.php" class="item" id="orderLink">
-                        <i class="fa-solid fa-receipt"></i>
-                        <span>Orders</span>
-                    </a>
-                    <a href="messages.php" class="item-last" id="messagesLink">
-                        <i class="fa-solid fa-envelope"></i>
-                        <span>Messages</span>
-                        <?php
+        <div class="container-fluid" style="overflow:hidden;">
+            <div class="row row-flex">
+                <!-- Add the row-flex class -->
+                <div class="col-sm-1 custom-width" style="height:100vh;">
+                    <!-- Add the custom-width class -->
+                    <div class="sidebar" style="height:100vh;">
+                        <a href="../../../index.php" class="item1">
+                            <img class="logo" src="../../assets/img/pizzahut-logo.png" alt="Pizza Hut Logo">
+                        </a>
+                        <a href="menu.php" class="item">
+                            <i class="fa-solid fa-utensils"></i>
+                            <span>Menu</span>
+                        </a>
+                        <a href="order.php" class="item" id="orderLink">
+                            <i class="fa-solid fa-receipt"></i>
+                            <span>Orders</span>
+                        </a>
+                        <a href="messages.php" class="item-last" id="messagesLink">
+                            <i class="fa-solid fa-envelope"></i>
+                            <span>Messages</span>
+                            <?php
                             
                             $unreadNotificationCount = $unreadNotificationCount; 
                             
@@ -150,35 +150,35 @@ if(isset($_POST['submitz'] )){
                                 echo '<span class="notification-count">' . $unreadNotificationCount . '</span>';
                             }
                         ?>
-                    </a>
-                    <!-- Toggle Login/Logout link -->
-                    <?php if ($loggedIn) : ?>
-                    <a href="profile.php" class="item active">
-                        <i class="fa-solid fa-user"></i>
-                        <span>Profile</span>
-                    </a>
-                    <a href="editProfile2.php?logout=1" class="item">
-                        <i class="fa-solid fa-right-from-bracket"></i>
-                        <span>Logout</span>
-                    </a>
-                    <?php else : ?><br><br>
-                    <a href="../../../login.php" class="item-login">
-                        <i class="fa-solid fa-user"></i>
-                        <span>Login</span>
-                    </a>
-                    <?php endif; ?>
+                        </a>
+                        <!-- Toggle Login/Logout link -->
+                        <?php if ($loggedIn) : ?>
+                        <a href="profile.php" class="item active">
+                            <i class="fa-solid fa-user"></i>
+                            <span>Profile</span>
+                        </a>
+                        <a href="editProfile2.php?logout=1" class="item">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                            <span>Logout</span>
+                        </a>
+                        <?php else : ?><br><br>
+                        <a href="../../../login.php" class="item-login">
+                            <i class="fa-solid fa-user"></i>
+                            <span>Login</span>
+                        </a>
+                        <?php endif; ?>
 
+                    </div>
                 </div>
-            </div>
-            <!-- BEGINNING OF BODY -->
-            <?php
+                <!-- BEGINNING OF BODY -->
+                <?php
             //get the user's information
             $sql = "SELECT * FROM customerInfo WHERE uid = $currentUserId";
             $result = $db->query($sql);
             $row = $result->fetch_assoc();
             ?>
-            <div class="col-sm-11 wrap" style="padding:15px; height:100vh;">
-                <?php
+                <div class="col-sm-11 wrap" style="padding:15px; height:100vh;">
+                    <?php
                         if (isset($_SESSION['update']) && !empty($_SESSION['update'])) {
                             echo '<div class="success" id="message-box">';
                             echo $_SESSION['update'];
@@ -194,96 +194,99 @@ if(isset($_POST['submitz'] )){
                         ?>
                     <div class="row">
                         <div class="col-sm-12">
-                            <div class = "wrapper">
-                            <h2><i class="fa-solid fa-user" style="margin-left:5px;" ></i> Profile</h2>
-                            <hr>
-                            <div class = "box-wrapper" style="padding:0 20px 0 20px;">
-                                <div class = "box">
-                                    <div class = "box-content" style="margin:20px 0 50px 0;">
-                                        <div class = "row" style="margin-bottom:20px">
-                                            <div class = "col-sm-6">
-                                                <label for="name">Name</label>
-                                                <input type="text" id="name" name="name" value="<?php echo $row['name']; ?>" disabled>
+                            <div class="wrapper">
+                                <h2><i class="fa-solid fa-user" style="margin-left:5px;"></i> Profile</h2>
+                                <hr>
+                                <div class="box-wrapper" style="padding:0 20px 0 20px;">
+                                    <div class="box">
+                                        <div class="box-content" style="margin:20px 0 50px 0;">
+                                            <div class="row" style="margin-bottom:20px">
+                                                <div class="col-sm-6">
+                                                    <label for="name">Name</label>
+                                                    <input type="text" id="name" name="name"
+                                                        value="<?php echo $row['name']; ?>" disabled>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <label for="email">Email</label>
+                                                    <input type="text" id="email" name="email"
+                                                        value="<?php echo $row['email']; ?>" disabled>
+                                                </div>
                                             </div>
-                                            <div class = "col-sm-6">
-                                                <label for="email">Email</label>
-                                                <input type="text" id="email" name="email" value="<?php echo $row['email']; ?>" disabled>
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <label for="address">Address</label>
+                                                    <input type="text" id="address" name="address"
+                                                        value="<?php echo $userAddress; ?>" disabled>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <label for="contact">Contact Number</label>
+                                                    <input type="text" id="contact" name="contact"
+                                                        value="<?php echo $row['contactNum']; ?>" disabled>
+                                                </div>
+
+
                                             </div>
                                         </div>
-                                        <div class = "row">
-                                            <div class = "col-sm-6">
-                                                <label for="address">Address</label>
-                                                <input type="text" id="address" name="address" value="<?php echo $userAddress; ?>" disabled>
-                                            </div>
-                                            <div class = "col-sm-6">
-                                                <label for="contact">Contact Number</label>
-                                                <input type="text" id="contact" name="contact" value="<?php echo $row['contactNum']; ?>" disabled>
-                                            </div>
 
+                                    </div>
+                                    <div class="box">
 
+                                        <h3>Account Information</h3>
+                                        <hr>
+                                        <div class="box-content">
+                                            <div class="row" style="margin-top:20px; margin-bottom:20px;">
+                                                <div class="col-sm-6">
+                                                    <label for="username">User ID</label>
+                                                    <input type="text" id="username" name="username"
+                                                        value="<?php echo $row['uid']; ?>" disabled>
+                                                </div>
+
+                                                <div class="col-sm-6">
+                                                    <form action="" method="post">
+                                                        <label for="password">Password</label>
+                                                        <input type="password1" name="password" value=""
+                                                            placeholder="Enter your new password">
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                </div>
+
+                                                <div class="col-sm-6">
+                                                    <div class="edit">
+                                                        <input type="submit" class="btn btn-primary" name="submitz"
+                                                            value="Save"></button>
+                                                        <a href="profile.php" class="btn btn-primary">Cancel</a>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
 
                                 </div>
-                                <div class = "box">
-                                     
-                                    <h3>Account Information</h3>
-                                    <hr>
-                                    <div class = "box-content">
-                                        <div class = "row" style="margin-top:20px; margin-bottom:20px;">
-                                            <div class = "col-sm-6">
-                                                <label for="username">User ID</label>
-                                                <input type="text" id="username" name="username" value="<?php echo $row['uid']; ?>" disabled>
-                                            </div>
-                           
-                                            <div class = "col-sm-6">
-                                            <form action="" method="post">
-                                                <label for="password">Password</label>
-                                                <input type="password1" name="password" value="" placeholder="Enter your new password">
-                                            </div>
-                                        </div>
-                                            <div class = "row">
-                                            <div class = "col-sm-6">
-                                            </div>
-                           
-                                            <div class = "col-sm-6">
-                                            <div class="edit">
-                                                <input type="submit" class="btn btn-primary" name = "submitz" value="Save"></button>
-                                                <a href="profile.php" class="btn btn-primary">Cancel</a>
-                                            </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                             
+                                </form>
                             </div>
-                  </form>
                         </div>
                     </div>
                 </div>
+                <!-- ENDING OF BODY -->
             </div>
-            <!-- ENDING OF BODY -->
-        </div>
+            <script>
+            <?php if (!$loggedIn) : ?>
+            document.getElementById('messagesLink').classList.add('disabled');
+            document.getElementById('orderLink').classList.add('disabled');
+            <?php endif; ?>
+            </script>
+            <script>
+            setTimeout(function() {
+                var messageBox = document.getElementById('message-box');
+                if (messageBox) {
+                    messageBox.style.display = 'none';
+                }
+            }, 2000);
+            </script>
 
 
+    </body>
 
-
-<script>
-    <?php if (!$loggedIn) : ?>
-        document.getElementById('messagesLink').classList.add('disabled');
-        document.getElementById('orderLink').classList.add('disabled');
-    <?php endif; ?>
-</script>
-    <script>
-    setTimeout(function() {
-        var messageBox = document.getElementById('message-box');
-        if (messageBox) {
-            messageBox.style.display = 'none';
-        }
-    }, 2000);
-    </script>
-
-
-</body>
-
-</html>
+    </html>

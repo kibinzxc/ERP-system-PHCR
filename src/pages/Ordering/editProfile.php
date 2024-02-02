@@ -334,17 +334,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <!-- ENDING OF BODY -->
         </div>
 
-
-
-
-
         <script>
         <?php if (!$loggedIn) : ?>
         document.getElementById('messagesLink').classList.add('disabled');
         document.getElementById('orderLink').classList.add('disabled');
         <?php endif; ?>
         </script>
-
+        <script>
+        setTimeout(function() {
+            var messageBox = document.getElementById('message-box');
+            if (messageBox) {
+                messageBox.style.display = 'none';
+            }
+        }, 2000);
+        </script>
 
 
 </body>
