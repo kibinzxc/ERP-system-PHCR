@@ -769,3 +769,8 @@ button:not(.active) {
     transform: translateY(0);
   }
 }
+
+.notifs h3{
+font-family: "Outfit";
+font-weight: 500;
+}

@@ -63,6 +63,39 @@ if ($result41) {
     $unreadNotificationCount = 0; // Default to 0 if query fails
 }
 
+if(isset($_POST['submitz'] )){
+    //get the old passsword
+    $sql = "SELECT * FROM users WHERE uid = " . $_SESSION['uid'];
+    $result = $db->query($sql);
+    $row = $result->fetch_assoc();
+    $password = $_POST['password'];
+    
+    if (empty($password)) { 
+        $_SESSION['errorMessage'] = 'Password is required';
+    } else if(strlen($password) < 8){
+        $_SESSION['errorMessage'] = 'Password must be at least 8 characters';
+    } else if(!preg_match("#[0-9]+#",$password)) {
+        $_SESSION['errorMessage'] = 'Password must include at least one number!';
+    } else if(!preg_match("#[A-Z]+#",$password)) {
+        $_SESSION['errorMessage'] = 'Password must include at least one uppercase letter!';
+    } else if(!preg_match("#[a-z]+#",$password)) {
+        $_SESSION['errorMessage'] = 'Password must include at least one lowercase letter!';
+    } else if(!preg_match('/[\'^£$%&*()}{@#~?>!<>,|=_+¬-]/', $password)) {
+        $_SESSION['errorMessage'] = 'Password must include at least one special character!';
+    }//else if password is the same as the old password
+    else if (md5($password) == $row['password']) {
+        $_SESSION['errorMessage'] = 'Password must be different from the old password';
+    }
+  else {   
+        $password1 = md5($password);
+        mysqli_query($db,"UPDATE users SET password='$password1' WHERE uid=". $_SESSION['uid']);
+        $_SESSION['update'] = "Password has been updated successfully";
+        header('location: profile.php');
+        
+        exit();
+    }
+}
+
 
 ?>
 
@@ -74,7 +107,7 @@ if ($result41) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="../../assets/img/pizzahut-logo.png">
-    <title>Profile | Pizza Hut Chino Roces</title>
+    <title>Edit Profile | Pizza Hut Chino Roces</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../../../src/bootstrap/css/bootstrap.css">
     <link rel="stylesheet" href="../../../src/bootstrap/css/bootstrap.min.css">
@@ -124,7 +157,7 @@ if ($result41) {
                         <i class="fa-solid fa-user"></i>
                         <span>Profile</span>
                     </a>
-                    <a href="profile.php?logout=1" class="item">
+                    <a href="editProfile2.php?logout=1" class="item">
                         <i class="fa-solid fa-right-from-bracket"></i>
                         <span>Logout</span>
                     </a>
@@ -152,43 +185,39 @@ if ($result41) {
                             unset($_SESSION['update']);
                             echo '</div>';
                         }
-                        if (isset($_SESSION['errorMessage']) && !empty($_SESSION['error'])) {
+                        if (isset($_SESSION['errorMessage']) && !empty($_SESSION['errorMessage'])) {
                             echo '<div class="error" id="message-box">';
                             echo $_SESSION['errorMessage'];
                             unset($_SESSION['errorMessage']);
                             echo '</div>';
                         }
                         ?>
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="wrapper">
-                            <h2><i class="fa-solid fa-user" style="margin-left:5px;"></i> Profile</h2>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class = "wrapper">
+                            <h2><i class="fa-solid fa-user" style="margin-left:5px;" ></i> Profile</h2>
                             <hr>
-                            <div class="box-wrapper" style="padding:0 20px 0 20px;">
-                                <div class="box">
-                                    <div class="box-content" style="margin:20px 0 20px 0;">
-                                        <div class="row" style="margin-bottom:20px">
-                                            <div class="col-sm-6">
+                            <div class = "box-wrapper" style="padding:0 20px 0 20px;">
+                                <div class = "box">
+                                    <div class = "box-content" style="margin:20px 0 50px 0;">
+                                        <div class = "row" style="margin-bottom:20px">
+                                            <div class = "col-sm-6">
                                                 <label for="name">Name</label>
-                                                <input type="text" id="name" name="name"
-                                                    value="<?php echo $row['name']; ?>" disabled>
+                                                <input type="text" id="name" name="name" value="<?php echo $row['name']; ?>" disabled>
                                             </div>
-                                            <div class="col-sm-6">
+                                            <div class = "col-sm-6">
                                                 <label for="email">Email</label>
-                                                <input type="text" id="email" name="email"
-                                                    value="<?php echo $row['email']; ?>" disabled>
+                                                <input type="text" id="email" name="email" value="<?php echo $row['email']; ?>" disabled>
                                             </div>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-sm-6">
+                                        <div class = "row">
+                                            <div class = "col-sm-6">
                                                 <label for="address">Address</label>
-                                                <input type="text" id="address" name="address"
-                                                    value="<?php echo $userAddress; ?>" disabled>
+                                                <input type="text" id="address" name="address" value="<?php echo $userAddress; ?>" disabled>
                                             </div>
-                                            <div class="col-sm-6">
+                                            <div class = "col-sm-6">
                                                 <label for="contact">Contact Number</label>
-                                                <input type="text" id="contact" name="contact"
-                                                    value="<?php echo $row['contactNum']; ?>" disabled>
+                                                <input type="text" id="contact" name="contact" value="<?php echo $row['contactNum']; ?>" disabled>
                                             </div>
 
 
@@ -196,33 +225,39 @@ if ($result41) {
                                     </div>
 
                                 </div>
-                                <div class="edit" style="margin-bottom:50px;">
-                                    <a href="editProfile.php" class="btn btn-primary"><i class="fa-solid fa-pen"></i>
-                                        Edit Information</a>
-                                </div>
-                                <div class="box">
+                                <div class = "box">
+                                     
                                     <h3>Account Information</h3>
                                     <hr>
-                                    <div class="box-content">
-                                        <div class="row" style="margin-top:20px; margin-bottom:20px;">
-                                            <div class="col-sm-6">
+                                    <div class = "box-content">
+                                        <div class = "row" style="margin-top:20px; margin-bottom:20px;">
+                                            <div class = "col-sm-6">
                                                 <label for="username">User ID</label>
-                                                <input type="text" id="username" name="username"
-                                                    value="<?php echo $row['uid']; ?>" disabled>
+                                                <input type="text" id="username" name="username" value="<?php echo $row['uid']; ?>" disabled>
                                             </div>
-                                            <div class="col-sm-6">
+                           
+                                            <div class = "col-sm-6">
+                                            <form action="" method="post">
                                                 <label for="password">Password</label>
-                                                <input type="password" id="password" name="password" value="********"
-                                                    disabled>
+                                                <input type="password1" name="password" value="" placeholder="Enter your new password">
+                                            </div>
+                                        </div>
+                                            <div class = "row">
+                                            <div class = "col-sm-6">
+                                            </div>
+                           
+                                            <div class = "col-sm-6">
+                                            <div class="edit">
+                                                <input type="submit" class="btn btn-primary" name = "submitz" value="Save"></button>
+                                                <a href="profile.php" class="btn btn-primary">Cancel</a>
+                                            </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="edit">
-                                    <a href="editProfile2.php" class="btn btn-primary"><i class="fa-solid fa-pen"></i>
-                                        Change Password</a>
-                                </div>
+                             
                             </div>
+                  </form>
                         </div>
                     </div>
                 </div>
@@ -233,13 +268,12 @@ if ($result41) {
 
 
 
-
-        <script>
-        <?php if (!$loggedIn) : ?>
+<script>
+    <?php if (!$loggedIn) : ?>
         document.getElementById('messagesLink').classList.add('disabled');
         document.getElementById('orderLink').classList.add('disabled');
-        <?php endif; ?>
-        </script>
+    <?php endif; ?>
+</script>
     <script>
     setTimeout(function() {
         var messageBox = document.getElementById('message-box');
