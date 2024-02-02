@@ -598,3 +598,15 @@ button:not(.active) {
 .cancellation:hover {
   background: #CB4019;
 }
+
+.notification-count {
+  background-color: #c23415;
+  color: white;
+  border-radius: 50%;
+  padding: 1px 5px;
+  font-size: 10px;
+  position: absolute;
+  top: 350px;
+  left:55px;
+  font-weight: bold;
+}

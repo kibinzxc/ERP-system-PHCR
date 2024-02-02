@@ -30,9 +30,7 @@ if (isset($_SESSION['uid'])) {
 
     $conn->close();
 } else {
-    $currentUserId = 123; // or any default value
-    $loggedIn = false;
-    $userAddress = "";
+header("Location: ../../../login.php");
 }
 
 
@@ -45,11 +43,23 @@ if (isset($_GET['logout'])) {
     header("Location:../../../login.php");
     exit();
 }
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "ph_db";
 
+// Create connection
+$db= new mysqli($servername, $username, $password, $dbname);
 
+$queryz = "SELECT COUNT(*) as unread_count FROM msg_users WHERE status = 'unread' AND uid =" . $_SESSION['uid'];
+$result41 = $db->query($queryz);
 
-
-
+if ($result41) {
+    $row41 = $result41->fetch_assoc();
+    $unreadNotificationCount = $row41['unread_count'];
+} else {
+    $unreadNotificationCount = 0; // Default to 0 if query fails
+}
 
 ?>
 
@@ -61,7 +71,7 @@ if (isset($_GET['logout'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="../../assets/img/pizzahut-logo.png">
-    <title>Menu | Pizza Hut Chino Roces</title>
+    <title>Orders | Pizza Hut Chino Roces</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../../../src/bootstrap/css/bootstrap.css">
     <link rel="stylesheet" href="../../../src/bootstrap/css/bootstrap.min.css">
@@ -91,11 +101,19 @@ if (isset($_GET['logout'])) {
                     </a>
                     <a href="order.php" class="item active" id="orderLink">
                         <i class="fa-solid fa-receipt"></i>
-                        <span>Order</span>
+                        <span>Orders</span>
                     </a>
                     <a href="messages.php" class="item-last" id="messagesLink">
                         <i class="fa-solid fa-envelope"></i>
                         <span>Messages</span>
+                        <?php
+                            
+                            $unreadNotificationCount = $unreadNotificationCount; 
+                            
+                            if ($unreadNotificationCount > 0) {
+                                echo '<span class="notification-count">' . $unreadNotificationCount . '</span>';
+                            }
+                        ?>
                     </a>
                     <!-- Toggle Login/Logout link -->
                     <?php if ($loggedIn) : ?>

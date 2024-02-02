@@ -1,6 +1,12 @@
 <?php
 session_start();
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "ph_db";
 
+// Create connection
+$db= new mysqli($servername, $username, $password, $dbname);
 // Check if user is logged in
 if (isset($_SESSION['uid'])) {
     $loggedIn = true;
@@ -117,6 +123,16 @@ if (isset($_POST['checkout'])) {
     $db->close();
 }
 
+$queryz = "SELECT COUNT(*) as unread_count FROM msg_users WHERE status = 'unread' AND uid =" . $_SESSION['uid'];
+$result41 = $db->query($queryz);
+
+if ($result41) {
+    $row41 = $result41->fetch_assoc();
+    $unreadNotificationCount = $row41['unread_count'];
+} else {
+    $unreadNotificationCount = 0; // Default to 0 if query fails
+}
+
 ?>
 
 
@@ -162,6 +178,14 @@ if (isset($_POST['checkout'])) {
                     <a href="messages.php" class="item-last" id="messagesLink">
                         <i class="fa-solid fa-envelope"></i>
                         <span>Messages</span>
+                        <?php
+                        // Include your PHP logic here to determine the count of unread notifications
+                        $unreadNotificationCount = $unreadNotificationCount; // Replace with your actual logic
+                        
+                        if ($unreadNotificationCount > 0) {
+                            echo '<span class="notification-count">' . $unreadNotificationCount . '</span>';
+                        }
+                        ?>
                     </a>
                     <!-- Toggle Login/Logout link -->
                     <?php if ($loggedIn) : ?>

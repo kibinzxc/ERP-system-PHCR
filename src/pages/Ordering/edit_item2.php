@@ -4,6 +4,25 @@ session_start();
 $g = $_GET['edit_item'];
  // Create connection
 
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "ph_db";
+
+// Create connection
+$db= new mysqli($servername, $username, $password, $dbname);
+
+$queryz = "SELECT COUNT(*) as unread_count FROM msg_users WHERE status = 'unread' AND uid =" . $_SESSION['uid'];
+$result41 = $db->query($queryz);
+
+if ($result41) {
+    $row41 = $result41->fetch_assoc();
+    $unreadNotificationCount = $row41['unread_count'];
+} else {
+    $unreadNotificationCount = 0; // Default to 0 if query fails
+}
+
+
 // Check if user is logged in
 if (isset($_SESSION['uid'])) {
     $loggedIn = true;
@@ -33,9 +52,7 @@ if (isset($_SESSION['uid'])) {
 
     $conn->close();
 } else {
-    $currentUserId = 123; // or any default value
-    $loggedIn = false;
-    $userAddress = "";
+header("Location: menu.php");
 }
 
 
@@ -182,6 +199,14 @@ if (isset($_POST['checkout'])) {
                     <a href="promo.php" class="item-last" id="messagesLink">
                         <i class="fa-solid fa-envelope"></i>
                         <span>Messages</span>
+                        <?php
+                            
+                            $unreadNotificationCount = $unreadNotificationCount; 
+                            
+                            if ($unreadNotificationCount > 0) {
+                                echo '<span class="notification-count">' . $unreadNotificationCount . '</span>';
+                            }
+                        ?>
                     </a>
                     <!-- Toggle Login/Logout link -->
                     <?php if ($loggedIn) : ?>

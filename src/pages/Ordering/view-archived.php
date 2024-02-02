@@ -36,7 +36,7 @@ if (isset($_SESSION['uid'])) {
 
     $conn->close();
 } else {
- header("Location: ../../../login.php");
+ header("Location: menu.php");
 }
 
 
@@ -60,15 +60,7 @@ if ($result41) {
 } else {
     $unreadNotificationCount = 0; // Default to 0 if query fails
 }
-if (isset($_POST['mark_all_read'])) {
-    $updateQuery = "UPDATE msg_users SET status = 'read' WHERE uid =" . $_SESSION['uid'] . " AND status = 'unread'";
-    if ($db->query($updateQuery) === TRUE) {
-        //
-        header("Location:messages.php ");
-    } else {
-        
-    }
-}
+
 
 	function convertDateTimeFormat($dateTime) {
 		// Convert date to 'F d, Y' format
@@ -82,6 +74,47 @@ if (isset($_POST['mark_all_read'])) {
 	  
 		return $convertedDateTime;
 	  }
+
+if (isset($_GET['delete'])) {
+    $notificationId = $_GET['delete'];
+    $deleteQuery = "DELETE FROM msg_users WHERE msgID = $notificationId AND uid=". $_SESSION['uid'];
+    if ($db->query($deleteQuery) === TRUE) {
+        header("Location:messages.php ");
+    } else {
+        
+    }
+}
+
+if (isset($_GET['archive'])) {
+    $notificationId = $_GET['archive'];
+    $updateQuery = "UPDATE msg_users SET status = 'archived' WHERE uid =". $_SESSION['uid'];
+    if ($db->query($updateQuery) === TRUE) {
+        header("Location:messages.php ");
+    } else {
+        
+    }
+}
+
+if (isset($_POST['mark_all_read'])) {
+    $deleteQuery = "DELETE FROM msg_users WHERE uid =" . $_SESSION['uid'] . " AND status = 'archived'";
+    
+    if ($db->query($deleteQuery) === TRUE) {
+        // Deletion successful
+    } else {
+        // Handle deletion error
+        echo "Error deleting record: " . $db->error;
+    }
+}
+
+$queryz1 = "SELECT COUNT(*) as archived_count FROM msg_users WHERE status = 'archived' AND uid =" . $_SESSION['uid'];
+$result42 = $db->query($queryz1);
+
+if ($result42) {
+    $row42= $result42->fetch_assoc();
+    $unreadArchivedCount = $row42['archived_count'];
+} else {
+    $unreadArchivedCount  = 0; // Default to 0 if query fails
+}
 
 ?>
 
@@ -160,20 +193,20 @@ if (isset($_POST['mark_all_read'])) {
             <div class="col-sm-11" style="background: white;">
                 <div class="row">
                     <div class="col-md-5" style="height:100vh; border-right:2px solid #B6B6B6; overflow: auto;">
-                        <div class = "notifs" style=" margin: 0 20px 0 10px">
-                        <h3 style="font-weight:700; margin-top:40px;"> Messages</h3>
-                        <?php
-                        if ($unreadNotificationCount > 0) {
-                            echo '<form style="position: fixed; top: 45px; left: 630px;" method="post">';
-                            echo '<button type="submit" name="mark_all_read" class="read-all-button" style="border:none; text-decoration:none; background-color:white; color:#D24545;">Mark All Read</button>';
+                        <div class="notifs" style=" margin: 0 20px 0 10px">
+                            <h3 style="font-weight:700; margin-top:40px;">Archived Messages</h3>
+                            <?php
+                        if ($unreadArchivedCount > 0) {
+                            echo '<form style="position: fixed; top: 45px; left: 660px;" method="post">';
+                            echo '<button type="submit" name="mark_all_read" class="read-all-button" style="border:none; text-decoration:none; background-color:white; color:#D24545;">Delete All</button>';
                             echo '</form>';
                         }
                         ?>
-                        <a href="archives.php" class="archive1" title="Archived Messages"><i class="fa-solid fa-box-archive" style="position: fixed; top: 45px; left: 765px; font-size:30px;"></i></a>
+                        <a href="messages.php" class="archive1" title="Messages"><i class="fa-solid fa-envelope-open" style="position: fixed; top: 45px; left: 765px; font-size:30px;"></i></a>
                         <hr>
-                        <?php
+                            <?php
 
-                    $sql = "SELECT * FROM msg_users WHERE uid=" . $_SESSION['uid'] . " AND status <> 'archived'";
+                    $sql = "SELECT * FROM msg_users WHERE uid=" . $_SESSION['uid'] . " AND status = 'archived'";
                     $result = $db->query($sql);
                     $result1 = $db->query($sql);
                     $newrow = mysqli_fetch_array($result1);
@@ -212,7 +245,7 @@ if (isset($_POST['mark_all_read'])) {
                             $dateTime = $row['date_created'];
                             $convertedDateTime = convertDateTimeFormat($dateTime);
                             
-                            echo '<a class="notif" style="text-decoration:none; color:black;" href="view.php?id=' . $row['msgID'] . '">
+                            echo '<a class="notif" style="text-decoration:none; color:black;" href="view-archived.php?id=' . $row['msgID'] . '">
                             <div class="' . $row['status'] . '" style = "padding:20px 20px 5px 20px; width:100%; border-bottom:1px solid #B6B6B6; border-radius:5px; margin-bottom:10px;">
                                 <div style = "float:left; margin-top:10px;"> 
                                     
@@ -228,27 +261,62 @@ if (isset($_POST['mark_all_read'])) {
 
                         }
                     } else {
-                        echo '<h4 style="text-align:center; margin-top:300px;">You have no message yet</h4>';
+                        echo '<h4 style="text-align:center; margin-top:320px;">No Notifications</h4>';
                     }
                     ?>
+                        </div>
                     </div>
-                    </div>
-                    <div class="col-md-7" style="">
-                        <h4 style="text-align:center; margin-top:400px;">No Message Selected</h4>
+                    <div class="col-md-7">
+                        <div style="margin:40px 20px 0 20px;">
+                            <?php
+                        if (isset($_GET['id'])) {
+
+                            $notif_id = $_GET['id'];
+
+                            $sqly = "SELECT * FROM msg_users WHERE msgID = '$notif_id'";
+                            $resultz = $db->query($sqly);
+
+                           
+
+
+                            if ($resultz->num_rows > 0) {
+                                $rowz = $resultz->fetch_assoc();
+
+
+                                $dateTime = $rowz['date_created'];
+                                $convertedDateTime = convertDateTimeFormat($dateTime);
+                                echo '<p>' . $convertedDateTime . '</p> 
+                        <h3>' . $rowz['title'] . '</h3><a class="button1" href="' . $_SERVER['PHP_SELF'] . '?archive=' . $rowz['msgID'] . '" style="position:absolute; color:#a12c12; top:80px; right:100px;"><i class="fa-solid fa-inbox" style="font-size:30px;" title="Move to inbox"></i></a>
+                        <a class="button1" href="' . $_SERVER['PHP_SELF'] . '?delete=' . $rowz['msgID'] . '" style="position:absolute; color:#a12c12; top:80px; right:50px;"><i class="fa-solid fa-trash-can" style="font-size:30px;" title="Delete"></i></a>
+<hr>
+                        <div class="middle" style="padding: 20px 50px 20px 50px; text-align:center; overflow:auto; height:760px;">
+                        <img src="../../assets/img/' . $rowz['image'] . '" alt="notif pic" style="width:500px; max-width:100%; min-width:100px;">
+                        <h5 style="margin-top:20px;">' . $rowz['category'] . '</h5>
+                        <p style="font-family:verdana; font-size:15px; margin-top:20px; line-height: 1.8; text-align:justify;">' . $rowz['description'] . '</p>
+                        <div>';
+                            } else {
+                                echo '<h4 style="text-align:center; margin-top:400px;">No Message Selected</h4>';
+                            }
+                        } else {
+                            echo '<h4 style="text-align:center; margin-top:400px;">Invalid Message ID!</h4>';
+                        }
+
+                        ?>
+                        </div>
                     </div>
                 </div>
             </div>
-            </div>
+        </div>
 
 
         <!-- ENDING OF BODY -->
 
-    <script>
-    <?php if (!$loggedIn) : ?>
-    document.getElementById('messagesLink').classList.add('disabled');
-    document.getElementById('orderLink').classList.add('disabled');
-    <?php endif; ?>
-    </script>
+        <script>
+        <?php if (!$loggedIn) : ?>
+        document.getElementById('messagesLink').classList.add('disabled');
+        document.getElementById('orderLink').classList.add('disabled');
+        <?php endif; ?>
+        </script>
 
 
 

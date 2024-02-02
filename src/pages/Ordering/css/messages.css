@@ -2,6 +2,7 @@
   font-family: "Outfit";
   src: url("../../../assets/fonts/Outfit-Regular.otf") format('truetype')
 }
+
 .logo {
   width: 100%;
   pointer-events: auto;
@@ -125,7 +126,7 @@
 }
 
 body {
-  scrollbar-width:auto;
+  scrollbar-width: auto;
   /* Matte red: #ff9999, Matte black: #333 */
 }
 
@@ -134,8 +135,7 @@ body::-webkit-scrollbar {
   width: 10px;
 }
 
-body::-webkit-scrollbar-track {
-}
+body::-webkit-scrollbar-track {}
 
 body::-webkit-scrollbar-thumb {
 
@@ -253,6 +253,7 @@ input[type="text1"]:focus {
   .sidebar .item-last i {
     font-size: 0.99em;
   }
+
   .sidebar .item-login {
     margin: -40px 5px 0 5px;
   }
@@ -261,15 +262,18 @@ input[type="text1"]:focus {
 .scroll {
   scrollbar-color: #333;
 }
+
 .scroll::-webkit-scrollbar {
   width: 7px;
 }
+
 .scroll::-webkit-scrollbar-thumb {
   background-color: gray;
   /* Matte red: #ff9999 */
   border-radius: 10px;
   /* Matte black: #333 */
 }
+
 .cart {
 
   scrollbar-color: #333;
@@ -281,8 +285,7 @@ input[type="text1"]:focus {
   width: 7px;
 }
 
-.cart::-webkit-scrollbar-track {
-}
+.cart::-webkit-scrollbar-track {}
 
 .cart::-webkit-scrollbar-thumb {
   background-color: gray;
@@ -355,6 +358,7 @@ textarea {
 .box:hover .remove-btn {
   display: block;
 }
+
 .edit-btn {
   position: absolute;
   display: none;
@@ -366,9 +370,11 @@ textarea {
   text-decoration: none;
   color: gray;
 }
+
 .edit-btn:hover {
   color: #a12c12;
 }
+
 .quantity1:hover .edit-btn {
   display: block;
 }
@@ -443,6 +449,7 @@ button:not(.active) {
   text-decoration: underline;
   /* Add any other styles you need for the hover state */
 }
+
 .menu-item {
   text-decoration: none;
   color: black;
@@ -455,7 +462,8 @@ button:not(.active) {
 
 .flex-container {
   display: flex;
-  flex-wrap: wrap; /* Allow items to wrap to the next line */
+  flex-wrap: wrap;
+  /* Allow items to wrap to the next line */
   justify-content: center;
 }
 
@@ -488,11 +496,14 @@ button:not(.active) {
 
 #messagesLink.disabled {
   pointer-events: none;
-  opacity: 0.5; /* Optional: You can adjust the opacity to visually indicate that the link is disabled */
+  opacity: 0.5;
+  /* Optional: You can adjust the opacity to visually indicate that the link is disabled */
 }
+
 #orderLink.disabled {
   pointer-events: none;
-  opacity: 0.5; /* Optional: You can adjust the opacity to visually indicate that the link is disabled */
+  opacity: 0.5;
+  /* Optional: You can adjust the opacity to visually indicate that the link is disabled */
 }
 
 .mpopup1 {
@@ -508,6 +519,7 @@ button:not(.active) {
   background-color: rgba(0, 0, 0, 0.5);
   padding: 250px;
 }
+
 .modal-content1 {
   position: relative;
   background-color: #fafafa;
@@ -522,6 +534,7 @@ button:not(.active) {
   border-radius: 20px;
   text-align: center;
 }
+
 .modal-header1 {
   background-color: #E29040;
   color: #333;
@@ -549,6 +562,7 @@ button:not(.active) {
   font-family: "Biryani", sans-serif;
   align-items: center;
 }
+
 .close {
   color: #888;
   float: right;
@@ -559,6 +573,7 @@ button:not(.active) {
   pointer-events: visible;
   cursor: pointer;
 }
+
 .close:hover,
 .close:focus {
   color: #000;
@@ -579,8 +594,9 @@ button:not(.active) {
   text-decoration: none;
   font-family: "Biryani", sans-serif;
   margin-left: 30px;
-  border:none;
+  border: none;
 }
+
 .cancellation {
   border-radius: 5px;
   text-decoration: none;
@@ -594,7 +610,7 @@ button:not(.active) {
   text-decoration: none;
   font-family: "Biryani", sans-serif;
   margin-right: 30px;
-    border:none;
+  border: none;
 }
 
 .confirmation:hover {
@@ -609,57 +625,93 @@ button:not(.active) {
 
 
 .hovertext {
-    border-bottom: 1px dotted black;
-    position:relative;
-    
-    }
-    .hovertext:before {
-      content: attr(data-hover);
-      visibility: hidden;
-      opacity: 0;
-      width: 85px;
-      background-color: #FF9400;
-      color: black;
-      text-align: center;
-      border-radius: 5px;
-      padding: 3px 0;
-      font-size:13px;
-      position: absolute;
-      z-index: 1;
-      left: 7px;
-      top: 90%;
-      font-weight: 600;
-    }
-    
-    .hovertext:hover:before {
-      opacity: 1;
-      visibility: visible;
-    }
-  
-  
-.unread{
+  border-bottom: 1px dotted black;
+  position: relative;
+
+}
+
+.hovertext:before {
+  content: attr(data-hover);
+  visibility: hidden;
+  opacity: 0;
+  width: 85px;
+  background-color: #FF9400;
+  color: black;
+  text-align: center;
+  border-radius: 5px;
+  padding: 3px 0;
+  font-size: 13px;
+  position: absolute;
+  z-index: 1;
+  left: 7px;
+  top: 90%;
+  font-weight: 600;
+}
+
+.hovertext:hover:before {
+  opacity: 1;
+  visibility: visible;
+}
+
+
+.unread {
   background-color: rgb(221, 221, 221);
 }
 
-.unread:hover{
+.unread:hover {
   background-color: lightgray;
 }
-  .read:hover{
-    background-color: rgb(221, 221, 221);
-  }
-  
-.button1 i:hover{
-color: #c23415;
-}
 
-.archive1 i:hover{
+.read:hover{
+  background-color: rgb(221, 221, 221);
+}
+.archived:hover{
+  background-color: rgb(221, 221, 221);
+}
+.button1 i:hover {
   color: #c23415;
 }
 
-.archive1 i{
-  color:#a12c12;
+.archive1 i:hover {
+  color: #c23415;
 }
 
-.read-all-button:hover{
-color: #c23415;
+.archive1 i {
+  color: #a12c12;
+}
+
+.read-all-button:hover {
+  color: #c23415;
+}
+
+.notification-count {
+  background-color: #c23415;
+  color: white;
+  border-radius: 50%;
+  padding: 1px 5px;
+  font-size: 10px;
+  position: absolute;
+  top: 350px;
+  left:55px;
+  font-weight: bold;
+}
+.tooltip {
+
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
 }

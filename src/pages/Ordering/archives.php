@@ -53,20 +53,33 @@ if (isset($_GET['logout'])) {
 
 $queryz = "SELECT COUNT(*) as unread_count FROM msg_users WHERE status = 'unread' AND uid =" . $_SESSION['uid'];
 $result41 = $db->query($queryz);
-
 if ($result41) {
     $row41 = $result41->fetch_assoc();
     $unreadNotificationCount = $row41['unread_count'];
 } else {
     $unreadNotificationCount = 0; // Default to 0 if query fails
 }
+
+$queryz1 = "SELECT COUNT(*) as archived_count FROM msg_users WHERE status = 'archived' AND uid =" . $_SESSION['uid'];
+$result42 = $db->query($queryz1);
+
+if ($result42) {
+    $row42= $result42->fetch_assoc();
+    $unreadArchivedCount = $row42['archived_count'];
+} else {
+    $unreadArchivedCount  = 0; // Default to 0 if query fails
+}
+
+
+
 if (isset($_POST['mark_all_read'])) {
-    $updateQuery = "UPDATE msg_users SET status = 'read' WHERE uid =" . $_SESSION['uid'] . " AND status = 'unread'";
-    if ($db->query($updateQuery) === TRUE) {
-        //
-        header("Location:messages.php ");
+    $deleteQuery = "DELETE FROM msg_users WHERE uid =" . $_SESSION['uid'] . " AND status = 'archived'";
+    
+    if ($db->query($deleteQuery) === TRUE) {
+        // Deletion successful
     } else {
-        
+        // Handle deletion error
+        echo "Error deleting record: " . $db->error;
     }
 }
 
@@ -93,7 +106,7 @@ if (isset($_POST['mark_all_read'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="../../assets/img/pizzahut-logo.png">
-    <title>Messages | Pizza Hut Chino Roces</title>
+    <title>Archived Messages | Pizza Hut Chino Roces</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../../../src/bootstrap/css/bootstrap.css">
     <link rel="stylesheet" href="../../../src/bootstrap/css/bootstrap.min.css">
@@ -161,19 +174,19 @@ if (isset($_POST['mark_all_read'])) {
                 <div class="row">
                     <div class="col-md-5" style="height:100vh; border-right:2px solid #B6B6B6; overflow: auto;">
                         <div class = "notifs" style=" margin: 0 20px 0 10px">
-                        <h3 style="font-weight:700; margin-top:40px;"> Messages</h3>
+                        <h3 style="font-weight:700; margin-top:40px;"> Archived Messages</h3>
                         <?php
-                        if ($unreadNotificationCount > 0) {
-                            echo '<form style="position: fixed; top: 45px; left: 630px;" method="post">';
-                            echo '<button type="submit" name="mark_all_read" class="read-all-button" style="border:none; text-decoration:none; background-color:white; color:#D24545;">Mark All Read</button>';
+                        if ($unreadArchivedCount  > 0) {
+                            echo '<form style="position: fixed; top: 45px; left: 660px;" method="post">';
+                            echo '<button type="submit" name="mark_all_read" class="read-all-button" style="border:none; text-decoration:none; background-color:white; color:#D24545;">Delete All</button>';
                             echo '</form>';
                         }
                         ?>
-                        <a href="archives.php" class="archive1" title="Archived Messages"><i class="fa-solid fa-box-archive" style="position: fixed; top: 45px; left: 765px; font-size:30px;"></i></a>
+                        <a href="messages.php" class="archive1" title="Messages"><i class="fa-solid fa-envelope-open" style="position: fixed; top: 45px; left: 765px; font-size:30px;"></i></a>
                         <hr>
                         <?php
 
-                    $sql = "SELECT * FROM msg_users WHERE uid=" . $_SESSION['uid'] . " AND status <> 'archived'";
+                    $sql = "SELECT * FROM msg_users WHERE uid=" . $_SESSION['uid'] . " AND status = 'archived'";
                     $result = $db->query($sql);
                     $result1 = $db->query($sql);
                     $newrow = mysqli_fetch_array($result1);
@@ -212,7 +225,7 @@ if (isset($_POST['mark_all_read'])) {
                             $dateTime = $row['date_created'];
                             $convertedDateTime = convertDateTimeFormat($dateTime);
                             
-                            echo '<a class="notif" style="text-decoration:none; color:black;" href="view.php?id=' . $row['msgID'] . '">
+                            echo '<a class="notif" style="text-decoration:none; color:black;" href="view-archived.php?id=' . $row['msgID'] . '">
                             <div class="' . $row['status'] . '" style = "padding:20px 20px 5px 20px; width:100%; border-bottom:1px solid #B6B6B6; border-radius:5px; margin-bottom:10px;">
                                 <div style = "float:left; margin-top:10px;"> 
                                     
@@ -228,7 +241,7 @@ if (isset($_POST['mark_all_read'])) {
 
                         }
                     } else {
-                        echo '<h4 style="text-align:center; margin-top:300px;">You have no message yet</h4>';
+                        echo '<h4 style="text-align:center; margin-top:300px;">No Archived Message Yet</h4>';
                     }
                     ?>
                     </div>

@@ -411,3 +411,15 @@ button:not(.active) {
     text-decoration: underline;
     /* Add any other styles you need for the hover state */
 }
+
+.notification-count {
+  background-color: red;
+  color: red;
+  border-radius: 50%;
+  padding: 1px 10px;
+  font-size: 12px;
+  position: absolute;
+  top: 1px;
+  right: -5px;
+  font-weight: bold;
+}

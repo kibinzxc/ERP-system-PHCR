@@ -83,6 +83,25 @@ if (isset($_POST['mark_all_read'])) {
 		return $convertedDateTime;
 	  }
 
+if (isset($_GET['delete'])) {
+    $notificationId = $_GET['delete'];
+    $deleteQuery = "DELETE FROM msg_users WHERE msgID = $notificationId AND uid=". $_SESSION['uid'];
+    if ($db->query($deleteQuery) === TRUE) {
+        header("Location:messages.php ");
+    } else {
+        
+    }
+}
+
+if (isset($_GET['archive'])) {
+    $notificationId = $_GET['archive'];
+    $updateQuery = "UPDATE msg_users SET status = 'archived' WHERE uid =". $_SESSION['uid'];
+    if ($db->query($updateQuery) === TRUE) {
+        header("Location:messages.php ");
+    } else {
+        
+    }
+}
 ?>
 
 
@@ -128,6 +147,14 @@ if (isset($_POST['mark_all_read'])) {
                     <a href="messages.php" class="item-last active" id="messagesLink">
                         <i class="fa-solid fa-envelope"></i>
                         <span>Messages</span>
+                        <?php
+                            
+                            $unreadNotificationCount = $unreadNotificationCount; 
+                            
+                            if ($unreadNotificationCount > 0) {
+                                echo '<span class="notification-count">' . $unreadNotificationCount . '</span>';
+                            }
+                        ?>
                     </a>
                     <!-- Toggle Login/Logout link -->
                     <?php if ($loggedIn) : ?>
@@ -161,7 +188,7 @@ if (isset($_POST['mark_all_read'])) {
                             echo '</form>';
                         }
                         ?>
-                        <a href="#" class="archive1"><i class="fa-solid fa-box-archive" style="position: fixed; top: 45px; left: 765px; font-size:30px;"></i></a>
+                        <a href="archives.php" class="archive1" title="Archived Messages"><i class="fa-solid fa-box-archive" style="position: fixed; top: 45px; left: 765px; font-size:30px;"></i></a>
                         <hr>
                             <?php
 
@@ -246,11 +273,11 @@ if (isset($_POST['mark_all_read'])) {
                                 $dateTime = $rowz['date_created'];
                                 $convertedDateTime = convertDateTimeFormat($dateTime);
                                 echo '<p>' . $convertedDateTime . '</p> 
-                        <h3>' . $rowz['title'] . '</h3><a class="button1" href="' . $_SERVER['PHP_SELF'] . '?delete=' . $rowz['msgID'] . '" style="position:absolute; color:#a12c12; top:80px; right:100px;"><i class="fa-solid fa-box-archive" style="font-size:30px;"></i></a>
-                        <a class="button1" href="' . $_SERVER['PHP_SELF'] . '?delete=' . $rowz['msgID'] . '" style="position:absolute; color:#a12c12; top:80px; right:50px;"><i class="fa-solid fa-trash-can" style="font-size:30px;"></i></a>
+                        <h3>' . $rowz['title'] . '</h3><a class="button1" href="' . $_SERVER['PHP_SELF'] . '?archive=' . $rowz['msgID'] . '" style="position:absolute; color:#a12c12; top:80px; right:100px;"><i class="fa-solid fa-box-archive" style="font-size:30px;" title="Archive"></i></a>
+                        <a class="button1" href="' . $_SERVER['PHP_SELF'] . '?delete=' . $rowz['msgID'] . '" style="position:absolute; color:#a12c12; top:80px; right:50px;"><i class="fa-solid fa-trash-can" style="font-size:30px;" title="Delete"></i></a>
 <hr>
                         <div class="middle" style="padding: 20px 50px 20px 50px; text-align:center; overflow:auto; height:760px;">
-                        <img src="../../assets/img/menu/' . $rowz['image'] . '" alt="notif pic" style="width:500px; max-width:100%; min-width:100px;">
+                        <img src="../../assets/img/' . $rowz['image'] . '" alt="notif pic" style="width:500px; max-width:100%; min-width:100px;">
                         <h5 style="margin-top:20px;">' . $rowz['category'] . '</h5>
                         <p style="font-family:verdana; font-size:15px; margin-top:20px; line-height: 1.8; text-align:justify;">' . $rowz['description'] . '</p>
                         <div>';
