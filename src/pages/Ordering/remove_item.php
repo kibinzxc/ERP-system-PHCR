@@ -34,9 +34,9 @@ if (isset($_GET['remove_item'])) {
         $update_stmt->bind_param("i", $dish_id);
 
         if ($update_stmt->execute()) {
-            $_SESSION['message'] = "Bag updated successfully";
+            $_SESSION['success'] = "Bag updated successfully";
         } else {
-            $_SESSION['message'] = "Error" . $update_stmt->error;
+            $_SESSION['sucesss'] = "Error" . $update_stmt->error;
         }
 
         $update_stmt->close();
@@ -47,14 +47,14 @@ if (isset($_GET['remove_item'])) {
         $delete_stmt->bind_param("i", $dish_id);
 
         if ($delete_stmt->execute()) {
-            $_SESSION['message'] = "Item removed successfully";
+            $_SESSION['success'] = "Item removed successfully";
         } else {
-            $_SESSION['message'] = "Error removing item: " . $delete_stmt->error;
+            $_SESSION['success'] = "Error removing item: " . $delete_stmt->error;
         }
 
         $delete_stmt->close();
     } else {
-        $_SESSION['message'] = "Invalid value";
+        $_SESSION['success'] = "Invalid value";
     }
 
     // Close the database connection

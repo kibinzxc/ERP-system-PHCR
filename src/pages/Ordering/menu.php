@@ -17,13 +17,14 @@ if (isset($_SESSION['uid'])) {
     // Retrieve the current user's ID from the session
     $currentUserId = $_SESSION['uid'];
 
-    $sql = "SELECT address FROM users WHERE uid = $currentUserId"; // Replace 'users' with your table name
+    $sql = "SELECT address FROM customerInfo WHERE uid = $currentUserId"; // Replace 'users' with your table name
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
         $userAddress = $row['address']; // Store the user's address in a variable
         $currentUserId = $currentUserId;
+
     } else {
         $userAddress = "House No, Street, City, Province"; // Set a default value if no address is found
     }
@@ -37,6 +38,7 @@ if (isset($_SESSION['uid'])) {
     } else {
         $unreadNotificationCount = 0; // Default to 0 if query fails
     }
+
 
     $conn->close();
 } else {
@@ -58,31 +60,54 @@ if (isset($_GET['logout'])) {
 }
 
 if (isset($_POST['addtobag'])) {
+if (!isset($_SESSION['uid'])) {
+        // User is not logged in, redirect to login page
+        header("Location: ../../../login.php");
+        exit();
+    }
     $dbz = new mysqli('localhost', 'root', '', 'ph_db');
     $uid = $_SESSION['uid'];
     $name = $_POST['name'];
     $price = $_POST['price'];
     $img = $_POST['img'];
     $size1 = $_POST['size'];
-    $size = ''.$size1.'"';
+    $size = ''.$size1.'';
     $dish_id = $_POST['dish_id'];
     $quantity = 1;  // default quantity
+
     // Check if the dish_id already exists in the cart
     $check_sql = "SELECT * FROM cart WHERE dish_id = '$dish_id' AND uid = '$uid'";
     $result = mysqli_query($dbz, $check_sql);
 
     if (mysqli_num_rows($result) > 0) {
-        // If the dish_id exists, update the quantity and multiply the price
-        $update_sql = "UPDATE cart SET qty = qty + $quantity, totalprice = totalprice + ($quantity * $price) WHERE dish_id = '$dish_id' AND uid = '$uid'";
-        mysqli_query($dbz, $update_sql);
+        $row = mysqli_fetch_assoc($result);
+        $currentQuantity = $row['qty'];
+
+        // Check if the current quantity plus the new quantity exceeds the maximum
+        if (($currentQuantity + $quantity) > 10) {
+            // Display an error message for reaching the maximum quantity
+            $_SESSION['error'] = "You cannot add more than 10 items";
+        } else {
+            // Update the quantity and multiply the price
+            $update_sql = "UPDATE cart SET qty = qty + $quantity, totalprice = totalprice + ($quantity * $price) WHERE dish_id = '$dish_id' AND uid = '$uid'";
+            mysqli_query($dbz, $update_sql);
+            $_SESSION['success']  = "Successfully added into your bag";
+        }
     } else {
         // If the dish_id doesn't exist, insert a new row with the multiplied price
         $total_price = $quantity * $price;
         $insert_sql = "INSERT INTO cart (dish_id, uid, name, size, qty, price, img,totalprice) 
                         VALUES ('$dish_id', '$uid', '$name', '$size', '$quantity', '$price', '$img','$total_price')";
         mysqli_query($dbz, $insert_sql);
+        $_SESSION['success']  = "Successfully added into your bag";
     }
 }
+
+if (!isset($_SESSION['uid'])) {
+        // User is not logged in, redirect to login page
+        header("Location: ../../../login.php");
+        exit();
+    }
 
 
 if (isset($_POST['checkout'])) {
@@ -207,7 +232,20 @@ if (isset($_POST['checkout'])) {
             <div class="col-sm-9" style="background: white;">
                 <div class="container">
                     <div class="row">
-                        
+                        <?php
+                        if (isset($_SESSION['success']) && !empty($_SESSION['success'])) {
+                            echo '<div class="success" id="message-box">';
+                            echo $_SESSION['success'];
+                            unset($_SESSION['success']);
+                            echo '</div>';
+                        }
+                        if (isset($_SESSION['error']) && !empty($_SESSION['error'])) {
+                            echo '<div class="error" id="message-box">';
+                            echo $_SESSION['error'];
+                            unset($_SESSION['error']);
+                            echo '</div>';
+                        }
+                        ?>
                         <div class="col-sm-12"
                             style="padding:0; height:100%; overflow:hidden; border-radius:5px!important; margin-top:40px; width:100%;">
                             <img class="banner" src="../../assets/img/ph_banner2.png" alt="Banner"
@@ -325,8 +363,9 @@ if (isset($_POST['checkout'])) {
                             <div id="deliveryContent" style="display: block;">
 
                                 <div class="col-sm-12">
-                                    <input style="font-weight:bold; color:#333; margin-left:10px;" type="text" name="address" 
-                                    value="<?php echo $userAddress; ?>" <?php if (!$loggedIn) echo 'disabled'; else echo 'readonly'; ?>><br><br>
+                                    <input style="font-weight:bold; color:#333; margin-left:10px;" type="text"
+                                        name="address" value="<?php echo $userAddress; ?>"
+                                        <?php if (!$loggedIn) echo 'disabled'; else echo 'readonly'; ?>><br><br>
                                 </div>
                                 <div class="col-sm-12 cart"
                                     style="margin:0 0 -25px 0; padding:0; height:45vh; overflow-y: scroll; overflow:auto; ">
@@ -556,14 +595,21 @@ if (isset($_POST['checkout'])) {
     </div>
 
 
-<script>
+    <script>
     <?php if (!$loggedIn) : ?>
-        document.getElementById('messagesLink').classList.add('disabled');
-        document.getElementById('orderLink').classList.add('disabled');
+    document.getElementById('messagesLink').classList.add('disabled');
+    document.getElementById('orderLink').classList.add('disabled');
     <?php endif; ?>
-</script>
+    </script>
 
-
+    <script>
+    setTimeout(function() {
+        var messageBox = document.getElementById('message-box');
+        if (messageBox) {
+            messageBox.style.display = 'none';
+        }
+    }, 2000);
+    </script>
 
 </body>
 

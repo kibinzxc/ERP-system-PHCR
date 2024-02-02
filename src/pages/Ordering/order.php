@@ -17,16 +17,6 @@ if (isset($_SESSION['uid'])) {
     // Retrieve the current user's ID from the session
     $currentUserId = $_SESSION['uid'];
 
-    $sql = "SELECT address FROM users WHERE uid = $currentUserId"; // Replace 'users' with your table name
-    $result = $conn->query($sql);
-
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        $userAddress = $row['address']; // Store the user's address in a variable
-        $currentUserId = $currentUserId;
-    } else {
-        $userAddress = "House No, Street, City, Province"; // Set a default value if no address is found
-    }
 
     $conn->close();
 } else {

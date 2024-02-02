@@ -23,7 +23,7 @@ if (isset($_SESSION['uid'])) {
     // Retrieve the current user's ID from the session
     $currentUserId = $_SESSION['uid'];
 
-    $sql = "SELECT address FROM users WHERE uid = $currentUserId"; // Replace 'users' with your table name
+    $sql = "SELECT address FROM customerInfo WHERE uid = $currentUserId"; // Replace 'users' with your table name
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
@@ -192,8 +192,8 @@ if (isset($_POST['mark_all_read'])) {
 
                         $category = $row['category'];
                         $iconMapping = [
-                            "unread" => "bi bi-bell",
-                            "Announcement" => "fa-solid fa-bullhorn",
+                            "Order update" => "fa-solid fa-bell",
+                            "Promotion" => "fa-solid fa-bullhorn",
         
                             ];
                         $defaultIcon = "bi bi-question"; // Adjust the default icon class name

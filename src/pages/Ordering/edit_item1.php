@@ -26,7 +26,7 @@ if (isset($_SESSION['uid'])) {
     // Retrieve the current user's ID from the session
     $currentUserId = $_SESSION['uid'];
 
-    $sql = "SELECT address FROM users WHERE uid = $currentUserId"; // Replace 'users' with your table name
+    $sql = "SELECT address FROM customerInfo WHERE uid = $currentUserId"; // Replace 'users' with your table name
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
@@ -81,20 +81,15 @@ if (isset($_POST['addtobag'])) {
 }
 
 if (isset($_POST["confirmation"])) {
-     $conn = new mysqli('localhost', 'root', '', 'ph_db');
+    $conn = new mysqli('localhost', 'root', '', 'ph_db');
     $selectedQty = $_POST["qty"];
     $dish_id = $_GET['edit_item'];
-  $updateQuery = "UPDATE cart SET qty = '$selectedQty' WHERE dish_id = '$dish_id'";
+    $updateQuery = "UPDATE cart SET qty = '$selectedQty' WHERE dish_id = '$dish_id'";
+    $_SESSION['success']  = "Bag updated successfully";
     header("Location:menu.php");
     // Execute the update query
     $result = mysqli_query($conn, $updateQuery);
-
-    // Check if the update was successful
-    if ($result) {
-        echo "Update successful!";
-    } else {
-        echo "Update failed: " . mysqli_error($conn);
-}}
+}
 
 
 

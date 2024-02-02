@@ -23,7 +23,7 @@ if (isset($_SESSION['uid'])) {
     // Retrieve the current user's ID from the session
     $currentUserId = $_SESSION['uid'];
 
-    $sql = "SELECT address FROM users WHERE uid = $currentUserId"; // Replace 'users' with your table name
+    $sql = "SELECT address FROM customerInfo WHERE uid = $currentUserId"; // Replace 'users' with your table name
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
@@ -85,11 +85,11 @@ if (isset($_GET['delete'])) {
     }
 }
 
-if (isset($_GET['archive'])) {
+if (isset($_GET['inbox'])) {
     $notificationId = $_GET['archive'];
-    $updateQuery = "UPDATE msg_users SET status = 'archived' WHERE uid =". $_SESSION['uid'];
+    $updateQuery = "UPDATE msg_users SET status = 'read' WHERE uid =". $_SESSION['uid'];
     if ($db->query($updateQuery) === TRUE) {
-        header("Location:messages.php ");
+        header("Location:archives.php ");
     } else {
         
     }
@@ -225,8 +225,8 @@ if ($result42) {
 
                         $category = $row['category'];
                         $iconMapping = [
-                            "unread" => "bi bi-bell",
-                            "Announcement" => "fa-solid fa-bullhorn",
+                            "Order update" => "fa-solid fa-bell",
+                            "Promotion" => "fa-solid fa-bullhorn",
         
                             ];
                         $defaultIcon = "bi bi-question"; // Adjust the default icon class name
@@ -286,7 +286,7 @@ if ($result42) {
                                 $dateTime = $rowz['date_created'];
                                 $convertedDateTime = convertDateTimeFormat($dateTime);
                                 echo '<p>' . $convertedDateTime . '</p> 
-                        <h3>' . $rowz['title'] . '</h3><a class="button1" href="' . $_SERVER['PHP_SELF'] . '?archive=' . $rowz['msgID'] . '" style="position:absolute; color:#a12c12; top:80px; right:100px;"><i class="fa-solid fa-inbox" style="font-size:30px;" title="Move to inbox"></i></a>
+                        <h3>' . $rowz['title'] . '</h3><a class="button1" href="' . $_SERVER['PHP_SELF'] . '?inbox=' . $rowz['msgID'] . '" style="position:absolute; color:#a12c12; top:80px; right:100px;"><i class="fa-solid fa-inbox" style="font-size:30px;" title="Move to inbox"></i></a>
                         <a class="button1" href="' . $_SERVER['PHP_SELF'] . '?delete=' . $rowz['msgID'] . '" style="position:absolute; color:#a12c12; top:80px; right:50px;"><i class="fa-solid fa-trash-can" style="font-size:30px;" title="Delete"></i></a>
 <hr>
                         <div class="middle" style="padding: 20px 50px 20px 50px; text-align:center; overflow:auto; height:760px;">

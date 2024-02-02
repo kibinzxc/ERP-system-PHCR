@@ -17,7 +17,7 @@ if (isset($_SESSION['uid'])) {
     // Retrieve the current user's ID from the session
     $currentUserId = $_SESSION['uid'];
 
-    $sql = "SELECT address FROM users WHERE uid = $currentUserId"; // Replace 'users' with your table name
+    $sql = "SELECT address FROM customerInfo WHERE uid = $currentUserId"; // Replace 'users' with your table name
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
@@ -54,20 +54,32 @@ if (isset($_POST['addtobag'])) {
     $size = ''.$size1.'';
     $dish_id = $_POST['dish_id'];
     $quantity = 1;  // default quantity
+
     // Check if the dish_id already exists in the cart
     $check_sql = "SELECT * FROM cart WHERE dish_id = '$dish_id' AND uid = '$uid'";
     $result = mysqli_query($dbz, $check_sql);
 
     if (mysqli_num_rows($result) > 0) {
-        // If the dish_id exists, update the quantity and multiply the price
-        $update_sql = "UPDATE cart SET qty = qty + $quantity, totalprice = totalprice + ($quantity * $price) WHERE dish_id = '$dish_id' AND uid = '$uid'";
-        mysqli_query($dbz, $update_sql);
+        $row = mysqli_fetch_assoc($result);
+        $currentQuantity = $row['qty'];
+
+        // Check if the current quantity plus the new quantity exceeds the maximum
+        if (($currentQuantity + $quantity) > 10) {
+            // Display an error message for reaching the maximum quantity
+            $_SESSION['error'] = "You cannot add more than 10 items";
+        } else {
+            // Update the quantity and multiply the price
+            $update_sql = "UPDATE cart SET qty = qty + $quantity, totalprice = totalprice + ($quantity * $price) WHERE dish_id = '$dish_id' AND uid = '$uid'";
+            mysqli_query($dbz, $update_sql);
+            $_SESSION['success']  = "Successfully added into your bag";
+        }
     } else {
         // If the dish_id doesn't exist, insert a new row with the multiplied price
         $total_price = $quantity * $price;
         $insert_sql = "INSERT INTO cart (dish_id, uid, name, size, qty, price, img,totalprice) 
                         VALUES ('$dish_id', '$uid', '$name', '$size', '$quantity', '$price', '$img','$total_price')";
         mysqli_query($dbz, $insert_sql);
+        $_SESSION['success']  = "Successfully added into your bag";
     }
 }
 
@@ -208,7 +220,20 @@ if ($result41) {
             <div class="col-sm-9" style="background: white;">
                 <div class="container">
                     <div class="row">
-
+                        <?php
+                        if (isset($_SESSION['success']) && !empty($_SESSION['success'])) {
+                            echo '<div class="success" id="message-box">';
+                            echo $_SESSION['success'];
+                            unset($_SESSION['success']);
+                            echo '</div>';
+                        }
+                        if (isset($_SESSION['error']) && !empty($_SESSION['error'])) {
+                            echo '<div class="error" id="message-box">';
+                            echo $_SESSION['error'];
+                            unset($_SESSION['error']);
+                            echo '</div>';
+                        }
+                        ?>
                         <div class="col-sm-12"
                             style="padding:0; height:100%; overflow:hidden; border-radius:5px!important; margin-top:40px; width:100%;">
                             <img class="banner" src="../../assets/img/ph_banner2.png" alt="Banner"
@@ -565,7 +590,14 @@ if ($result41) {
     <?php endif; ?>
     </script>
 
-
+    <script>
+    setTimeout(function() {
+        var messageBox = document.getElementById('message-box');
+        if (messageBox) {
+            messageBox.style.display = 'none';
+        }
+    }, 2000);
+    </script>
 
 </body>
 
