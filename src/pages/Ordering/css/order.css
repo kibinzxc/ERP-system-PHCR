@@ -27,13 +27,13 @@
 }
 
 .sidebar .item-last {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    margin: 15px 5px 250px 5px;
-    /* top | right | bottom | left */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  margin: 15px 5px 350px 5px;
+  /* top | right | bottom | left */
 }
 .sidebar .item-login {
     display: flex;
@@ -112,14 +112,6 @@
 
 
 
-.col-sm-11 {
-    display: flex;
-    justify-content: center;
-    height: 100vh;
-    /* Adjust this value as needed */
-    margin-left: 5px;
-flex-grow: 1;
-}
 
 body {
     scrollbar-width: thin;
@@ -209,33 +201,33 @@ input[type="text"]:focus {
 }
 
 @media (max-width: 1800px) {
-    .sidebar .item-last {
-        margin: 15px 5px 180px 5px;
-    }
+  .sidebar .item-last {
+    margin: 15px 5px 280px 5px;
+  }
 
-    .sidebar .item-login {
-        margin: -40px 5px 0 5px;
-    }
+  .sidebar .item-login {
+    margin: -40px 5px 0 5px;
+  }
 }
 
 @media (max-width: 1700px) {
-    .sidebar .item-last {
-        margin: 15px 5px 100px 5px;
-        font-size: 0.99em;
-    }
+  .sidebar .item-last {
+    margin: 15px 5px 200px 5px;
+    font-size: 0.99em;
+  }
 
-    .sidebar .item i {
-        font-size: 0.99em;
-    }
+  .sidebar .item i {
+    font-size: 0.99em;
+  }
 
-    .sidebar .item-last i {
-        font-size: 0.99em;
-    }
-    .sidebar .item-login {
-        margin: -40px 5px 0 5px;
-    }
+  .sidebar .item-last i {
+    font-size: 0.99em;
+  }
+
+  .sidebar .item-login {
+    margin: -40px 5px 0 5px;
+  }
 }
-
 .notification-container a[disabled] {
     /* Define styles for the disabled state */
     color: gray;
@@ -262,3 +254,141 @@ input[type="text"]:focus {
     text-decoration: underline;
     /* Add any other styles you need for the hover state */
 }
+.wrapper{
+width:100%;
+height:97vh;
+background: #FFF;
+box-shadow: 2px 2px 4px 5px rgba(0, 0, 0, 0.10);
+padding:35px 40px 20px 40px;
+font-family: 'Outfit';
+font-weight: bold;
+border-radius:15px;
+}
+
+.wrap{
+flex-grow: 1;
+margin:0;
+padding:0;
+}
+.btn-primary{
+  background-color: #C23415;
+  border-color: #C23415;
+  color: white;
+}
+
+.btn-primary:hover{
+  background-color: #a12c12;
+  border-color: #a12c12;
+  color: white;
+}
+
+.upper-buttons{
+  position:absolute;
+  right: 70px;
+  top: 40px;
+  display: flex;
+  gap:10px;
+}
+
+.cart-summary{
+  border-radius: 30px;
+  background: #e0e0e0;
+  box-shadow: 15px 15px 30px #bebebe,
+             -15px -15px 30px #ffffff;
+    padding: 30px 30px; 
+    font-family: "Outfit";
+}
+
+.cart {
+
+  scrollbar-color: #333;
+  /* Matte red: #ff9999, Matte black: #333 */
+}
+
+/* WebKit (Chrome, Safari) and Blink (Opera) */
+.cart::-webkit-scrollbar {
+  width: 7px;
+}
+
+.cart::-webkit-scrollbar-track {
+}
+
+.cart::-webkit-scrollbar-thumb {
+  background-color: gray;
+  /* Matte red: #ff9999 */
+  border-radius: 10px;
+  /* Matte black: #333 */
+}
+
+.image {
+  width: 100%;
+}
+
+.caption {
+  font-weight: 500;
+  color: #333;
+  font-size:1.2rem;
+}
+
+textarea {
+  /* Adjust padding to accommodate the icon */
+  box-sizing: border-box;
+  border: none;
+  outline: none;
+  font-weight: 600;
+  background-repeat: no-repeat;
+  resize: none;
+  /* Add this line */
+  width: 100%;
+  /* Add this line */
+  background: none;
+  height: auto;
+}
+
+.price p {
+  font-size: 1.2rem;
+  margin-left: -5px;
+
+}
+
+.quantity1 {
+  margin-top: -5px;
+  margin-left: -8px;
+}
+
+.box {
+  position: relative;
+}
+
+.deliveryInfo{
+    padding: 30px 30px; 
+    text-decoration:none;
+    font-weight: 500;
+    font-size:1.2rem;
+}
+.edit{
+ justify-content: center;
+}
+input[type="radio"]:checked {
+  background-color: #C23415; /* Change this to your desired color */
+  border-color: #C23415; /* Change this to your desired color */
+  color: white; /* Change this to your desired text color */
+}
+
+
+
+    /* Optional: You can add additional styling for your table */
+    th {
+      border-bottom: 1px solid black; /* Add a border to header cells and data cells if needed */
+    
+    }
+    .total{
+    border-bottom:1px solid white;
+    
+    }
+    .subtotal{
+      border-bottom:1px solid white;
+    }
+    .lasttotal{
+      border-bottom:2px solid black;
+    }

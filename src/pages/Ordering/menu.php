@@ -71,7 +71,8 @@ if (!isset($_SESSION['uid'])) {
     $price = $_POST['price'];
     $img = $_POST['img'];
     $size1 = $_POST['size'];
-    $size = ''.$size1.'';
+    //put a quotation mark on the size
+    $size = '' . $size1 . '';
     $dish_id = $_POST['dish_id'];
     $quantity = 1;  // default quantity
 
@@ -106,45 +107,8 @@ if (!isset($_SESSION['uid'])) {
 
 
 if (isset($_POST['checkout'])) {
-    $uid = $_SESSION['uid']; 
-
-    // Connect to the database
-    $db = new mysqli('localhost', 'root', '', 'ph_db');
-
-    // Check for a successful connection
-    if ($db->connect_error) {
-        die("Connection failed: " . $db->connect_error);
-    }
-
-    // Get the quantity from the form
-    $address = $_POST['address'];
-
-    // Retrieve data from the 'cart' table based on the current user's UID
-    $cartQuery = "SELECT * FROM cart WHERE uid = '$uid'";
-    $cartResult = $db->query($cartQuery);
-
-    // Check if the retrieval was successful
-    if ($cartResult) {
-        $name = array();
-        
-        while ($row = $cartResult->fetch_assoc()) {
-            $orderDetails = array($row['size'], $row['name'], $row['qty'], $row['totalprice']);
-            $names[] = $orderDetails;
-        }
-    
-
-        $details = json_encode($names);
-
-        $orderInsertQuery = "INSERT INTO `test` (uid, address, details) VALUES ('$uid', '$address', '$details')";
-        $db->query($orderInsertQuery);
-        
-
-        header("Location:order.php");
-        exit();
-    } else {
-        echo "Error retrieving data from cart: " . $db->error;
-    }
-
+    header("Location:order.php");
+    exit();
     $db->close();
 }
 
@@ -309,7 +273,7 @@ if (isset($_POST['checkout'])) {
 
         // Iterate over the 'size' data and create an option for each size
         foreach ($sizes as $size) {
-            echo '<option value="' . $size . ' "">' . ucfirst($size) . '</option>';
+            echo '<option value="' . $size . ' "">' . ucfirst($size) . ' Pan Pizza</option>';
         }
 
         echo '

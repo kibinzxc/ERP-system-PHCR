@@ -229,11 +229,6 @@ if ($result41) {
             </div>
             <!-- ENDING OF BODY -->
         </div>
-
-
-
-
-
         <script>
         <?php if (!$loggedIn) : ?>
         document.getElementById('messagesLink').classList.add('disabled');
