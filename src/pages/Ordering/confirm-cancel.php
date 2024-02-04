@@ -10,9 +10,23 @@ if (isset($_SESSION['uid'])) {
     $username = "root";
     $password = "";
     $dbname = "ph_db";
-
+    
     // Create connection
     $conn = new mysqli($servername, $username, $password, $dbname);
+    
+         $sql = "SELECT address FROM customerInfo WHERE uid = $currentUserId"; // Replace 'users' with your table name
+    $result = $conn->query($sql);
+        $hasActiveOrders = false;
+        $orderStatuses = ["placed", "preparing", "delivery"];
+  // Query the database to check for orders with specified statuses
+        $checkOrdersSql = "SELECT COUNT(*) AS orderCount FROM orders WHERE uid = $currentUserId AND status IN ('" . implode("','", $orderStatuses) . "')";
+        $resultOrders = $conn->query($checkOrdersSql);
+
+        if ($resultOrders) {
+            $rowOrders = $resultOrders->fetch_assoc();
+            $hasActiveOrders = ($rowOrders['orderCount'] > 0);
+        }
+
      $sql = "SELECT * FROM orders WHERE uid = $currentUserId";
                             $resultz = $conn->query($sql);
                             $row1 = $resultz->fetch_assoc();
@@ -719,8 +733,8 @@ if ($result42) {
         }
     }, 2000);
     </script>
-    <script>
-        <?php if ($isCartEmpty) : ?>
+<script>
+        <?php if ($isCartEmpty && !$hasActiveOrders) : ?>
             document.getElementById('orderLink').classList.add('disabled');
         <?php endif; ?>
     </script>

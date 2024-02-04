@@ -22,6 +22,7 @@ if (isset($_SESSION['uid'])) {
     header("Location: order.php"); // Replace "/specific-page.php" with the actual page URL
     exit(); // Ensure that no further code is executed after the redirection
 }
+
 $userTypeQuery = "SELECT user_type FROM users WHERE uid = $currentUserId";
     $result = $conn->query($userTypeQuery);
 
@@ -378,8 +379,8 @@ if ($loggedIn) {
         }
     }, 2000);
     </script>
-    <script>
-        <?php if ($isCartEmpty) : ?>
+<script>
+        <?php if ($isCartEmpty && !$hasActiveOrders) : ?>
             document.getElementById('orderLink').classList.add('disabled');
         <?php endif; ?>
     </script>

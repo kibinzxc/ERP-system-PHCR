@@ -10,10 +10,22 @@ if (isset($_SESSION['uid'])) {
     $username = "root";
     $password = "";
     $dbname = "ph_db";
-
+    
     // Create connection
     $conn = new mysqli($servername, $username, $password, $dbname);
+    
+         $sql = "SELECT address FROM customerInfo WHERE uid = $currentUserId"; // Replace 'users' with your table name
+    $result = $conn->query($sql);
+        $hasActiveOrders = false;
+        $orderStatuses = ["placed", "preparing", "delivery"];
+  // Query the database to check for orders with specified statuses
+        $checkOrdersSql = "SELECT COUNT(*) AS orderCount FROM orders WHERE uid = $currentUserId AND status IN ('" . implode("','", $orderStatuses) . "')";
+        $resultOrders = $conn->query($checkOrdersSql);
 
+        if ($resultOrders) {
+            $rowOrders = $resultOrders->fetch_assoc();
+            $hasActiveOrders = ($rowOrders['orderCount'] > 0);
+        }
     // Retrieve the current user's ID from the session
     $currentUserId = $_SESSION['uid'];
 
@@ -118,48 +130,11 @@ if (!isset($_SESSION['uid'])) {
 
 
 if (isset($_POST['checkout'])) {
-    $uid = $_SESSION['uid']; 
-
-    // Connect to the database
-    $db = new mysqli('localhost', 'root', '', 'ph_db');
-
-    // Check for a successful connection
-    if ($db->connect_error) {
-        die("Connection failed: " . $db->connect_error);
-    }
-
-    // Get the quantity from the form
-    $address = $_POST['address'];
-
-    // Retrieve data from the 'cart' table based on the current user's UID
-    $cartQuery = "SELECT * FROM cart WHERE uid = '$uid'";
-    $cartResult = $db->query($cartQuery);
-
-    // Check if the retrieval was successful
-    if ($cartResult) {
-        $name = array();
-        
-        while ($row = $cartResult->fetch_assoc()) {
-            $orderDetails = array($row['size'], $row['name'], $row['qty'], $row['totalprice']);
-            $names[] = $orderDetails;
-        }
-    
-
-        $details = json_encode($names);
-
-        $orderInsertQuery = "INSERT INTO `test` (uid, address, details) VALUES ('$uid', '$address', '$details')";
-        $db->query($orderInsertQuery);
-        
-
-        header("Location:order.php");
-        exit();
-    } else {
-        echo "Error retrieving data from cart: " . $db->error;
-    }
-
+    header("Location:order.php");
+    exit();
     $db->close();
 }
-
+  $db = new mysqli('localhost', 'root', '', 'ph_db');
 $isCartEmpty = true;
 
 if ($loggedIn) {
@@ -629,8 +604,8 @@ if ($loggedIn) {
         }
     }, 2000);
     </script>
-    <script>
-        <?php if ($isCartEmpty) : ?>
+<script>
+        <?php if ($isCartEmpty && !$hasActiveOrders) : ?>
             document.getElementById('orderLink').classList.add('disabled');
         <?php endif; ?>
     </script>

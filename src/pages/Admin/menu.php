@@ -13,7 +13,11 @@ if (isset($_SESSION['uid'])) {
 
     // Create connection
     $conn = new mysqli($servername, $username, $password, $dbname);
-          $sql = "SELECT address FROM customerInfo WHERE uid = $currentUserId"; // Replace 'users' with your table name
+
+    // Retrieve the current user's ID from the session
+    $currentUserId = $_SESSION['uid'];
+
+    $sql = "SELECT address FROM customerInfo WHERE uid = $currentUserId"; // Replace 'users' with your table name
     $result = $conn->query($sql);
         $hasActiveOrders = false;
         $orderStatuses = ["placed", "preparing", "delivery"];
@@ -24,14 +28,7 @@ if (isset($_SESSION['uid'])) {
         if ($resultOrders) {
             $rowOrders = $resultOrders->fetch_assoc();
             $hasActiveOrders = ($rowOrders['orderCount'] > 0);
-        }   
-    
-    // Retrieve the current user's ID from the session
-    $currentUserId = $_SESSION['uid'];
-
-    $sql = "SELECT address FROM customerInfo WHERE uid = $currentUserId"; // Replace 'users' with your table name
-    $result = $conn->query($sql);
-
+        }
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
         $userAddress = $row['address']; // Store the user's address in a variable
@@ -49,9 +46,8 @@ if (isset($_SESSION['uid'])) {
         $unreadNotificationCount = $row41['unread_count'];
     } else {
         $unreadNotificationCount = 0; // Default to 0 if query fails
-    }
-
-    $userTypeQuery = "SELECT user_type FROM users WHERE uid = $currentUserId";
+    }   
+       $userTypeQuery = "SELECT user_type FROM users WHERE uid = $currentUserId";
     $result = $conn->query($userTypeQuery);
 
     if ($result && $result->num_rows > 0) {
@@ -66,10 +62,12 @@ if (isset($_SESSION['uid'])) {
     }
     $conn->close();
 } else {
-    $currentUserId = 123; // or any default value
-    $loggedIn = false;
-    $userAddress = "";
-     $unreadNotificationCount = 0;
+ $loggedIn = false;
+        $currentUserId = 123; // or any default value
+        $userAddress = "";
+        $unreadNotificationCount = 0;
+        
+        $hasActiveOrders = false; // Non-logged-in users won't have active orders
 }
 
 
@@ -95,7 +93,8 @@ if (!isset($_SESSION['uid'])) {
     $price = $_POST['price'];
     $img = $_POST['img'];
     $size1 = $_POST['size'];
-    $size = ''.$size1.'';
+    //put a quotation mark on the size
+    $size = '' . $size1 . '';
     $dish_id = $_POST['dish_id'];
     $quantity = 1;  // default quantity
 
@@ -134,17 +133,9 @@ if (isset($_POST['checkout'])) {
     exit();
     $db->close();
 }
-  $db = new mysqli('localhost', 'root', '', 'ph_db');
-$isCartEmpty = true;
 
-if ($loggedIn) {
-    $sqlCartCheck = "SELECT * FROM cart WHERE uid = $currentUserId";
-    $resultCartCheck = $db->query($sqlCartCheck);
 
-    if ($resultCartCheck->num_rows > 0) {
-        $isCartEmpty = false;
-    }
-}
+
 ?>
 
 
@@ -187,7 +178,7 @@ if ($loggedIn) {
                         <i class="fa-solid fa-receipt"></i>
                         <span>Orders</span>
                     </a>
-                     <a href="order-history.php" class="item">
+                    <a href="order-history.php" class="item">
                         <i class="fa-solid fa-file-lines"></i>
                         <span>Records</span>
                     </a>
@@ -195,12 +186,12 @@ if ($loggedIn) {
                         <i class="fa-solid fa-envelope"></i>
                         <span>Messages</span>
                         <?php
-                            
-                            $unreadNotificationCount = $unreadNotificationCount; 
-                            
-                            if ($unreadNotificationCount > 0) {
-                                echo '<span class="notification-count">' . $unreadNotificationCount . '</span>';
-                            }
+                        // Include your PHP logic here to determine the count of unread notifications
+                        $unreadNotificationCount = $unreadNotificationCount; // Replace with your actual logic
+                        
+                        if ($unreadNotificationCount > 0) {
+                            echo '<span class="notification-count">' . $unreadNotificationCount . '</span>';
+                        }
                         ?>
                     </a>
                     <!-- Toggle Login/Logout link -->
@@ -209,7 +200,7 @@ if ($loggedIn) {
                         <i class="fa-solid fa-user"></i>
                         <span>Profile</span>
                     </a>
-                    <a href="menu-beverages.php?logout=1" class="item">
+                    <a href="menu.php?logout=1" class="item">
                         <i class="fa-solid fa-right-from-bracket"></i>
                         <span>Logout</span>
                     </a>
@@ -248,25 +239,25 @@ if ($loggedIn) {
                         <div class="col-sm-12" style="padding:0; margin:0; margin-top:30px;">
                             <div class="container" style="padding:0;">
                                 <div class="row" style="padding:0px 15px 0 12px;">
-                                    <div class="col-sm-4" style="text-align:center;">
-                                        <a href="menu.php" class="menu-item">
+                                    <div class="col-sm-4"
+                                        style="text-align:center; border-bottom:5px solid red; margin-bottom:-20px;padding-bottom:20px;">
+                                        <a href="menu.php" class="menu-item active">
                                             <span>Pizza</span>
                                         </a>
                                     </div>
-                                    <div class="col-sm-4" style="text-align:center; ">
+                                    <div class="col-sm-4" style="text-align:center;">
                                         <a href="menu-pasta.php" class="menu-item">
                                             <span>Pasta</span>
                                         </a>
                                     </div>
-                                    <div class="col-sm-4"
-                                        style="text-align:center;border-bottom:5px solid red; margin-bottom:-20px;padding-bottom:20px;">
+                                    <div class="col-sm-4" style="text-align:center;">
                                         <a href="menu-beverages.php" class="menu-item">
                                             <span>Beverages</span>
                                         </a>
                                     </div>
                                 </div>
                             </div>
-                            <hr style="margin-right:5px;">
+                            <hr style="">
                         </div>
                         <div class="col-sm-12 scroll" style="overflow-y: auto; height: 50vh; margin:0; padding:0;">
 
@@ -274,7 +265,7 @@ if ($loggedIn) {
 
                                 <?php
                 $db = new mysqli('localhost', 'root', '', 'ph_db');
-                $sql = "SELECT * FROM dishes where categoryID ='3' ORDER BY price asc ";
+                $sql = "SELECT * FROM dishes where categoryID ='1' ORDER BY price asc "; 
                 $result = $db->query($sql);
                 $result1 = $db->query($sql);
                 $newrow = mysqli_fetch_array($result1);
@@ -293,7 +284,7 @@ if ($loggedIn) {
                         <div class="header-img">
                         <img src="../../assets/img/menu/' . $row['img'] . '" alt="notif pic" style="width:100%; max-width:100%; min-width:50px;min-height:50px; height:auto;">
                         </div>
-                        <div class="body-card" style="padding:10px 20px 10px 20px; text-align:justify; background:#D9D9D9; height:5vh;">
+                        <div class="body-card" style="padding:10px 20px 10px 20px; text-align:justify; background:#D9D9D9; height:13vh;">
                             <input type="hidden" id="hiddenField" name="name" value="' . $row['name'] . '">
                             <input type="hidden" id="hiddenField" name="dish_id" value="' . $row['dish_id'] . '">
                             <input type="hidden" id="hiddenField" name="price" value="' . $row['price'] . '">
@@ -308,7 +299,7 @@ if ($loggedIn) {
 
         // Iterate over the 'size' data and create an option for each size
         foreach ($sizes as $size) {
-            echo '<option value="' . $size . '">' . ucfirst($size) . '</option>';
+            echo '<option value="' . $size . ' "">' . ucfirst($size) . ' Pan Pizza</option>';
         }
 
         echo '
@@ -406,7 +397,7 @@ if ($loggedIn) {
                                                             
                                                             <div class = "quantity1">
                                                              <div class="edit-btn">
-                                                            <a  href="edit_item3.php?edit_item='.$row['dish_id'].'" class="edit-btn"><i class="fa-solid fa-pencil"  style="font-size:20px;"></i></a> 
+                                                            <a  href="edit_item1.php?edit_item='.$row['dish_id'].'" class="edit-btn"><i class="fa-solid fa-pencil"  style="font-size:20px;"></i></a> 
                                                             </div>
                                                             <select class="quantity" name="quantity" data-id="' . $row['cart_id'] . '" disabled>';
                                                  $sizes = explode(',', $row['qty']);
@@ -433,7 +424,18 @@ if ($loggedIn) {
                                         } else {
                                             echo '<p style="text-align:center; margin-top:50px;">Please Login to Continue</p> ';
                                         }
-                                        ?>
+$isCartEmpty = true;
+
+if ($loggedIn) {
+    $sqlCartCheck = "SELECT * FROM cart WHERE uid = $currentUserId";
+    $resultCartCheck = $db->query($sqlCartCheck);
+
+    if ($resultCartCheck->num_rows > 0) {
+        $isCartEmpty = false;
+    }
+}
+                                        
+    ?>
 
                                 </div>
                                 <div class="col-sm-12" style="margin: 30px 0 0 0;">
@@ -472,9 +474,16 @@ if ($loggedIn) {
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="col-sm-12" style="padding:0 20px 0 20px; margin-top:20px;">
-                                    <input type="submit" value="Checkout" class="checkout" name="checkout" <?php if (!$loggedIn)
-                                            echo 'disabled'; ?>>
+                                <?php if ($isCartEmpty || !$loggedIn) : ?>
+                                            <input type="submit" value="Checkout" class="checkout" name="checkout" disabled>
+                                            <?php if (!$loggedIn) : ?>
+                                            <?php elseif ($isCartEmpty) : ?>
+                                            <?php endif; ?>
+                                        <?php else : ?>
+                                            <input type="submit" value="Checkout" class="checkout" name="checkout">
+                                        <?php endif; ?>
                         </form>
                     </div>
                 </div>
@@ -609,6 +618,7 @@ if ($loggedIn) {
             document.getElementById('orderLink').classList.add('disabled');
         <?php endif; ?>
     </script>
+
 </body>
 
 </html>

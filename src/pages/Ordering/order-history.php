@@ -13,10 +13,21 @@ if (isset($_SESSION['uid'])) {
 
     // Create connection
     $conn = new mysqli($servername, $username, $password, $dbname);
+         $sql = "SELECT address FROM customerInfo WHERE uid = $currentUserId"; // Replace 'users' with your table name
+    $result = $conn->query($sql);
+        $hasActiveOrders = false;
+        $orderStatuses = ["placed", "preparing", "delivery"];
+  // Query the database to check for orders with specified statuses
+        $checkOrdersSql = "SELECT COUNT(*) AS orderCount FROM orders WHERE uid = $currentUserId AND status IN ('" . implode("','", $orderStatuses) . "')";
+        $resultOrders = $conn->query($checkOrdersSql);
 
+        if ($resultOrders) {
+            $rowOrders = $resultOrders->fetch_assoc();
+            $hasActiveOrders = ($rowOrders['orderCount'] > 0);
+        }
 $userTypeQuery = "SELECT user_type FROM users WHERE uid = $currentUserId";
     $result = $conn->query($userTypeQuery);
-
+    
     if ($result && $result->num_rows > 0) {
         $row = $result->fetch_assoc();
         $userType = $row['user_type'];
@@ -252,16 +263,10 @@ $db->close();
                         <div class="wrapper">
                             <h2><i class="fa-solid fa-file-invoice" style="margin-left:5px;"></i> Order History</h2>
                             <div class="upper-buttons">
-                                 <?php if ($isCartEmpty) : ?>
-                                            <a href="order.php" class="btn btn-primary" style="margin-top:10px; pointer-events:none; background:#dddddd; border-color:#dddddd;" disabled><i
-                                        class="fa-solid fa-utensils"></i>  My Order</a>
-                                            <?php if (!$loggedIn) : ?>
-                                            <?php elseif ($isCartEmpty) : ?>
-                                            <?php endif; ?>
-                                        <?php else : ?>
+                                 
                                             <a href="order.php" class="btn btn-primary" style="margin-top:10px;"><i
                                         class="fa-solid fa-utensils"></i>  My Order</a>
-                                        <?php endif; ?>
+
                                 
                                 <a href="menu.php" class="btn btn-primary" style="margin-top:10px;"><i
                                         class="fa-solid fa-bag-shopping"></i> My Bag</a>
@@ -342,8 +347,8 @@ $db->close();
                 </div>
             </div>
         </div>
-    <script>
-        <?php if ($isCartEmpty) : ?>
+<script>
+        <?php if ($isCartEmpty && !$hasActiveOrders) : ?>
             document.getElementById('orderLink').classList.add('disabled');
         <?php endif; ?>
     </script>
