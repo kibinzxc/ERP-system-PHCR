@@ -19,7 +19,16 @@ if (isset($_SESSION['uid'])) {
 
     $sql = "SELECT address FROM customerInfo WHERE uid = $currentUserId"; // Replace 'users' with your table name
     $result = $conn->query($sql);
+        $hasActiveOrders = false;
+        $orderStatuses = ["placed", "preparing", "delivery"];
+  // Query the database to check for orders with specified statuses
+        $checkOrdersSql = "SELECT COUNT(*) AS orderCount FROM orders WHERE uid = $currentUserId AND status IN ('" . implode("','", $orderStatuses) . "')";
+        $resultOrders = $conn->query($checkOrdersSql);
 
+        if ($resultOrders) {
+            $rowOrders = $resultOrders->fetch_assoc();
+            $hasActiveOrders = ($rowOrders['orderCount'] > 0);
+        }
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
         $userAddress = $row['address']; // Store the user's address in a variable
@@ -37,15 +46,28 @@ if (isset($_SESSION['uid'])) {
         $unreadNotificationCount = $row41['unread_count'];
     } else {
         $unreadNotificationCount = 0; // Default to 0 if query fails
+    }   
+       $userTypeQuery = "SELECT user_type FROM users WHERE uid = $currentUserId";
+    $result = $conn->query($userTypeQuery);
+
+    if ($result && $result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $userType = $row['user_type'];
+
+        // Check if user_type is "customer"
+        if ($userType !== "customer") {
+            header("Location: ../../../login.php");
+            exit(); // Ensure script stops execution after redirection
+        }
     }
-
-
     $conn->close();
 } else {
-    $currentUserId = 123; // or any default value
-    $loggedIn = false;
-    $userAddress = "";
-     $unreadNotificationCount = 0;
+ $loggedIn = false;
+        $currentUserId = 123; // or any default value
+        $userAddress = "";
+        $unreadNotificationCount = 0;
+        
+        $hasActiveOrders = false; // Non-logged-in users won't have active orders
 }
 
 
@@ -155,6 +177,10 @@ if (isset($_POST['checkout'])) {
                     <a href="order.php" class="item" id="orderLink">
                         <i class="fa-solid fa-receipt"></i>
                         <span>Orders</span>
+                    </a>
+                    <a href="order-history.php" class="item">
+                        <i class="fa-solid fa-file-lines"></i>
+                        <span>Records</span>
                     </a>
                     <a href="messages.php" class="item-last" id="messagesLink">
                         <i class="fa-solid fa-envelope"></i>
@@ -398,7 +424,18 @@ if (isset($_POST['checkout'])) {
                                         } else {
                                             echo '<p style="text-align:center; margin-top:50px;">Please Login to Continue</p> ';
                                         }
-                                        ?>
+$isCartEmpty = true;
+
+if ($loggedIn) {
+    $sqlCartCheck = "SELECT * FROM cart WHERE uid = $currentUserId";
+    $resultCartCheck = $db->query($sqlCartCheck);
+
+    if ($resultCartCheck->num_rows > 0) {
+        $isCartEmpty = false;
+    }
+}
+                                        
+    ?>
 
                                 </div>
                                 <div class="col-sm-12" style="margin: 30px 0 0 0;">
@@ -437,9 +474,16 @@ if (isset($_POST['checkout'])) {
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="col-sm-12" style="padding:0 20px 0 20px; margin-top:20px;">
-                                    <input type="submit" value="Checkout" class="checkout" name="checkout" <?php if (!$loggedIn)
-                                            echo 'disabled'; ?>>
+                                <?php if ($isCartEmpty || !$loggedIn) : ?>
+                                            <input type="submit" value="Checkout" class="checkout" name="checkout" disabled>
+                                            <?php if (!$loggedIn) : ?>
+                                            <?php elseif ($isCartEmpty) : ?>
+                                            <?php endif; ?>
+                                        <?php else : ?>
+                                            <input type="submit" value="Checkout" class="checkout" name="checkout">
+                                        <?php endif; ?>
                         </form>
                     </div>
                 </div>
@@ -568,6 +612,11 @@ if (isset($_POST['checkout'])) {
             messageBox.style.display = 'none';
         }
     }, 2000);
+    </script>
+<script>
+        <?php if ($isCartEmpty && !$hasActiveOrders) : ?>
+            document.getElementById('orderLink').classList.add('disabled');
+        <?php endif; ?>
     </script>
 
 </body>

@@ -27,7 +27,19 @@ if (isset($_SESSION['uid'])) {
     } else {
         $userAddress = "House No, Street, City, Province"; // Set a default value if no address is found
     }
+$userTypeQuery = "SELECT user_type FROM users WHERE uid = $currentUserId";
+    $result = $conn->query($userTypeQuery);
 
+    if ($result && $result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $userType = $row['user_type'];
+
+        // Check if user_type is "customer"
+        if ($userType !== "customer") {
+            header("Location: ../../../login.php");
+            exit(); // Ensure script stops execution after redirection
+        }
+    }
     $conn->close();
 } else {
 header("Location: ../../../login.php");
@@ -63,7 +75,16 @@ if ($result41) {
     $unreadNotificationCount = 0; // Default to 0 if query fails
 }
 
+$isCartEmpty = true;
 
+if ($loggedIn) {
+    $sqlCartCheck = "SELECT * FROM cart WHERE uid = $currentUserId";
+    $resultCartCheck = $db->query($sqlCartCheck);
+
+    if ($resultCartCheck->num_rows > 0) {
+        $isCartEmpty = false;
+    }
+}
 ?>
 
 
@@ -105,6 +126,10 @@ if ($result41) {
                     <a href="order.php" class="item" id="orderLink">
                         <i class="fa-solid fa-receipt"></i>
                         <span>Orders</span>
+                    </a>
+                     <a href="order-history.php" class="item">
+                        <i class="fa-solid fa-file-lines"></i>
+                        <span>Records</span>
                     </a>
                     <a href="messages.php" class="item-last" id="messagesLink">
                         <i class="fa-solid fa-envelope"></i>
@@ -158,6 +183,8 @@ if ($result41) {
                             unset($_SESSION['errorMessage']);
                             echo '</div>';
                         }
+
+
                         ?>
                 <div class="row">
                     <div class="col-sm-12">
@@ -229,12 +256,13 @@ if ($result41) {
             </div>
             <!-- ENDING OF BODY -->
         </div>
-        <script>
-        <?php if (!$loggedIn) : ?>
-        document.getElementById('messagesLink').classList.add('disabled');
-        document.getElementById('orderLink').classList.add('disabled');
+<script>
+    window.addEventListener('load', function () {
+        <?php if ($isCartEmpty) : ?>
+            document.getElementById('orderLink1').classList.add('disabled');
         <?php endif; ?>
-        </script>
+    });
+</script>
     <script>
     setTimeout(function() {
         var messageBox = document.getElementById('message-box');
@@ -242,6 +270,11 @@ if ($result41) {
             messageBox.style.display = 'none';
         }
     }, 2000);
+    </script>
+    <script>
+        <?php if ($isCartEmpty) : ?>
+            document.getElementById('orderLink').classList.add('disabled');
+        <?php endif; ?>
     </script>
 
 

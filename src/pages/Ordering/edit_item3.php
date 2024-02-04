@@ -30,7 +30,19 @@ if (isset($_SESSION['uid'])) {
     } else {
         $userAddress = "House No, Street, City, Province"; // Set a default value if no address is found
     }
+    $userTypeQuery = "SELECT user_type FROM users WHERE uid = $currentUserId";
+    $result = $conn->query($userTypeQuery);
 
+    if ($result && $result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $userType = $row['user_type'];
+
+        // Check if user_type is "customer"
+        if ($userType !== "customer") {
+            header("Location: ../../../login.php");
+            exit(); // Ensure script stops execution after redirection
+        }
+    }
     $conn->close();
 } else {
 header("Location: menu.php");
@@ -192,6 +204,10 @@ if ($result41) {
                         <i class="fa-solid fa-receipt"></i>
                         <span>Orders</span>
                     </a>
+                     <a href="order-history.php" class="item">
+                        <i class="fa-solid fa-file-lines"></i>
+                        <span>Records</span>
+                    </a>
                     <a href="promo.php" class="item-last" id="messagesLink">
                         <i class="fa-solid fa-envelope"></i>
                         <span>Messages</span>
@@ -210,7 +226,7 @@ if ($result41) {
                         <i class="fa-solid fa-user"></i>
                         <span>Profile</span>
                     </a>
-                    <a href="favorites.php?logout=1" class="item">
+                    <a href="edit-item3.php?logout=1" class="item">
                         <i class="fa-solid fa-right-from-bracket"></i>
                         <span>Logout</span>
                     </a>
@@ -650,7 +666,11 @@ if ($result41) {
     <!-- Bootstrap tether Core JavaScript -->
     <script src="js/lib/bootstrap/js/popper.min.js"></script>
     <script src="js/lib/bootstrap/js/bootstrap.min.js"></script>
-
+    <script>
+        <?php if ($isCartEmpty) : ?>
+            document.getElementById('orderLink').classList.add('disabled');
+        <?php endif; ?>
+    </script>
 </body>
 
 </html>

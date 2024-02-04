@@ -13,15 +13,13 @@ if (isset($_SESSION['uid'])) {
 
     // Create connection
     $conn = new mysqli($servername, $username, $password, $dbname);
-     $sql = "SELECT * FROM orders WHERE uid = $currentUserId";
-                            $resultz = $conn->query($sql);
-                            $row1 = $resultz->fetch_assoc();
-                            $orderStatus1 = $row1['status'];
-    if ($orderStatus1!== "placed" && $orderStatus1!== "preparing" && $orderStatus1!== "delivery") {
-    // Redirect to the specific page
-    header("Location: order.php"); // Replace "/specific-page.php" with the actual page URL
-    exit(); // Ensure that no further code is executed after the redirection
-}
+
+    
+    // Retrieve cart items count for the user
+$currentUserId = $_SESSION['uid'];
+$sqlCartCount = "SELECT COUNT(*) AS cartCount FROM cart WHERE uid = $currentUserId";
+$resultCartCount = $conn->query($sqlCartCount);
+
 $userTypeQuery = "SELECT user_type FROM users WHERE uid = $currentUserId";
     $result = $conn->query($userTypeQuery);
 
@@ -122,11 +120,11 @@ if ($loggedIn) {
                         <i class="fa-solid fa-utensils"></i>
                         <span>Menu</span>
                     </a>
-                    <a href="order.php" class="item active" id="orderLink">
+                    <a href="order.php" class="item" id="orderLink">
                         <i class="fa-solid fa-receipt"></i>
                         <span>Orders</span>
                     </a>
-                     <a href="order-history.php" class="item">
+                     <a href="order-history.php" class="item active">
                         <i class="fa-solid fa-file-lines"></i>
                         <span>Records</span>
                     </a>
@@ -148,7 +146,7 @@ if ($loggedIn) {
                         <i class="fa-solid fa-user"></i>
                         <span>Profile</span>
                     </a>
-                    <a href="order-placed.php?logout=1" class="item">
+                    <a href="order-details.php?logout=1" class="item">
                         <i class="fa-solid fa-right-from-bracket"></i>
                         <span>Logout</span>
                     </a>
@@ -175,10 +173,9 @@ if ($loggedIn) {
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="wrapper">
-                            <h2><i class="fa-solid fa-utensils" style="margin-left:5px;"></i> My Orders</h2>
+                            <h2><i class="fa-solid fa-file-invoice" style="margin-left:5px;"></i> Order History</h2>
                             <div class="upper-buttons">
-                                <a href="order-history.php" class="btn btn-primary" style="margin-top:10px;"><i
-                                        class="fa-solid fa-file-invoice"></i> Order History</a>
+                                 <a href="order-history.php" class="btn btn-primary" style="margin-top:10px;"><i class="fa-solid fa-arrow-left"></i>  Back</a>
                                 <a href="menu.php" class="btn btn-primary" style="margin-top:10px;"><i
                                         class="fa-solid fa-bag-shopping"></i> My Bag</a>
                                 <a href="messages.php" class="btn btn-primary" style="margin-top:10px;"><i
@@ -187,8 +184,8 @@ if ($loggedIn) {
                             <hr>
                             <?php
                             // Assuming you have a database connection established as $db and $currentUserId is defined
-
-                            $sql = "SELECT * FROM orders WHERE uid = $currentUserId";
+                            $order_id= $_GET['order_id'];
+                            $sql = "SELECT * FROM success_orders WHERE uid = $currentUserId AND orderID = $order_id";
                             $result = $db->query($sql);
                             $results = $db->query($sql);
                             $rowz = $results->fetch_assoc();
@@ -371,7 +368,7 @@ if ($loggedIn) {
     </div>
     <!-- ENDING OF BODY -->
     <script>
-    setTimeout(function() {  
+    setTimeout(function() {
         var messageBox = document.getElementById('message-box');
         if (messageBox) {
             messageBox.style.display = 'none';

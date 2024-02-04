@@ -33,7 +33,19 @@ if (isset($_SESSION['uid'])) {
     } else {
         $userAddress = "House No, Street, City, Province"; // Set a default value if no address is found
     }
+$userTypeQuery = "SELECT user_type FROM users WHERE uid = $currentUserId";
+    $result = $conn->query($userTypeQuery);
 
+    if ($result && $result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $userType = $row['user_type'];
+
+        // Check if user_type is "customer"
+        if ($userType !== "customer") {
+            header("Location: ../../../login.php");
+            exit(); // Ensure script stops execution after redirection
+        }
+    }
     $conn->close();
 } else {
  header("Location: menu.php");
@@ -107,6 +119,16 @@ if (isset($_GET['archive'])) {
         
     }
 }
+$isCartEmpty = true;
+
+if ($loggedIn) {
+    $sqlCartCheck = "SELECT * FROM cart WHERE uid = $currentUserId";
+    $resultCartCheck = $db->query($sqlCartCheck);
+
+    if ($resultCartCheck->num_rows > 0) {
+        $isCartEmpty = false;
+    }
+}
 ?>
 
 
@@ -147,7 +169,11 @@ if (isset($_GET['archive'])) {
                     </a>
                     <a href="order.php" class="item" id="orderLink">
                         <i class="fa-solid fa-receipt"></i>
-                        <span>Order</span>
+                        <span>Orders</span>
+                    </a>
+                     <a href="order-history.php" class="item">
+                        <i class="fa-solid fa-file-lines"></i>
+                        <span>Records</span>
                     </a>
                     <a href="messages.php" class="item-last active" id="messagesLink">
                         <i class="fa-solid fa-envelope"></i>
@@ -167,7 +193,7 @@ if (isset($_GET['archive'])) {
                         <i class="fa-solid fa-user"></i>
                         <span>Profile</span>
                     </a>
-                    <a href="favorites.php?logout=1" class="item">
+                    <a href="view.php?logout=1" class="item">
                         <i class="fa-solid fa-right-from-bracket"></i>
                         <span>Logout</span>
                     </a>
@@ -339,7 +365,11 @@ if (isset($_GET['archive'])) {
         }
     }, 2000);
     </script>
-
+    <script>
+        <?php if ($isCartEmpty) : ?>
+            document.getElementById('orderLink').classList.add('disabled');
+        <?php endif; ?>
+    </script>
 </body>
 
 </html>

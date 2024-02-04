@@ -15,7 +15,7 @@ if (isset($_SESSION['uid'])) {
     $conn = new mysqli($servername, $username, $password, $dbname);
 
     // Retrieve the current user's ID from the session
-      $sql = "SELECT status FROM test WHERE uid = $currentUserId";
+      $sql = "SELECT status FROM orders WHERE uid = $currentUserId";
     $result = $conn->query($sql);
     // Check if there is a result
     if ($result->num_rows > 0) {
@@ -23,14 +23,26 @@ if (isset($_SESSION['uid'])) {
             $order_status = $row['status'];
 
             // Check if the order status is 'placed' or 'delivery'
-            if ($order_status == 'placed' || $order_status == 'delivery') {
+            if ($order_status == 'placed' || $order_status == 'delivery' || $order_status == 'preparing') {
                 // Redirect to another page
                 header("Location: order-placed.php");
                 exit();
             }
         }
     }
+$userTypeQuery = "SELECT user_type FROM users WHERE uid = $currentUserId";
+    $result = $conn->query($userTypeQuery);
 
+    if ($result && $result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $userType = $row['user_type'];
+
+        // Check if user_type is "customer"
+        if ($userType !== "customer") {
+            header("Location: ../../../login.php");
+            exit(); // Ensure script stops execution after redirection
+        }
+    }
 
     $conn->close();
 } else {
@@ -120,15 +132,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $cartItemsJSON = json_encode($cartItems);
 
         // Insert order details into the 'test' table
-        $insertOrderSql = "INSERT INTO `test` (uid, name, address, items, totalPrice, payment, del_instruct, status)
+        $insertOrderSql = "INSERT INTO `orders` (uid, name, address, items, totalPrice, payment, del_instruct, status)
                            VALUES ('$currentUserId', '{$userDetails['name']}', '{$userDetails['address']}', '$cartItemsJSON', '$totalPrice', '$payment', '$del_instruct', 'placed')";
         $db->query($insertOrderSql);
-        
         $deleteCartSql = "DELETE FROM cart WHERE uid = $currentUserId";
         $db->query($deleteCartSql);
-        $db->close();
+
+        $_SESSION['success'] = "Order has been placed successfully";
         header("Location: order-placed.php");
-        echo "Order placed successfully! Total Price: $totalPrice";
+        exit();
+
     } else {
         // Handle query error for cart
         echo "Error fetching cart: " . $db->error;
@@ -182,6 +195,10 @@ $db->close();
                         <i class="fa-solid fa-receipt"></i>
                         <span>Orders</span>
                     </a>
+                     <a href="order-history.php" class="item">
+                        <i class="fa-solid fa-file-lines"></i>
+                        <span>Records</span>
+                    </a>
                     <a href="messages.php" class="item-last" id="messagesLink">
                         <i class="fa-solid fa-envelope"></i>
                         <span>Messages</span>
@@ -215,13 +232,21 @@ $db->close();
             </div>
             <!-- BEGINNING OF BODY -->
             <div class="col-sm-11 wrap" style="padding:15px; height:100vh; ">
-
+                        <?php
+                        if (isset($_SESSION['success']) && !empty($_SESSION['success'])) {
+                            echo '<div class="success" id="message-box">';
+                            echo $_SESSION['success'];
+                            unset($_SESSION['success']);
+                            echo '</div>';
+                        }
+                      
+                        ?>
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="wrapper">
                             <h2><i class="fa-solid fa-utensils" style="margin-left:5px;"></i> My Orders</h2>
                             <div class="upper-buttons">
-                                <a href="" class="btn btn-primary" style="margin-top:10px;"><i
+                                <a href="order-history.php" class="btn btn-primary" style="margin-top:10px;"><i
                                         class="fa-solid fa-file-invoice"></i> Order History</a>
                                 <a href="menu.php" class="btn btn-primary" style="margin-top:10px;"><i
                                         class="fa-solid fa-bag-shopping"></i> My Bag</a>
@@ -442,6 +467,19 @@ $db->close();
     </div>
     </div>
     </div>
+    <script>
+    setTimeout(function() {
+        var messageBox = document.getElementById('message-box');
+        if (messageBox) {
+            messageBox.style.display = 'none';
+        }
+    }, 2000);
+    </script>
+    <script>
+        <?php if ($isCartEmpty) : ?>
+            document.getElementById('orderLink').classList.add('disabled');
+        <?php endif; ?>
+    </script>
 </body>
 
 </html>

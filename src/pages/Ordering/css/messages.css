@@ -35,7 +35,7 @@
   align-items: center;
   justify-content: center;
   padding: 20px;
-  margin: 15px 5px 350px 5px;
+  margin: 15px 5px 250px 5px;
   /* top | right | bottom | left */
 }
 
@@ -691,7 +691,7 @@ button:not(.active) {
   padding: 1px 5px;
   font-size: 10px;
   position: absolute;
-  top: 350px;
+  top: 450px;
   left:55px;
   font-weight: bold;
 }

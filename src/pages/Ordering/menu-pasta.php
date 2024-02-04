@@ -38,7 +38,19 @@ if (isset($_SESSION['uid'])) {
     } else {
         $unreadNotificationCount = 0; // Default to 0 if query fails
     }
+$userTypeQuery = "SELECT user_type FROM users WHERE uid = $currentUserId";
+    $result = $conn->query($userTypeQuery);
 
+    if ($result && $result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $userType = $row['user_type'];
+
+        // Check if user_type is "customer"
+        if ($userType !== "customer") {
+            header("Location: ../../../login.php");
+            exit(); // Ensure script stops execution after redirection
+        }
+    }
 
     $conn->close();
 } else {
@@ -148,7 +160,16 @@ if (isset($_POST['checkout'])) {
     $db->close();
 }
 
+$isCartEmpty = true;
 
+if ($loggedIn) {
+    $sqlCartCheck = "SELECT * FROM cart WHERE uid = $currentUserId";
+    $resultCartCheck = $db->query($sqlCartCheck);
+
+    if ($resultCartCheck->num_rows > 0) {
+        $isCartEmpty = false;
+    }
+}
 ?>
 
 
@@ -191,6 +212,10 @@ if (isset($_POST['checkout'])) {
                         <i class="fa-solid fa-receipt"></i>
                         <span>Orders</span>
                     </a>
+                     <a href="order-history.php" class="item">
+                        <i class="fa-solid fa-file-lines"></i>
+                        <span>Records</span>
+                    </a>
                     <a href="messages.php" class="item-last" id="messagesLink">
                         <i class="fa-solid fa-envelope"></i>
                         <span>Messages</span>
@@ -209,7 +234,7 @@ if (isset($_POST['checkout'])) {
                         <i class="fa-solid fa-user"></i>
                         <span>Profile</span>
                     </a>
-                    <a href="favorites.php?logout=1" class="item">
+                    <a href="menu-pasta.php?logout=1" class="item">
                         <i class="fa-solid fa-right-from-bracket"></i>
                         <span>Logout</span>
                     </a>
@@ -604,7 +629,11 @@ if (isset($_POST['checkout'])) {
         }
     }, 2000);
     </script>
-
+    <script>
+        <?php if ($isCartEmpty) : ?>
+            document.getElementById('orderLink').classList.add('disabled');
+        <?php endif; ?>
+    </script>
 </body>
 
 </html>

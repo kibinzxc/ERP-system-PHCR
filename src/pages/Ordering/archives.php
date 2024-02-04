@@ -33,7 +33,19 @@ if (isset($_SESSION['uid'])) {
     } else {
         $userAddress = "House No, Street, City, Province"; // Set a default value if no address is found
     }
+    $userTypeQuery = "SELECT user_type FROM users WHERE uid = $currentUserId";
+    $result = $conn->query($userTypeQuery);
 
+    if ($result && $result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $userType = $row['user_type'];
+
+        // Check if user_type is "customer"
+        if ($userType !== "customer") {
+            header("Location: ../../../login.php");
+            exit(); // Ensure script stops execution after redirection
+        }
+    }
     $conn->close();
 } else {
  header("Location: menu.php");
@@ -119,6 +131,16 @@ if ($result42) {
 } else {
     $unreadArchivedCount  = 0; // Default to 0 if query fails
 }
+$isCartEmpty = true;
+
+if ($loggedIn) {
+    $sqlCartCheck = "SELECT * FROM cart WHERE uid = $currentUserId";
+    $resultCartCheck = $db->query($sqlCartCheck);
+
+    if ($resultCartCheck->num_rows > 0) {
+        $isCartEmpty = false;
+    }
+}
 
 ?>
 
@@ -162,6 +184,10 @@ if ($result42) {
                         <i class="fa-solid fa-receipt"></i>
                         <span>Orders</span>
                     </a>
+                    <a href="order-history.php" class="item">
+                        <i class="fa-solid fa-file-lines"></i>
+                        <span>Records</span>
+                    </a>
                     <a href="messages.php" class="item-last active" id="messagesLink">
                         <i class="fa-solid fa-envelope"></i>
                         <span>Messages</span>
@@ -174,13 +200,14 @@ if ($result42) {
                             }
                         ?>
                     </a>
+
                     <!-- Toggle Login/Logout link -->
                     <?php if ($loggedIn) : ?>
                     <a href="profile.php" class="item">
                         <i class="fa-solid fa-user"></i>
                         <span>Profile</span>
                     </a>
-                    <a href="favorites.php?logout=1" class="item">
+                    <a href="archives.php?logout=1" class="item">
                         <i class="fa-solid fa-right-from-bracket"></i>
                         <span>Logout</span>
                     </a>
@@ -196,7 +223,7 @@ if ($result42) {
             <!-- BEGINNING OF BODY -->
             <div class="col-sm-11" style="background: white;">
                 <div class="row">
-                        <?php
+                    <?php
                         if (isset($_SESSION['success2']) && !empty($_SESSION['success2'])) {
                             echo '<div class="success" id="message-box">';
                             echo $_SESSION['success2'];
@@ -211,18 +238,20 @@ if ($result42) {
                         }
                         ?>
                     <div class="col-md-5" style="height:100vh; border-right:2px solid #B6B6B6; overflow: auto;">
-                        <div class = "notifs" style=" margin: 0 20px 0 10px">
-                        <h3 style="font-weight:700; margin-top:40px;"> Archived Messages</h3>
-                        <?php
+                        <div class="notifs" style=" margin: 0 20px 0 10px">
+                            <h3 style="font-weight:700; margin-top:40px;"> Archived Messages</h3>
+                            <?php
                         if ($unreadArchivedCount  > 0) {
                             echo '<form style="position: fixed; top: 45px; left: 660px;" method="post">';
                             echo '<button type="submit" name="mark_all_read" class="read-all-button" style="border:none; text-decoration:none; background-color:white; color:#D24545;">Delete All</button>';
                             echo '</form>';
                         }
                         ?>
-                        <a href="messages.php" class="archive1" title="Messages"><i class="fa-solid fa-envelope-open" style="position: fixed; top: 45px; left: 765px; font-size:30px;"></i></a>
-                        <hr>
-                        <?php
+                            <a href="messages.php" class="archive1" title="Messages"><i
+                                    class="fa-solid fa-envelope-open"
+                                    style="position: fixed; top: 45px; left: 765px; font-size:30px;"></i></a>
+                            <hr>
+                            <?php
 
                     $sql = "SELECT * FROM msg_users WHERE uid=" . $_SESSION['uid'] . " AND status = 'archived'";
                     $result = $db->query($sql);
@@ -282,40 +311,44 @@ if ($result42) {
                         echo '<h4 style="text-align:center; margin-top:300px;">No Archived Message Yet</h4>';
                     }
                     ?>
-                    </div>
+                        </div>
                     </div>
                     <div class="col-md-7" style="">
                         <h4 style="text-align:center; margin-top:400px;">No Message Selected</h4>
                     </div>
                 </div>
             </div>
-            </div>
+        </div>
 
 
         <!-- ENDING OF BODY -->
 
-    <script>
-    <?php if (!$loggedIn) : ?>
-    document.getElementById('messagesLink').classList.add('disabled');
-    document.getElementById('orderLink').classList.add('disabled');
-    <?php endif; ?>
-    </script>
-    <script>
-    <?php if (!$loggedIn) : ?>
-    document.getElementById('messagesLink').classList.add('disabled');
-    document.getElementById('orderLink').classList.add('disabled');
-    <?php endif; ?>
-    </script>
+        <script>
+        <?php if (!$loggedIn) : ?>
+        document.getElementById('messagesLink').classList.add('disabled');
+        document.getElementById('orderLink').classList.add('disabled');
+        <?php endif; ?>
+        </script>
+        <script>
+        <?php if (!$loggedIn) : ?>
+        document.getElementById('messagesLink').classList.add('disabled');
+        document.getElementById('orderLink').classList.add('disabled');
+        <?php endif; ?>
+        </script>
 
-    <script>
-    setTimeout(function() {
-        var messageBox = document.getElementById('message-box');
-        if (messageBox) {
-            messageBox.style.display = 'none';
-        }
-    }, 2000);
-    </script>
-
+        <script>
+        setTimeout(function() {
+            var messageBox = document.getElementById('message-box');
+            if (messageBox) {
+                messageBox.style.display = 'none';
+            }
+        }, 2000);
+        </script>
+        <script>
+        <?php if ($isCartEmpty) : ?>
+        document.getElementById('orderLink').classList.add('disabled');
+        <?php endif; ?>
+        </script>
 
 </body>
 

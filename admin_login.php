@@ -58,7 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $typeRow = $typeResult->fetch_assoc();
             $userType = $typeRow['user_type'];
 
-        if ($userType !== "customer") {
+        if ($userType !== "admin") {
             // Set login failure message
             $_SESSION['message'] = "Login failed.";
         } else {
@@ -75,7 +75,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Redirect to login.php in both cases
-    header("Location: login.php");
+    header("Location: admin_login.php");
     die(); // Ensure script stops execution after redirection
 } 
 ?>
@@ -100,9 +100,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class = "container">
         <div class = "row">
             <div class = "col-sm-1" style="height:6vh; background:white;">
-                <button type="button" class= "back-btn" onclick="window.history.back()">
-                    <i class="fa-solid fa-arrow-left" style="margin-right:7px;"></i>BACK
-                </button>
+               
             </div>
 
             <div class = "col-sm-11" style="height:6vh; background:white;">
@@ -121,7 +119,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
                 <div class = "wrapper">
                     <div class = "login-wrapper">
-                        <h1 class = "title">Login</h1><br><br><br><br>
+                        <h1 class = "title" style="font-size:2.5rem;">Administrator</h1><br><br><br><br>
                             <form action="" method="post">
                                 <div class="user-box">
                                     <label>Email</label>
@@ -140,9 +138,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         }
                     ?>
                                     <input type="submit" value="Sign in" class="login-btn" name="login">
-                                <div class="additional-links">
-                                    <p>Don't have an account yet?<a href="register.php" class="register-link">Register here</a></p>
-                                </div>
+                                
                             </form>
                     </div>
                 </div>
