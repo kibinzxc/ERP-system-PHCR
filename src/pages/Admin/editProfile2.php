@@ -95,6 +95,16 @@ if ($result41a) {
 } else {
     $unreadNotificationCount4 = 0; // Default to 0 if query fails
 }
+
+if (isset($_GET['logout'])) {
+    if (isset($_SESSION['uid'])) {
+
+        session_destroy();
+        unset($_SESSION['uid']);
+    }
+    header("Location:../../../admin_login.php");
+    exit();
+}
 ?>
 
 

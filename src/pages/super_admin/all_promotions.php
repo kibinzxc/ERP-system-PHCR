@@ -147,7 +147,7 @@ if ($result41a) {
                             </div>
                             <hr>
                             <div class = "wrapper2" style="height:80vh; overflow:auto; ">
-                            <table class="table table-bordered" style="text-align:center;">
+                            <table class="table table-bordered table-striped" style="text-align:center;">
                                 <thead>
                                     <tr>
                                         <th>Title</th>

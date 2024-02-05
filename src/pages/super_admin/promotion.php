@@ -202,7 +202,7 @@ if ($result41a) {
                         <i class="fa-solid fa-user"></i>
                         <span>Profile</span>
                     </a>
-                    <a href="profile.php?logout=1" class="item">
+                    <a href="promotion.php?logout=1" class="item">
                         <i class="fa-solid fa-right-from-bracket"></i>
                         <span>Logout</span>
                     </a>

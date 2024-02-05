@@ -144,7 +144,15 @@ if ($result41a) {
 } else {
     $unreadNotificationCount4 = 0; // Default to 0 if query fails
 }
+if (isset($_GET['logout'])) {
+    if (isset($_SESSION['uid'])) {
 
+        session_destroy();
+        unset($_SESSION['uid']);
+    }
+    header("Location:../../../admin_login.php");
+    exit();
+}
 ?>
 
 
@@ -210,7 +218,7 @@ if ($result41a) {
                         <i class="fa-solid fa-user"></i>
                         <span>Profile</span>
                     </a>
-                    <a href="profile.php?logout=1" class="item">
+                    <a href="promotion.php?logout=1" class="item">
                         <i class="fa-solid fa-right-from-bracket"></i>
                         <span>Logout</span>
                     </a>

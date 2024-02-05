@@ -415,3 +415,10 @@ gap:10px;
   left:50px;
   font-weight: bold;
 }
+.upper-buttons{
+  position:absolute;
+  right: 70px;
+  top: 40px;
+  display: flex;
+  gap:10px;
+}

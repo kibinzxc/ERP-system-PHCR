@@ -60,7 +60,15 @@ if ($result41a) {
 } else {
     $unreadNotificationCount4 = 0; // Default to 0 if query fails
 }
+if (isset($_GET['logout'])) {
+    if (isset($_SESSION['uid'])) {
 
+        session_destroy();
+        unset($_SESSION['uid']);
+    }
+    header("Location:../../../admin_login.php");
+    exit();
+}
 
 ?>
 
@@ -153,10 +161,13 @@ if ($result41a) {
                         ?>
                     <div class="col-sm-12">
                         <div class="wrapper">
-                            <h2><i class="fa-solid fa-file"></i> Items</h2>
+                            <h2><i class="fa-solid fa-file"></i> Dishes</h2>
+ <div class="upper-buttons">
+                                 <a href="ingredients.php" class="btn btn-primary" style="margin-top:10px;"><i class="fa-solid fa-list-check"></i> Ingredients</a>
+                            </div>
                             <hr>
                             <div class = "wrapper2" style="height:80vh; overflow:auto; ">
-                            <table class="table table-bordered" style="text-align:center;">
+                            <table class="table table-bordered table-striped" style="text-align:center;">
                                 <thead>
                                     <tr>
                                         <th>Name</th>
