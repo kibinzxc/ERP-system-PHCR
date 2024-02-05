@@ -44,6 +44,7 @@ $userTypeQuery = "SELECT user_type FROM users WHERE uid = $currentUserId";
             exit(); // Ensure script stops execution after redirection
         }
     }
+       
     $conn->close();
 } else {
 header("Location: ../../../login.php");
@@ -268,16 +269,25 @@ if ($loggedIn) {
                                                     <p>Order Date: <?php echo $date?></p>
                                                     <p>Order Time: <?php echo $time?></p>
                                                     <?php echo $html?>
+                                                    <?php if ($displayDeliveryDetails): ?>
+                                                    <p>Delivery Date: <?php echo $deliveryDate; ?></p>
+                                                    <p>Delivery Time: <?php echo $deliveryTime; ?></p>
+                                                    <?php endif; ?>
                                                 </div>
                                             </div>
                                             <div class="col-sm-6">
                                                 <h5>Delivery Address</h5>
                                                 <div style="padding:10px 0 0 30px">
                                                     <p>Address: <?php echo $rowz['address']?></p>
-                                                    <?php if ($displayDeliveryDetails): ?>
-                                                    <p>Delivery Date: <?php echo $deliveryDate; ?></p>
-                                                    <p>Delivery Time: <?php echo $deliveryTime; ?></p>
-                                                    <?php endif; ?>
+                                                    <p>Contact Number: <?php 
+                                                        $uid = $rowz['uid'];
+                                                     $sql2 = "SELECT * FROM customerinfo where uid = $uid";
+                                                    $resultz = $db->query($sql2);
+                                                    $rows2 = $resultz->fetch_assoc();     
+                                                    echo $rows2['contactNum'];
+                                                     ?></p>
+                                                    <p>Delivery Instructions: <?php echo $rowz['del_instruct']?></p>
+
                                                 </div>
                                             </div>
                                         </div>

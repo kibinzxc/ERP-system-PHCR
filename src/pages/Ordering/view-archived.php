@@ -19,6 +19,7 @@ if (isset($_SESSION['uid'])) {
 
     // Create connection
     $conn = new mysqli($servername, $username, $password, $dbname);
+    
          $sql = "SELECT address FROM customerInfo WHERE uid = $currentUserId"; // Replace 'users' with your table name
     $result = $conn->query($sql);
         $hasActiveOrders = false;
@@ -30,13 +31,25 @@ if (isset($_SESSION['uid'])) {
         if ($resultOrders) {
             $rowOrders = $resultOrders->fetch_assoc();
             $hasActiveOrders = ($rowOrders['orderCount'] > 0);
-        }
+        }    
+
     // Retrieve the current user's ID from the session
     $currentUserId = $_SESSION['uid'];
 
     $sql = "SELECT address FROM customerInfo WHERE uid = $currentUserId"; // Replace 'users' with your table name
     $result = $conn->query($sql);
-    
+     $sql = "SELECT address FROM customerInfo WHERE uid = $currentUserId"; // Replace 'users' with your table name
+    $result = $conn->query($sql);
+        $hasActiveOrders = false;
+        $orderStatuses = ["placed", "preparing", "delivery"];
+  // Query the database to check for orders with specified statuses
+        $checkOrdersSql = "SELECT COUNT(*) AS orderCount FROM orders WHERE uid = $currentUserId AND status IN ('" . implode("','", $orderStatuses) . "')";
+        $resultOrders = $conn->query($checkOrdersSql);
+
+        if ($resultOrders) {
+            $rowOrders = $resultOrders->fetch_assoc();
+            $hasActiveOrders = ($rowOrders['orderCount'] > 0);
+        }
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
         $userAddress = $row['address']; // Store the user's address in a variable
@@ -44,7 +57,7 @@ if (isset($_SESSION['uid'])) {
     } else {
         $userAddress = "House No, Street, City, Province"; // Set a default value if no address is found
     }
-$userTypeQuery = "SELECT user_type FROM users WHERE uid = $currentUserId";
+    $userTypeQuery = "SELECT user_type FROM users WHERE uid = $currentUserId";
     $result = $conn->query($userTypeQuery);
 
     if ($result && $result->num_rows > 0) {
@@ -100,7 +113,7 @@ if ($result41) {
 
 if (isset($_GET['delete'])) {
     $notificationId = $_GET['delete'];
-    $deleteQuery = "DELETE FROM msg_users WHERE msgID = $notificationId AND uid=". $_SESSION['uid'];
+    $deleteQuery = "DELETE FROM msg_users WHERE user_msgID = $notificationId AND uid=". $_SESSION['uid'];
     if ($db->query($deleteQuery) === TRUE) {
         $_SESSION['success2']  = "Message has been successfully deleted";
         header("Location:archives.php ");
@@ -111,8 +124,8 @@ if (isset($_GET['delete'])) {
 }
 
 if (isset($_GET['inbox'])) {
-    $notificationId = $_GET['archive'];
-    $updateQuery = "UPDATE msg_users SET status = 'read' WHERE uid =". $_SESSION['uid'];
+    $notificationId = $_GET['inbox'];
+    $updateQuery = "UPDATE msg_users SET status = 'read' WHERE user_msgID = $notificationId AND uid =" . $_SESSION['uid'];
     if ($db->query($updateQuery) === TRUE) {
         $_SESSION['success2']  = "Message has been successfully restored";
         header("Location:archives.php ");
@@ -121,18 +134,6 @@ if (isset($_GET['inbox'])) {
         
     }
 }
-
-if (isset($_POST['mark_all_read'])) {
-    $deleteQuery = "DELETE FROM msg_users WHERE uid =" . $_SESSION['uid'] . " AND status = 'archived'";
-    
-    if ($db->query($deleteQuery) === TRUE) {
-        // Deletion successful
-    } else {
-        // Handle deletion error
-        echo "Error deleting record: " . $db->error;
-    }
-}
-
 $queryz1 = "SELECT COUNT(*) as archived_count FROM msg_users WHERE status = 'archived' AND uid =" . $_SESSION['uid'];
 $result42 = $db->query($queryz1);
 
@@ -162,7 +163,7 @@ if ($loggedIn) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="../../assets/img/pizzahut-logo.png">
-    <title>Messages | Pizza Hut Chino Roces</title>
+    <title>Archives | Pizza Hut Chino Roces</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../../../src/bootstrap/css/bootstrap.css">
     <link rel="stylesheet" href="../../../src/bootstrap/css/bootstrap.min.css">
@@ -216,7 +217,7 @@ if ($loggedIn) {
                         <i class="fa-solid fa-user"></i>
                         <span>Profile</span>
                     </a>
-                    <a href="view-archived.php?logout=1" class="item">
+                    <a href="view.php?logout=1" class="item">
                         <i class="fa-solid fa-right-from-bracket"></i>
                         <span>Logout</span>
                     </a>
@@ -232,17 +233,17 @@ if ($loggedIn) {
             <!-- BEGINNING OF BODY -->
             <div class="col-sm-11" style="background: white;">
                 <div class="row">
-                    <?php
-                        if (isset($_SESSION['success2']) && !empty($_SESSION['success2'])) {
+                        <?php
+                        if (isset($_SESSION['success1']) && !empty($_SESSION['success1'])) {
                             echo '<div class="success" id="message-box">';
-                            echo $_SESSION['success2'];
-                            unset($_SESSION['success2']);
+                            echo $_SESSION['success1'];
+                            unset($_SESSION['success1']);
                             echo '</div>';
                         }
-                        if (isset($_SESSION['error2']) && !empty($_SESSION['error2'])) {
+                        if (isset($_SESSION['error1']) && !empty($_SESSION['error1'])) {
                             echo '<div class="error" id="message-box">';
-                            echo $_SESSION['error2'];
-                            unset($_SESSION['error2']);
+                            echo $_SESSION['error1'];
+                            unset($_SESSION['error1']);
                             echo '</div>';
                         }
                         ?>
@@ -251,14 +252,14 @@ if ($loggedIn) {
                             <h3 style="font-weight:700; margin-top:40px;">Archived Messages</h3>
                             <?php
                         if ($unreadArchivedCount > 0) {
-                            echo '<form style="position: fixed; top: 45px; left: 660px;" method="post">';
+                            echo '<form style="float:right; margin-top:-40px; margin-right:50px;" method="post">';
                             echo '<button type="submit" name="mark_all_read" class="read-all-button" style="border:none; text-decoration:none; background-color:white; color:#D24545;">Delete All</button>';
                             echo '</form>';
                         }
                         ?>
                             <a href="messages.php" class="archive1" title="Messages"><i
                                     class="fa-solid fa-envelope-open"
-                                    style="position: fixed; top: 45px; left: 765px; font-size:30px;"></i></a>
+                                    style="float:right; margin-top:-40px; margin-right:10px; font-size:30px;"></i></a>
                             <hr>
                             <?php
 
@@ -281,7 +282,7 @@ if ($loggedIn) {
 
                         $category = $row['category'];
                         $iconMapping = [
-                            "Order update" => "fa-solid fa-bell",
+                            "Order status" => "fa-solid fa-utensils",
                             "Promotion" => "fa-solid fa-bullhorn",
         
                             ];
@@ -301,7 +302,7 @@ if ($loggedIn) {
                             $dateTime = $row['date_created'];
                             $convertedDateTime = convertDateTimeFormat($dateTime);
                             
-                            echo '<a class="notif" style="text-decoration:none; color:black;" href="view-archived.php?id=' . $row['msgID'] . '">
+                            echo '<a class="notif" style="text-decoration:none; color:black;" href="view-archived.php?id=' . $row['user_msgID'] . '">
                             <div class="' . $row['status'] . '" style = "padding:20px 20px 5px 20px; width:100%; border-bottom:1px solid #B6B6B6; border-radius:5px; margin-bottom:10px;">
                                 <div style = "float:left; margin-top:10px;"> 
                                     
@@ -329,10 +330,10 @@ if ($loggedIn) {
 
                             $notif_id = $_GET['id'];
 
-                            $sqly = "SELECT * FROM msg_users WHERE msgID = '$notif_id'";
+                            $sqly = "SELECT * FROM msg_users WHERE user_msgID = '$notif_id'";
                             $resultz = $db->query($sqly);
 
-                           
+                        
 
 
                             if ($resultz->num_rows > 0) {
@@ -342,8 +343,8 @@ if ($loggedIn) {
                                 $dateTime = $rowz['date_created'];
                                 $convertedDateTime = convertDateTimeFormat($dateTime);
                                 echo '<p>' . $convertedDateTime . '</p> 
-                        <h3>' . $rowz['title'] . '</h3><a class="button1" href="' . $_SERVER['PHP_SELF'] . '?inbox=' . $rowz['msgID'] . '" style="position:absolute; color:#a12c12; top:80px; right:100px;"><i class="fa-solid fa-inbox" style="font-size:30px;" title="Move to inbox"></i></a>
-                        <a class="button1" href="' . $_SERVER['PHP_SELF'] . '?delete=' . $rowz['msgID'] . '" style="position:absolute; color:#a12c12; top:80px; right:50px;"><i class="fa-solid fa-trash-can" style="font-size:30px;" title="Delete"></i></a>
+                        <h3>' . $rowz['title'] . '</h3><a class="button1" href="' . $_SERVER['PHP_SELF'] . '?inbox=' . $rowz['user_msgID'] . '" style="position:absolute; color:#a12c12; top:80px; right:100px;"><i class="fa-solid fa-inbox" style="font-size:30px;" title="Move to inbox"></i></a>
+                        <a class="button1" href="' . $_SERVER['PHP_SELF'] . '?delete=' . $rowz['user_msgID'] . '" style="position:absolute; color:#a12c12; top:80px; right:50px;"><i class="fa-solid fa-trash-can" style="font-size:30px;" title="Delete"></i></a>
 <hr>
                         <div class="middle" style="padding: 20px 50px 20px 50px; text-align:center; overflow:auto; height:760px;">
                         <img src="../../assets/img/' . $rowz['image'] . '" alt="notif pic" style="width:500px; max-width:100%; min-width:100px;">
@@ -358,6 +359,8 @@ if ($loggedIn) {
                         }
 
                         ?>
+
+                        
                         </div>
                     </div>
                 </div>
@@ -373,27 +376,27 @@ if ($loggedIn) {
         document.getElementById('orderLink').classList.add('disabled');
         <?php endif; ?>
         </script>
-        <script>
-        <?php if (!$loggedIn) : ?>
-        document.getElementById('messagesLink').classList.add('disabled');
-        document.getElementById('orderLink').classList.add('disabled');
-        <?php endif; ?>
-        </script>
 
-        <script>
-        setTimeout(function() {
-            var messageBox = document.getElementById('message-box');
-            if (messageBox) {
-                messageBox.style.display = 'none';
-            }
-        }, 2000);
-        </script>
+    <script>
+    <?php if (!$loggedIn) : ?>
+    document.getElementById('messagesLink').classList.add('disabled');
+    document.getElementById('orderLink').classList.add('disabled');
+    <?php endif; ?>
+    </script>
+
+    <script>
+    setTimeout(function() {
+        var messageBox = document.getElementById('message-box');
+        if (messageBox) {
+            messageBox.style.display = 'none';
+        }
+    }, 2000);
+    </script>
 <script>
         <?php if ($isCartEmpty && !$hasActiveOrders) : ?>
             document.getElementById('orderLink').classList.add('disabled');
         <?php endif; ?>
     </script>
-
 </body>
 
 </html>

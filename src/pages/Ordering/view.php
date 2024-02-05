@@ -109,7 +109,7 @@ if (isset($_POST['mark_all_read'])) {
 
 if (isset($_GET['delete'])) {
     $notificationId = $_GET['delete'];
-    $deleteQuery = "DELETE FROM msg_users WHERE msgID = $notificationId AND uid=". $_SESSION['uid'];
+    $deleteQuery = "DELETE FROM msg_users WHERE user_msgID = $notificationId AND uid=". $_SESSION['uid'];
     if ($db->query($deleteQuery) === TRUE) {
         $_SESSION['success1']  = "Message has been successfully deleted";
         header("Location:messages.php ");
@@ -121,7 +121,7 @@ if (isset($_GET['delete'])) {
 
 if (isset($_GET['archive'])) {
     $notificationId = $_GET['archive'];
-    $updateQuery = "UPDATE msg_users SET status = 'archived' WHERE uid =". $_SESSION['uid'];
+    $updateQuery = "UPDATE msg_users SET status = 'archived' WHERE user_msgID = $notificationId AND uid=". $_SESSION['uid'];
     if ($db->query($updateQuery) === TRUE) {
          $_SESSION['success1']  = "Message has been successfully archived";
         header("Location:messages.php ");
@@ -235,20 +235,20 @@ if ($loggedIn) {
                         }
                         ?>
                     <div class="col-md-5" style="height:100vh; border-right:2px solid #B6B6B6; overflow: auto;">
-                        <div class="notifs" style=" margin: 0 20px 0 10px">
-                            <h3 style="font-weight:700; margin-top:40px;"> Messages</h3>
-                            <?php
+                        <div class = "notifs" style=" margin: 0 20px 0 10px">
+                        <h3 style="font-weight:700; margin-top:40px;"> Messages</h3>
+                        <?php
                         if ($unreadNotificationCount > 0) {
-                            echo '<form style="position: fixed; top: 45px; left: 630px;" method="post">';
+                            echo '<form style="float:right; margin-top:-40px; margin-right:50px;" method="post">';
                             echo '<button type="submit" name="mark_all_read" class="read-all-button" style="border:none; text-decoration:none; background-color:white; color:#D24545;">Mark All Read</button>';
                             echo '</form>';
                         }
                         ?>
-                        <a href="archives.php" class="archive1" title="Archived Messages"><i class="fa-solid fa-box-archive" style="position: fixed; top: 45px; left: 765px; font-size:30px;"></i></a>
+                        <a href="archives.php" class="archive1" title="Archived Messages"><i class="fa-solid fa-box-archive" style="float:right; margin-top:-40px; margin-right:10px; font-size:30px;"></i></a>
                         <hr>
                             <?php
 
-                    $sql = "SELECT * FROM msg_users where uid=" . $_SESSION['uid'];
+                    $sql = "SELECT * FROM msg_users WHERE uid=" . $_SESSION['uid'] . " AND status <> 'archived'";
                     $result = $db->query($sql);
                     $result1 = $db->query($sql);
                     $newrow = mysqli_fetch_array($result1);
@@ -267,7 +267,7 @@ if ($loggedIn) {
 
                         $category = $row['category'];
                         $iconMapping = [
-                            "Order update" => "fa-solid fa-bell",
+                            "Order status" => "fa-solid fa-utensils",
                             "Promotion" => "fa-solid fa-bullhorn",
         
                             ];
@@ -287,7 +287,7 @@ if ($loggedIn) {
                             $dateTime = $row['date_created'];
                             $convertedDateTime = convertDateTimeFormat($dateTime);
                             
-                            echo '<a class="notif" style="text-decoration:none; color:black;" href="view.php?id=' . $row['msgID'] . '">
+                            echo '<a class="notif" style="text-decoration:none; color:black;" href="view.php?id=' . $row['user_msgID'] . '">
                             <div class="' . $row['status'] . '" style = "padding:20px 20px 5px 20px; width:100%; border-bottom:1px solid #B6B6B6; border-radius:5px; margin-bottom:10px;">
                                 <div style = "float:left; margin-top:10px;"> 
                                     
@@ -315,10 +315,10 @@ if ($loggedIn) {
 
                             $notif_id = $_GET['id'];
 
-                            $sqly = "SELECT * FROM msg_users WHERE msgID = '$notif_id'";
+                            $sqly = "SELECT * FROM msg_users WHERE user_msgID = '$notif_id'";
                             $resultz = $db->query($sqly);
 
-                            $sqlzz = "UPDATE msg_users SET status = 'read' WHERE msgID = '$notif_id' AND uid =" . $_SESSION['uid'];
+                            $sqlzz = "UPDATE msg_users SET status = 'read' WHERE user_msgID = '$notif_id' AND uid =" . $_SESSION['uid'];
                             $result = $db->query($sqlzz);
 
 
@@ -329,8 +329,8 @@ if ($loggedIn) {
                                 $dateTime = $rowz['date_created'];
                                 $convertedDateTime = convertDateTimeFormat($dateTime);
                                 echo '<p>' . $convertedDateTime . '</p> 
-                        <h3>' . $rowz['title'] . '</h3><a class="button1" href="' . $_SERVER['PHP_SELF'] . '?archive=' . $rowz['msgID'] . '" style="position:absolute; color:#a12c12; top:80px; right:100px;"><i class="fa-solid fa-box-archive" style="font-size:30px;" title="Archive"></i></a>
-                        <a class="button1" href="' . $_SERVER['PHP_SELF'] . '?delete=' . $rowz['msgID'] . '" style="position:absolute; color:#a12c12; top:80px; right:50px;"><i class="fa-solid fa-trash-can" style="font-size:30px;" title="Delete"></i></a>
+                        <h3>' . $rowz['title'] . '</h3><a class="button1" href="' . $_SERVER['PHP_SELF'] . '?archive=' . $rowz['user_msgID'] . '" style="position:absolute; color:#a12c12; top:80px; right:100px;"><i class="fa-solid fa-box-archive" style="font-size:30px;" title="Archive"></i></a>
+                        <a class="button1" href="' . $_SERVER['PHP_SELF'] . '?delete=' . $rowz['user_msgID'] . '" style="position:absolute; color:#a12c12; top:80px; right:50px;"><i class="fa-solid fa-trash-can" style="font-size:30px;" title="Delete"></i></a>
 <hr>
                         <div class="middle" style="padding: 20px 50px 20px 50px; text-align:center; overflow:auto; height:760px;">
                         <img src="../../assets/img/' . $rowz['image'] . '" alt="notif pic" style="width:500px; max-width:100%; min-width:100px;">

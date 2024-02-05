@@ -138,6 +138,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             unset($_SESSION['message']);
                             echo '</div>';
                         }
+                             if (isset($_SESSION['update']) && !empty($_SESSION['update'])) {
+                            echo '<div class="success" id="message-box">';
+                            echo $_SESSION['update'];
+                            unset($_SESSION['update']);
+                            echo '</div>';
+                        }
                     ?>
                                     <input type="submit" value="Sign in" class="login-btn" name="login">
                                 <div class="additional-links">

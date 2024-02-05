@@ -216,12 +216,12 @@ if ($loggedIn) {
                         <h3 style="font-weight:700; margin-top:40px;"> Messages</h3>
                         <?php
                         if ($unreadNotificationCount > 0) {
-                            echo '<form style="position: fixed; top: 45px; left: 630px;" method="post">';
+                            echo '<form style="float:right; margin-top:-40px; margin-right:50px;" method="post">';
                             echo '<button type="submit" name="mark_all_read" class="read-all-button" style="border:none; text-decoration:none; background-color:white; color:#D24545;">Mark All Read</button>';
                             echo '</form>';
                         }
                         ?>
-                        <a href="archives.php" class="archive1" title="Archived Messages"><i class="fa-solid fa-box-archive" style="position: fixed; top: 45px; left: 765px; font-size:30px;"></i></a>
+                        <a href="archives.php" class="archive1" title="Archived Messages"><i class="fa-solid fa-box-archive" style="float:right; margin-top:-40px; margin-right:10px; font-size:30px;"></i></a>
                         <hr>
                         <?php
 
@@ -244,7 +244,7 @@ if ($loggedIn) {
 
                         $category = $row['category'];
                         $iconMapping = [
-                            "Order update" => "fa-solid fa-bell",
+                            "Order status" => "fa-solid fa-utensils",
                             "Promotion" => "fa-solid fa-bullhorn",
         
                             ];
@@ -264,7 +264,7 @@ if ($loggedIn) {
                             $dateTime = $row['date_created'];
                             $convertedDateTime = convertDateTimeFormat($dateTime);
                             
-                            echo '<a class="notif" style="text-decoration:none; color:black;" href="view.php?id=' . $row['msgID'] . '">
+                            echo '<a class="notif" style="text-decoration:none; color:black;" href="view.php?id=' . $row['user_msgID'] . '">
                             <div class="' . $row['status'] . '" style = "padding:20px 20px 5px 20px; width:100%; border-bottom:1px solid #B6B6B6; border-radius:5px; margin-bottom:10px;">
                                 <div style = "float:left; margin-top:10px;"> 
                                     

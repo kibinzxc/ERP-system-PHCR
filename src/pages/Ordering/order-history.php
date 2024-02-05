@@ -263,11 +263,7 @@ $db->close();
                         <div class="wrapper">
                             <h2><i class="fa-solid fa-file-invoice" style="margin-left:5px;"></i> Order History</h2>
                             <div class="upper-buttons">
-                                 
-                                            <a href="order.php" class="btn btn-primary" style="margin-top:10px;"><i
-                                        class="fa-solid fa-utensils"></i>  My Order</a>
 
-                                
                                 <a href="menu.php" class="btn btn-primary" style="margin-top:10px;"><i
                                         class="fa-solid fa-bag-shopping"></i> My Bag</a>
                                 <a href="messages.php" class="btn btn-primary" style="margin-top:10px;"><i

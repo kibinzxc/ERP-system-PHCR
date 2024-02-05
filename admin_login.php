@@ -9,7 +9,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Check if inputs are empty
     if (empty($email) || empty($password)) {
         $_SESSION['message'] = "Please enter both email and password.";
-        header("Location: login.php");
+        header("Location: admin_login.php");
         die();
     }
 
@@ -58,16 +58,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $typeRow = $typeResult->fetch_assoc();
             $userType = $typeRow['user_type'];
 
-        if ($userType !== "admin") {
+        if ($userType == "admin") {
             // Set login failure message
-            $_SESSION['message'] = "Login failed.";
-        } else {
-            // Store user ID in the session
-            $_SESSION['uid'] = $uid;
+             $_SESSION['uid'] = $uid;
             // Redirect to a logged-in page
-            header("Location: index.php");
-            die(); // Ensure script stops execution after redirection
-        }
+            header("Location: src/pages/admin/dashboard.php");
+            die(); // Ensure script stops execution after redirection   
+            
+        } else{
+                if ($userType == "super_admin") {
+                     $_SESSION['uid'] = $uid;
+            // Redirect to a logged-in page
+            header("Location: src/pages/super_admin/dashboard.php");
+            die(); // Ensure script stops execution after redirection   
+                }else{
+            $_SESSION['message'] = "Login failed. Invalid account.";
+                }
+            } 
+        
         }
     } else {
         // Set login failure message

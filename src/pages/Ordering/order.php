@@ -42,6 +42,25 @@ if (isset($_SESSION['uid'])) {
             }
         }
     }
+    $isCartEmpty = true;
+ $sqlCartCheck = "SELECT * FROM cart WHERE uid = $currentUserId";
+    $resultCartCheck = $conn->query($sqlCartCheck);
+    
+     
+$sqlactiveOrder= "SELECT * FROM cart WHERE uid = $currentUserId";
+    $resultactiveOrder = $conn->query($sqlactiveOrder);
+    $orderActive = true;
+    
+    if ($resultCartCheck->num_rows > 0) {
+        $isCartEmpty = false;
+    }
+        if ($resultactiveOrder ->num_rows > 0) {
+        $orderActive = false;
+    }
+    if ($orderActive && $isCartEmpty) {
+        header("Location: menu.php");
+    exit();
+}
 $userTypeQuery = "SELECT user_type FROM users WHERE uid = $currentUserId";
     $result = $conn->query($userTypeQuery);
 

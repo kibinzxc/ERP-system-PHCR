@@ -36,6 +36,25 @@ $userTypeQuery = "SELECT user_type FROM users WHERE uid = $currentUserId";
             exit(); // Ensure script stops execution after redirection
         }
     }
+    $isCartEmpty = true;
+ $sqlCartCheck = "SELECT * FROM cart WHERE uid = $currentUserId";
+    $resultCartCheck = $conn->query($sqlCartCheck);
+    
+     
+$sqlactiveOrder= "SELECT * FROM cart WHERE uid = $currentUserId";
+    $resultactiveOrder = $conn->query($sqlactiveOrder);
+    $orderActive = false;
+    
+    if ($resultCartCheck->num_rows > 0) {
+        $isCartEmpty = false;
+    }
+        if ($resultactiveOrder ->num_rows > 0) {
+        $orderActive = true;
+    }
+    if ($orderActive && $isCartEmpty) {
+    header("Location: menu.php");
+    exit();
+}
     $conn->close();
 } else {
 header("Location: ../../../login.php");
@@ -267,6 +286,13 @@ if ($loggedIn) {
                                                 <h5>Delivery Address</h5>
                                                 <div style="padding:10px 0 0 30px">
                                                     <p>Address: <?php echo $rowz['address']?></p>
+                                                    <p>Contact Number: <?php 
+                                                        $uid = $rowz['uid'];
+                                                     $sql2 = "SELECT * FROM customerinfo where uid = $uid";
+                                                    $resultz = $db->query($sql2);
+                                                    $rows2 = $resultz->fetch_assoc();     
+                                                    echo $rows2['contactNum'];
+                                                     ?></p>
                                                     <?php if ($displayDeliveryDetails): ?>
                                                     <p>Delivery Date: <?php echo $deliveryDate; ?></p>
                                                     <p>Delivery Time: <?php echo $deliveryTime; ?></p>
