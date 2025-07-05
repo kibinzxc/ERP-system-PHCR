@@ -1,12 +1,31 @@
-# Enterprise Resource Planning System
- An **Enterprise Resource System** (ERS) is a *software solution that integrates business processes using advanced technologies like data analytics. It enhances efficiency, automates tasks, and provides valuable insights for informed decision-making within organizations.* 
+# 🏢 Enterprise Resource Planning System
 
-## Capstone | CVSU Imus
-> In Compliance to METHODS OF RESEARCH (DCIT 60A) & SYSTEM ANALYSIS AND DESIGN (INSY 55)
-### Professor/s:
-- METHODS OF RESEARCH (DCIT 60A) - **Rhoel Sarino**
-- SYSTEM ANALYSIS AND DESIGN (INSY 55) - **Sherilyn Fajutagana**
+An **Enterprise Resource Planning (ERP)** system designed to streamline and integrate the core business processes of an organization. This software solution incorporates data analytics to enhance operational efficiency, automate repetitive tasks, and provide actionable insights for smarter decision-making.
 
-### Client / Company:
-- Pizza Hut Chino Roces
+## 📚 Capstone Project | CvSU Imus
 
+Developed in compliance with the following subjects:
+
+- **METHODS OF RESEARCH (DCIT 60A)**  
+  *Professor: Rhoel Sarino*
+
+- **SYSTEM ANALYSIS AND DESIGN (INSY 55)**  
+  *Professor: Sherilyn Fajutagana*
+
+## 🏬 Client / Company
+
+**Pizza Hut – Chino Roces Branch**
+
+This ERP system was tailored for the operational needs of Pizza Hut Chino Roces, aiming to improve their internal processes through automation and centralized data handling.
+
+## 🛠️ Technologies Used
+
+*(Add this section if you'd like to specify tools, frameworks, or languages used in the system)*
+
+## 🙌 Developers
+
+*(Optionally list your team members here if part of a group capstone)*
+
+## 📄 License
+
+This project is licensed under the [MIT License](./LICENSE)
