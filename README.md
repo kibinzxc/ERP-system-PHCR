@@ -28,4 +28,4 @@ This ERP system was tailored for the operational needs of Pizza Hut Chino Roces,
 
 ## 📄 License
 
-This project is licensed under the [MIT License](./LICENSE)
+This project is licensed under the [APACHE License](./LICENSE)
