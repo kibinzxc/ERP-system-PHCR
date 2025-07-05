@@ -20,11 +20,9 @@ This ERP system was tailored for the operational needs of Pizza Hut Chino Roces,
 
 ## 🛠️ Technologies Used
 
-*(Add this section if you'd like to specify tools, frameworks, or languages used in the system)*
-
-## 🙌 Developers
-
-*(Optionally list your team members here if part of a group capstone)*
+- **Backend**: Vanilla PHP  
+- **Database**: MySQL  
+- **Frontend**: HTML5, CSS3, JavaScript (no framework)  
 
 ## 📄 License
 
